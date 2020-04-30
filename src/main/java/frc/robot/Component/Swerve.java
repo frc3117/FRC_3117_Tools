@@ -135,6 +135,11 @@ public class Swerve implements Component {
     private double _instantVertical = 0;
     private double _instantRotation = 0;
 
+    public void Awake()
+    {
+        
+    }
+
     public void Init()
     {
         

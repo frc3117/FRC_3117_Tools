@@ -5,6 +5,7 @@ package frc.robot.Interface;
  */
 public interface Component
 {
+    public void Awake();
     public void Init();
     public void DoSystem();
 }

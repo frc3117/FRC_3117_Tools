@@ -72,6 +72,11 @@ public class Leds implements Component {
         }
     }
 
+    public void Awake()
+    {
+        
+    }
+
     public void Init() {
         _color = ColorList.get("off");
         _priority = 0;

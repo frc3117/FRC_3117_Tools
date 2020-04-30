@@ -32,6 +32,11 @@ public class FunctionScheduler implements Component
 
     private List<FunctionSchedulerStep> _steps;
 
+    public void Awake()
+    {
+
+    }
+    
     public void Init()
     {
         _isStarted = false;
