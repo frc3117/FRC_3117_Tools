@@ -152,5 +152,6 @@ public class Arduino implements Component
             return;
 
         _serial.close();
+        _isOpen = false;
     }
 }
