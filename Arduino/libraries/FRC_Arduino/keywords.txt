@@ -1,0 +1,22 @@
+#######################################
+# Syntax Coloring Map FRC_Arduino
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+FRC_Arduino	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+Setup	KEYWORD2
+RegisterCommand	KEYWORD2
+RegisterDefaultCommand	KEYWORD2
+Loop	KEYWORD2
+GetParam	KEYWORD2
+
+######################################
+# Constants (LITERAL1)
+#######################################
