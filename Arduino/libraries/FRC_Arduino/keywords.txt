@@ -15,7 +15,7 @@ Setup	KEYWORD2
 RegisterCommand	KEYWORD2
 RegisterDefaultCommand	KEYWORD2
 Loop	KEYWORD2
-GetParam	KEYWORD2
+NextParam	KEYWORD2
 
 ######################################
 # Constants (LITERAL1)

@@ -14,9 +14,9 @@ void FRC_Arduino::Setup()
     Serial.begin(_baudrate);
 }
 
-void FRC_Arduino::RegisterCommand(String commandName, void (*function)())
+void FRC_Arduino::RegisterCommand(char* commandName, void (*function)())
 {
-    if(functionCount == 16)
+    if(functionCount == MAX_COMMAND_COUNT)
       return;
     
   	_command[functionCount] = commandName;
@@ -31,13 +31,16 @@ void FRC_Arduino::Loop()
 {
     if(Serial.available())
     {
-      	_currentMessage = Serial.readStringUntil('$');        	
-		String commandName = getValue(_currentMessage, '|', 0);
+        char string[100];
+     	Serial.readBytesUntil('$', string, 100);
+       	
+		char *functionName;
+        functionName = strtok_r(string, "|", &_last);
       
       	bool isRegistred = false;
-      	for(int i = 0; i < 18; i++)
+      	for(int i = 0; i < MAX_COMMAND_COUNT; i++)
         {
-         	if(_command[i] == commandName)
+         	if(strcmp(functionName, _command[i]) == 0)
             {
              	_functions[i]();
               	isRegistred = true;
@@ -49,22 +52,10 @@ void FRC_Arduino::Loop()
     }
 }
 
-String FRC_Arduino::GetParam(int index)
+char* NextParam()
 {
-    return getValue(_currentMessage, '|', index + 1);
-}
-String FRC_Arduino::getValue(String data, char separator, int index)
-{
-    int found = 0;
-    int strIndex[] = { 0, -1 };
-    int maxIndex = data.length() - 1;
-
-    for (int i = 0; i <= maxIndex && found <= index; i++) {
-        if (data.charAt(i) == separator || i == maxIndex) {
-            found++;
-            strIndex[0] = strIndex[1] + 1;
-            strIndex[1] = (i == maxIndex) ? i+1 : i;
-        }
-    }
-    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+  char* nextParam;
+  nextParam = strtok_r(NULL, "|", &_last);
+  
+  return nextParam;
 }
