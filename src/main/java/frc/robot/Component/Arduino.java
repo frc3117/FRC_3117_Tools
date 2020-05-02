@@ -129,7 +129,10 @@ public class Arduino implements Component
      */
     public void SendCommand(String CommandName, String[] Params)
     {
-        _serial.writeString(CommandName + "|" + String.join("|", Params) + "$");
+        if(Params.length >= 1)
+            _serial.writeString(CommandName + "|" + String.join("|", Params) + "$");
+        else
+            _serial.writeString(CommandName + "$");
     }
 
     /**
