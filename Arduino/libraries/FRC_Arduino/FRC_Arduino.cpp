@@ -78,4 +78,6 @@ void SendCommand(char* CommandName, char* Params[], int ParamCount)
     strcat(command, "|");
     strcat(command, Params[i]);
   }
+
+  Serial.print(command);
 }
