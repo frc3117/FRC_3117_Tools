@@ -134,6 +134,22 @@ public class Arduino implements Component
         else
             _serial.writeString(CommandName + "$");
     }
+    /**
+     * Send a command to the arduino
+     * @param CommandName The name of the command
+     * @param Params The parameters of the command
+     */
+    public void SendCommand(String CommandName, Object[] Params)
+    {
+        String[] stringParams = new String[Params.length];
+
+        for(int i = 0; i < Params.length; i++)
+        {
+            stringParams[i] = Params[i].toString();
+        }
+
+        SendCommand(CommandName, stringParams);
+    }
 
     /**
      * Start the comunication betwee the roborio and the arduino
