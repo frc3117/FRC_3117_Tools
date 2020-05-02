@@ -2,7 +2,8 @@
 #include "Arduino.h"
 #endif
 
-#include "FRC_Arduino.h"
+#include <string.h>
+#include <FRC_Arduino.h>
 
 FRC_Arduino::FRC_Arduino(int baudrate)
 {
@@ -52,10 +53,29 @@ void FRC_Arduino::Loop()
     }
 }
 
-char* NextParam()
+char* FRC_Arduino::NextParam()
 {
   char* nextParam;
   nextParam = strtok_r(NULL, "|", &_last);
   
   return nextParam;
+}
+
+void SendCommand(char* CommandName, char* Params[], int ParamCount)
+{
+  int count = ParamCount;
+  count += strlen(CommandName);
+  for(int i = 0; i < ParamCount; i++)
+  {
+    count += strlen(Params[i]);
+  }
+
+  char command[100];
+  strcpy(command, new char('0' + count));
+  
+  for(int i = 0; i < ParamCount; i++)
+  {
+    strcat(command, "|");
+    strcat(command, Params[i]);
+  }
 }

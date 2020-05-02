@@ -13,13 +13,13 @@ class FRC_Arduino
     void RegisterCommand(char* commandName, void (*function)());
     void RegisterDefaultCommand(void (*function)());
     void Loop();
-    char* NextParam(int index);
-    void SendCommand(char* CommandName, char* Params[]);
+    char* NextParam();
+    void SendCommand(char* CommandName, char* Params[], int ParamCount);
 
     private:
     int _baudrate;
 
-    char* _next;
+    char* _last;
     char* _command[MAX_COMMAND_COUNT];
     void (*_functions[MAX_COMMAND_COUNT])();
     void (*_defaultFunction)();
