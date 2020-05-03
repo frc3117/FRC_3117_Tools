@@ -7,21 +7,32 @@
 
 FRC_Arduino::FRC_Arduino(int baudrate)
 {
-    _baudrate = baudrate;
+  _baudrate = baudrate;
+  _boardName = "any";
+}
+FRC_Arduino::FRC_Arduino(int baudrate, char* boardName)
+{
+  _baudrate = baudrate;
+  _boardName = boardName;
+}
+
+char* FRC_Arduino::GetBoardName()
+{
+  return _boardName;
 }
 
 void FRC_Arduino::Setup()
 {
-    Serial.begin(_baudrate);
+  Serial.begin(_baudrate);
 }
 
 void FRC_Arduino::RegisterCommand(char* commandName, void (*function)())
 {
-    if(functionCount == MAX_COMMAND_COUNT)
-      return;
+  if(functionCount == MAX_COMMAND_COUNT)
+    return;
     
-  	_command[functionCount] = commandName;
-  	_functions[functionCount++] = function;
+  _command[functionCount] = commandName;
+  _functions[functionCount++] = function;
 }
 void FRC_Arduino::RegisterDefaultCommand(void (*function)())
 {
@@ -30,27 +41,36 @@ void FRC_Arduino::RegisterDefaultCommand(void (*function)())
 
 void FRC_Arduino::Loop()
 {
-    if(Serial.available())
-    {
-        char string[100];
-     	Serial.readBytesUntil('$', string, 100);
+  if(Serial.available())
+  {
+    char string[100];
+    Serial.readBytesUntil('$', string, 100);
        	
 		char *functionName;
-        functionName = strtok_r(string, "|", &_last);
+    functionName = strtok_r(string, "|", &_last);
       
-      	bool isRegistred = false;
-      	for(int i = 0; i < MAX_COMMAND_COUNT; i++)
+    bool isRegistred = false;
+    for(int i = 0; i < MAX_COMMAND_COUNT; i++)
+    {
+      if(strcmp(functionName, "Discover"))
+      {
+        if(strcmp(NextParam(), _boardName))
         {
-         	if(strcmp(functionName, _command[i]) == 0)
-            {
-             	_functions[i]();
-              	isRegistred = true;
-            }
+          SendCommand("Success", {}, 0);
         }
-      
-      	if(!isRegistred)
-          _defaultFunction();
+      }
+      else if(strcmp(functionName, _command[i]) == 0)
+      {
+        functions[i]();
+        isRegistred = true;
+
+        break;
+      }
     }
+      
+    if(!isRegistred)
+      _defaultFunction();
+  }
 }
 
 char* FRC_Arduino::NextParam()

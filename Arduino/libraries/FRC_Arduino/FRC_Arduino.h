@@ -8,6 +8,9 @@ class FRC_Arduino
 {
     public:
     FRC_Arduino(int baudrate);
+    FRC_Arduino(int baudrate, char* boardName);
+
+    char* GetBoardName();
 
     void Setup();
     void RegisterCommand(char* commandName, void (*function)());
@@ -18,6 +21,7 @@ class FRC_Arduino
 
     private:
     int _baudrate;
+    char* _boardName;
 
     char* _last;
     char* _command[MAX_COMMAND_COUNT];
