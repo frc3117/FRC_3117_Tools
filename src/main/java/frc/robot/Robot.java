@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.robot.Interface.Component;
-import frc.robot.Math.Timer;
+import frc.robot.Library.FRC_3117.Interface.Component;
+import frc.robot.Library.FRC_3117.Math.Timer;
 
 public class Robot extends TimedRobot {
 
