@@ -17,6 +17,9 @@ class FRC_Arduino
     void RegisterDefaultCommand(void (*function)());
     void Loop();
     char* NextParam();
+    int NextParamInt();
+    float NextParamFloat();
+    bool NextParamBool();
     void SendCommand(char* CommandName, char* Params[], int ParamCount);
 
     private:

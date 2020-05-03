@@ -80,6 +80,19 @@ char* FRC_Arduino::NextParam()
   
   return nextParam;
 }
+int FRC_Arduino::NextParamInt()
+{
+  return atoi(NextParam());
+}
+float FRC_Arduino::NextParamFloat()
+{
+  return (float)strtod(NextParam(), NULL);
+}
+bool FRC_Arduino::NextParamBool()
+{
+  char* nextParam = NextParam();
+  return nextParam && stricmp(nextParam, "true") == 0;
+}
 
 void SendCommand(char* CommandName, char* Params[], int ParamCount)
 {

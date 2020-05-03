@@ -11,11 +11,15 @@ FRC_Arduino	KEYWORD1
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
+GetBoardName    KEYWORD2
 Setup	KEYWORD2
 RegisterCommand	KEYWORD2
 RegisterDefaultCommand	KEYWORD2
 Loop	KEYWORD2
 NextParam	KEYWORD2
+NextParamInt    KEYWORD2
+NextParamFloat  KEYWORD2
+NextParamBool   KEYWORD2
 
 ######################################
 # Constants (LITERAL1)
