@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import frc.robot.Library.FRC_3117.Interface.Action;;
+
 /**
  * A class that contain the initialization of the input
  */
@@ -14,39 +16,12 @@ public class InputManager
     private static HashMap<String, Boolean> _lastState = new HashMap<String, Boolean>();
     private static HashMap<String, Boolean> _currentState = new HashMap<String, Boolean>();
 
-    private static HashMap<String, List<ButtonCallback>> _buttonCallback = new HashMap<String, List<ButtonCallback>>();
+    private static HashMap<String, List<Action>> _buttonCallback = new HashMap<String, List<Action>>();
     /**
      * Initialize the input of the project
      */
     public static void Init()
     {
-        //Swerve
-        Input.CreateAxis("Horizontal", 1, 0, false);
-        Input.CreateAxis("Vertical", 1, 1, false);
-        Input.CreateAxis("Rotation", 1, 3, true);
-
-        Input.SetAxisNegative("Rotation", 1, 2, false);
-
-        Input.SetAxisDeadzone("Horizontal", 0.2);
-        Input.SetAxisDeadzone("Vertical", 0.2);
-
-        Input.CreateButton("GearShift", 1, 4);
-
-        //Intake
-        Input.CreateButton("ToggleIntake", 1, 4);
-        Input.CreateButton("StartFeeder", 1, 1);
-        Input.CreateButton("ReverseFeeder", 1, 2);
-
-        //Thrower
-        Input.CreateButton("Align", 0, 1);
-        Input.CreateButton("Shoot", 0, 2);
-
-        //Climber
-        Input.CreateButton("ClimberUp", 0, 8);
-        Input.CreateButton("ClimberDown", 0, 7);
-
-        Input.CreateButton("Temp", 0, 5);
-
         _allButton = Input.GetAllButton();
         for (String key : _allButton)
         {
@@ -70,23 +45,23 @@ public class InputManager
 
             if(current && _buttonCallback.containsKey(key))
             {
-                for(ButtonCallback callback : _buttonCallback.get(key))
+                for(Action callback : _buttonCallback.get(key))
                 {
-                    callback.OnPressed();
+                    callback.Invoke();
                 }
             }
             if((current && !last) && _buttonCallback.containsKey("Down/" + key))
             {
-                for(ButtonCallback callback : _buttonCallback.get("Down/" + key))
+                for(Action callback : _buttonCallback.get("Down/" + key))
                 {
-                    callback.OnPressed();
+                    callback.Invoke();
                 }
             }
             else if((!current && last) && _buttonCallback.containsKey("Up/" + key))
             {
-                for(ButtonCallback callback : _buttonCallback.get("Up/" + key))
+                for(Action callback : _buttonCallback.get("Up/" + key))
                 {
-                    callback.OnPressed();
+                    callback.Invoke();
                 }
             }
         }
@@ -97,11 +72,11 @@ public class InputManager
      * @param ButtonName The name of the button to add a callback to
      * @param Callback The callback of the button
      */
-    public static void AddButtonCallback(String ButtonName, ButtonCallback Callback)
+    public static void AddAction(String ButtonName, Action Callback)
     {
         if(!_buttonCallback.containsKey(ButtonName))
         {
-            _buttonCallback.put(ButtonName, new ArrayList<ButtonCallback>());
+            _buttonCallback.put(ButtonName, new ArrayList<Action>());
         }
 
         _buttonCallback.get(ButtonName).add(Callback);
@@ -111,11 +86,11 @@ public class InputManager
      * @param ButtonName The name of the button to add a callback to
      * @param Callback The callback of the button
      */
-    public static void AddButtonDownCallback(String ButtonName, ButtonCallback Callback)
+    public static void AddButtonDownCallback(String ButtonName, Action Callback)
     {
         if(!_buttonCallback.containsKey("Down/" + ButtonName))
         {
-            _buttonCallback.put(ButtonName, new ArrayList<ButtonCallback>());
+            _buttonCallback.put(ButtonName, new ArrayList<Action>());
         }
 
         _buttonCallback.get("Down/" + ButtonName).add(Callback);
@@ -125,11 +100,11 @@ public class InputManager
      * @param ButtonName The name of the button to add a callback to
      * @param Callback The callback of the button
      */
-    public static void AddButtonUpCallback(String ButtonName, ButtonCallback Callback)
+    public static void AddButtonUpCallback(String ButtonName, Action Callback)
     {
         if(!_buttonCallback.containsKey("Up/" + ButtonName))
         {
-            _buttonCallback.put(ButtonName, new ArrayList<ButtonCallback>());
+            _buttonCallback.put(ButtonName, new ArrayList<Action>());
         }
 
         _buttonCallback.get("Up/" + ButtonName).add(Callback);
@@ -161,10 +136,5 @@ public class InputManager
     public static boolean GetButtonUp(String ButtonName)
     {
         return _lastState.get(ButtonName) && !_currentState.get(ButtonName);
-    }
-
-    public interface ButtonCallback
-    {
-        public void OnPressed();
     }
 }
