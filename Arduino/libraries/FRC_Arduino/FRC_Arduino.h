@@ -3,6 +3,7 @@
 #endif
 
 #define MAX_COMMAND_COUNT 16
+#define COMMAND_BUFFER_SIZE 75
 
 class FRC_Arduino
 {
@@ -21,10 +22,14 @@ class FRC_Arduino
     float NextParamFloat();
     bool NextParamBool();
     void SendCommand(char* CommandName, char* Params[], int ParamCount);
+	void SendCommand(const char* CommandName, char* Params[], int ParamCount);
 
     private:
     int _baudrate;
     char* _boardName;
+
+	char _buffer[COMMAND_BUFFER_SIZE];
+	int _bufferIndex;
 
     char* _last;
     char* _command[MAX_COMMAND_COUNT];

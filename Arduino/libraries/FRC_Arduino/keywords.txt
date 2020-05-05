@@ -20,6 +20,7 @@ NextParam	KEYWORD2
 NextParamInt    KEYWORD2
 NextParamFloat  KEYWORD2
 NextParamBool   KEYWORD2
+SendCommand	KEYWORD2
 
 ######################################
 # Constants (LITERAL1)
