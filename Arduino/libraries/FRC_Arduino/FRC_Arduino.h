@@ -14,14 +14,13 @@ class FRC_Arduino
     char* GetBoardName();
 
     void Setup();
-    void RegisterCommand(char* commandName, void (*function)());
+    void RegisterCommand(const char* commandName, void (*function)());
     void RegisterDefaultCommand(void (*function)());
     void Loop();
     char* NextParam();
     int NextParamInt();
     float NextParamFloat();
     bool NextParamBool();
-    void SendCommand(char* CommandName, char* Params[], int ParamCount);
 	void SendCommand(const char* CommandName, char* Params[], int ParamCount);
 
     private:

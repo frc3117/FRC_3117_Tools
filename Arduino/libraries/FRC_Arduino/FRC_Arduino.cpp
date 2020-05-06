@@ -27,12 +27,12 @@ void FRC_Arduino::Setup()
   Serial.begin(_baudrate);
 }
 
-void FRC_Arduino::RegisterCommand(char* commandName, void (*function)())
+void FRC_Arduino::RegisterCommand(const char* commandName, void (*function)())
 {
   if(functionCount == MAX_COMMAND_COUNT)
     return;
     
-  _command[functionCount] = commandName;
+  _command[functionCount] = (char*)commandName;
   _functions[functionCount++] = function;
 }
 void FRC_Arduino::RegisterDefaultCommand(void (*function)())
@@ -61,8 +61,7 @@ void FRC_Arduino::Loop()
 		  {
 		    if(strcmp(NextParam(), _boardName) == 0)
 		    {
-				Serial.write((byte)7);
-				Serial.print("Success");
+				SendCommand("Success", NULL, 0);
 				break;
 		    }
 		  }
@@ -121,24 +120,23 @@ bool FRC_Arduino::NextParamBool()
   return nextParam && strcmp(nextParam, "true") == 0;
 }
 
-void FRC_Arduino::SendCommand(char* CommandName, char* Params[], int ParamCount)
+void FRC_Arduino::SendCommand(const char* CommandName, char* Params[], int ParamCount)
 {
-  int count = ParamCount;
-  count += strlen(CommandName);
-  for(int i = 0; i < ParamCount; i++)
-  {
-    count += strlen(Params[i]);
-  }
+	int count = ParamCount;
+	count += strlen(CommandName);
+	for (int i = 0; i < ParamCount; i++)
+	{
+		count += strlen(Params[i]);
+	}
 
-  char command[50] = { '\0' };
-  strncat(command, CommandName, 25);
-  
-  for(int i = 0; i < ParamCount; i++)
-  {
-    strncat(command, "|", 25);
-    strncat(command, Params[i], 25);
-  }
+	Serial.write(count);
+	Serial.print(CommandName);
+	delay(5);
 
-  Serial.write((byte)count);
-  Serial.print((__FlashStringHelper*)command);
+	for (int i = 0; i < ParamCount; i++)
+	{
+		Serial.print('|');
+		Serial.print(Params[i]);
+		delay(5);
+	}
 }
