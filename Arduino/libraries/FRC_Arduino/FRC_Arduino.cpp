@@ -41,10 +41,10 @@ void DigitalWrite(FRC_Arduino* instance)
 }
 void DigitalRead(FRC_Arduino* instance)
 {
-	int pin = instance->NextParamInt();
+	char* pin = instance->NextParam();
 
-	char* param[] = { digitalRead(pin) == HIGH ? (char*)"true" : (char*)"false" };
-	instance->SendCommand("DigitalRead", param, 1);
+	char* param[] = { pin, digitalRead(atoi(pin)) == HIGH ? (char*)"true" : (char*)"false" };
+	instance->SendCommand("DigitalRead", param, 2);
 }
 void AnalogWrite(FRC_Arduino* instance)
 {
@@ -55,13 +55,10 @@ void AnalogWrite(FRC_Arduino* instance)
 }
 void AnalogRead(FRC_Arduino* instance)
 {
-	int pin = instance->NextParamInt();
+	char* pin = instance->NextParam();
 
-	char buffer[4];
-	itoa(analogRead(pin), buffer, 10);
-
-	char* Param[] = { buffer };
-	instance->SendCommand("AnalogRead", Param, 1);
+	char* param[] = { pin, analogRead(atoi(pin)) };
+	instance->SendCommand("AnalogRead", param, 2);
 }
 
 void FRC_Arduino::Init()
