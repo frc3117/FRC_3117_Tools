@@ -13,8 +13,8 @@ FRC_Arduino	KEYWORD1
 #######################################
 GetBoardName    KEYWORD2
 Setup	KEYWORD2
-RegisterCommand	KEYWORD2
-RegisterDefaultCommand	KEYWORD2
+AddCommand	KEYWORD2
+SetDefaultCommand	KEYWORD2
 Loop	KEYWORD2
 NextParam	KEYWORD2
 NextParamInt    KEYWORD2

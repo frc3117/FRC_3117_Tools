@@ -5,16 +5,95 @@
 #include <string.h>
 #include <FRC_Arduino.h>
 
+void AutoDiscover(FRC_Arduino* instance)
+{
+	if (strcmp(instance->NextParam(), instance->GetBoardName()) == 0)
+	{
+		instance->SendCommand("Success", NULL, 0);
+	}
+}
+void PinMode(FRC_Arduino* instance)
+{
+	int pin = instance->NextParamInt();
+	int mode = instance->NextParamInt();
+
+	switch (mode)
+	{
+	case 0:
+		pinMode(pin, INPUT);
+		break;
+	case 1:
+		pinMode(pin, OUTPUT);
+		break;
+	case 2:
+		pinMode(pin, INPUT_PULLUP);
+		break;
+
+	default:
+		break;
+	}
+}
+void DigitalWrite(FRC_Arduino* instance)
+{
+	int pin = instance->NextParamInt();
+
+	digitalWrite(pin, instance->NextParamBool() ? HIGH : LOW);
+}
+void DigitalRead(FRC_Arduino* instance)
+{
+	int pin = instance->NextParamInt();
+
+	char* param[] = { digitalRead(pin) == HIGH ? (char*)"true" : (char*)"false" };
+	instance->SendCommand("DigitalRead", param, 1);
+}
+void AnalogWrite(FRC_Arduino* instance)
+{
+	int pin = instance->NextParamInt();
+	int value = constrain(instance->NextParamInt(), 0, 255);
+
+	analogWrite(pin, value);
+}
+void AnalogRead(FRC_Arduino* instance)
+{
+	int pin = instance->NextParamInt();
+
+	char buffer[4];
+	itoa(analogRead(pin), buffer, 10);
+
+	char* Param[] = { buffer };
+	instance->SendCommand("AnalogRead", Param, 1);
+}
+
+void FRC_Arduino::Init()
+{
+	_initCommand[0] = (char*)"Discover";
+	_initCommand[1] = (char*)"PinMode";
+	_initCommand[2] = (char*)"DigitalWrite";
+	_initCommand[3] = (char*)"DigitalRead";
+	_initCommand[4] = (char*)"AnalogWrite";
+	_initCommand[5] = (char*)"AnalogRead";
+
+	_initFunctions[0] = AutoDiscover;
+	_initFunctions[1] = PinMode;
+	_initFunctions[2] = DigitalWrite;
+	_initFunctions[3] = DigitalRead;
+	_initFunctions[4] = AnalogWrite;
+	_initFunctions[5] = AnalogRead;
+}
+
 FRC_Arduino::FRC_Arduino(int baudrate)
 {
   _baudrate = baudrate;
-
   _boardName = (char*)"any";
+
+  Init();
 }
 FRC_Arduino::FRC_Arduino(int baudrate, char* boardName)
 {
   _baudrate = baudrate;
   _boardName = boardName;
+
+  Init();
 }
 
 char* FRC_Arduino::GetBoardName()
@@ -27,7 +106,7 @@ void FRC_Arduino::Setup()
   Serial.begin(_baudrate);
 }
 
-void FRC_Arduino::RegisterCommand(const char* commandName, void (*function)())
+void FRC_Arduino::AddCommand(const char* commandName, void (*function)())
 {
   if(functionCount == MAX_COMMAND_COUNT)
     return;
@@ -35,7 +114,7 @@ void FRC_Arduino::RegisterCommand(const char* commandName, void (*function)())
   _command[functionCount] = (char*)commandName;
   _functions[functionCount++] = function;
 }
-void FRC_Arduino::RegisterDefaultCommand(void (*function)())
+void FRC_Arduino::SetDefaultCommand(void (*function)())
 {
   _defaultFunction = function;
 }
@@ -55,23 +134,29 @@ void FRC_Arduino::Loop()
 		functionName = strtok_r(_buffer, "|", &_last);
 
 		bool isRegistred = false;
-		for(int i = 0; i < MAX_COMMAND_COUNT; i++)
-		{
-		  if(strcmp(functionName, "Discover") == 0)
-		  {
-		    if(strcmp(NextParam(), _boardName) == 0)
-		    {
-				SendCommand("Success", NULL, 0);
-				break;
-		    }
-		  }
-		  else if(strcmp(functionName, _command[i]) == 0)
-		  {
-		    _functions[i]();
-		    isRegistred = true;
 
-		    break;
-		  }
+		for (int i = 0; i < INIT_COMMAND_COUNT; i++)
+		{
+			if (strcmp(functionName, _initCommand[i]) == 0)
+			{
+				_initFunctions[i](this);
+				isRegistred = true;
+
+				break;
+			}
+		}
+		if (!isRegistred)
+		{
+			for (int i = 0; i < MAX_COMMAND_COUNT; i++)
+			{
+				if (strcmp(functionName, _command[i]) == 0)
+				{
+					_functions[i]();
+					isRegistred = true;
+
+					break;
+				}
+			}
 		}
 
 		for(int i = 0; i < COMMAND_BUFFER_SIZE; i++)

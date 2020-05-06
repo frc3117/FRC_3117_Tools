@@ -3,6 +3,7 @@
 #endif
 
 #define MAX_COMMAND_COUNT 16
+#define INIT_COMMAND_COUNT 6
 #define COMMAND_BUFFER_SIZE 75
 
 class FRC_Arduino
@@ -14,8 +15,8 @@ class FRC_Arduino
     char* GetBoardName();
 
     void Setup();
-    void RegisterCommand(const char* commandName, void (*function)());
-    void RegisterDefaultCommand(void (*function)());
+    void AddCommand(const char* commandName, void (*function)());
+    void SetDefaultCommand(void (*function)());
     void Loop();
     char* NextParam();
     int NextParamInt();
@@ -31,8 +32,12 @@ class FRC_Arduino
 	int _bufferIndex;
 
     char* _last;
+	char* _initCommand[INIT_COMMAND_COUNT];
     char* _command[MAX_COMMAND_COUNT];
+	void (*_initFunctions[INIT_COMMAND_COUNT])(FRC_Arduino*);
     void (*_functions[MAX_COMMAND_COUNT])();
-    void (*_defaultFunction)();
+	void (*_defaultFunction)();
     int functionCount;
+
+	void Init();
 };
