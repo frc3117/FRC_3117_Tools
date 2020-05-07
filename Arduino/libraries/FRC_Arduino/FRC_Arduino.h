@@ -3,7 +3,7 @@
 #endif
 
 #define MAX_COMMAND_COUNT 16
-#define INIT_COMMAND_COUNT 6
+#define INIT_COMMAND_COUNT 8
 #define COMMAND_BUFFER_SIZE 75
 
 class FRC_Arduino
@@ -17,6 +17,8 @@ class FRC_Arduino
     void Setup();
     void AddCommand(const char* commandName, void (*function)());
     void SetDefaultCommand(void (*function)());
+	void SetOnConnect(void (*function)());
+	void SetOnDisconnect(void (*function)());
 	void CallCommand(char* CommandName);
 	void CallCommand(const char* CommandName);
     void Loop();
@@ -27,6 +29,8 @@ class FRC_Arduino
 	void SendCommand(const char* CommandName, char* Params[], int ParamCount);
 	void Print(char* text);
 	void Print(const char* text);
+	void OnConnected();
+	void OnDisconnected();
 
     private:
     int _baudrate;
@@ -42,6 +46,9 @@ class FRC_Arduino
     void (*_functions[MAX_COMMAND_COUNT])();
 	void (*_defaultFunction)();
     int functionCount;
+
+	void(*_onConnectedFunction)();
+	void(*_onDisconnectedFunction)();
 
 	void Init();
 };

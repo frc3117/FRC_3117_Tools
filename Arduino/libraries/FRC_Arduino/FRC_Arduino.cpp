@@ -5,6 +5,15 @@
 #include <string.h>
 #include <FRC_Arduino.h>
 
+void FRC_Arduino::OnConnected()
+{
+	_onConnectedFunction();
+}
+void FRC_Arduino::OnDisconnected()
+{
+	_onDisconnectedFunction();
+}
+
 void AutoDiscover(FRC_Arduino* instance)
 {
 	if (strcmp(instance->NextParam(), instance->GetBoardName()) == 0)
@@ -60,6 +69,14 @@ void AnalogRead(FRC_Arduino* instance)
 	char* param[] = { pin, analogRead(atoi(pin)) };
 	instance->SendCommand("AnalogRead", param, 2);
 }
+void Connect(FRC_Arduino* instance)
+{
+	instance->OnConnected();
+}
+void Disconnect(FRC_Arduino* instance)
+{
+	instance->OnDisconnected();
+}
 
 void FRC_Arduino::Init()
 {
@@ -69,6 +86,8 @@ void FRC_Arduino::Init()
 	_initCommand[3] = (char*)"DigitalRead";
 	_initCommand[4] = (char*)"AnalogWrite";
 	_initCommand[5] = (char*)"AnalogRead";
+	_initCommand[6] = (char*)"Connect";
+	_initCommand[7] = (char*)"Disconnect";
 
 	_initFunctions[0] = AutoDiscover;
 	_initFunctions[1] = PinMode;
@@ -76,6 +95,8 @@ void FRC_Arduino::Init()
 	_initFunctions[3] = DigitalRead;
 	_initFunctions[4] = AnalogWrite;
 	_initFunctions[5] = AnalogRead;
+	_initFunctions[6] = Connect;
+	_initFunctions[7] = Disconnect;
 }
 
 FRC_Arduino::FRC_Arduino(int baudrate)
@@ -114,6 +135,15 @@ void FRC_Arduino::AddCommand(const char* commandName, void (*function)())
 void FRC_Arduino::SetDefaultCommand(void (*function)())
 {
   _defaultFunction = function;
+}
+
+void FRC_Arduino::SetOnConnect(void (*function)())
+{
+	_onConnectedFunction = function;
+}
+void FRC_Arduino::SetOnDisconnect(void (*function)())
+{
+	_onDisconnectedFunction = function;
 }
 
 void FRC_Arduino::CallCommand(char* CommandName)
