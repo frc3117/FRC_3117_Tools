@@ -15,6 +15,7 @@ GetBoardName    KEYWORD2
 Setup	KEYWORD2
 AddCommand	KEYWORD2
 SetDefaultCommand	KEYWORD2
+CallCommand	KEYWORD2
 Loop	KEYWORD2
 NextParam	KEYWORD2
 NextParamInt    KEYWORD2

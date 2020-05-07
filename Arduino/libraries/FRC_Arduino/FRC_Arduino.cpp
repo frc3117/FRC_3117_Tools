@@ -116,6 +116,40 @@ void FRC_Arduino::SetDefaultCommand(void (*function)())
   _defaultFunction = function;
 }
 
+void FRC_Arduino::CallCommand(char* CommandName)
+{
+	for (int i = 0; i < INIT_COMMAND_COUNT; i++)
+	{
+		if (strcmp(CommandName, _initCommand[i]) == 0)
+		{
+			_initFunctions[i](this);
+			isRegistred = true;
+
+			break;
+		}
+	}
+	if (!isRegistred)
+	{
+		for (int i = 0; i < MAX_COMMAND_COUNT; i++)
+		{
+			if (strcmp(CommandName, _command[i]) == 0)
+			{
+				_functions[i]();
+				isRegistred = true;
+
+				break;
+			}
+		}
+	}
+
+	if (!isRegistred)
+		_defaultFunction();
+}
+void FRC_Arduino::CallCommand(const char* CommandName)
+{
+	CallCommand((char*)CommandName);
+}
+
 void FRC_Arduino::Loop()
 {
   if(Serial.available() > 0)
@@ -130,39 +164,13 @@ void FRC_Arduino::Loop()
 		_last = _buffer;
 		functionName = strtok_r(_buffer, "|", &_last);
 
-		bool isRegistred = false;
-
-		for (int i = 0; i < INIT_COMMAND_COUNT; i++)
-		{
-			if (strcmp(functionName, _initCommand[i]) == 0)
-			{
-				_initFunctions[i](this);
-				isRegistred = true;
-
-				break;
-			}
-		}
-		if (!isRegistred)
-		{
-			for (int i = 0; i < MAX_COMMAND_COUNT; i++)
-			{
-				if (strcmp(functionName, _command[i]) == 0)
-				{
-					_functions[i]();
-					isRegistred = true;
-
-					break;
-				}
-			}
-		}
+		CallCommand(functionName);
 
 		for(int i = 0; i < COMMAND_BUFFER_SIZE; i++)
 		{
 			_buffer[i] = '\0';
 		}
 
-		if(!isRegistred)
-			_defaultFunction();
 	}
 	else
 	{

@@ -17,6 +17,8 @@ class FRC_Arduino
     void Setup();
     void AddCommand(const char* commandName, void (*function)());
     void SetDefaultCommand(void (*function)());
+	void CallCommand(char* CommandName);
+	void CallCommand(const char* CommandName);
     void Loop();
     char* NextParam();
     int NextParamInt();
