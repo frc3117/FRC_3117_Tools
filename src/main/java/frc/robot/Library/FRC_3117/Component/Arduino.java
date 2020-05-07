@@ -5,7 +5,9 @@ import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.Library.FRC_3117.Interface.Action;
+import frc.robot.Library.FRC_3117.Interface.AnalogReadCallback;
 import frc.robot.Library.FRC_3117.Interface.Component;
+import frc.robot.Library.FRC_3117.Interface.DigitalReadCallback;
 
 /**
  * A class to comunicate to an arduino through a serial port
@@ -18,6 +20,9 @@ public class Arduino implements Component
         _baudRate = baudRate;
 
         _methods = new HashMap<>();
+        _methods.put("DigitalRead", this::ManageDigitalRead);
+        _methods.put("AnalogRead", this::ManageAnalogRead);
+        _methods.put("Print", () -> System.out.println(GetParam((0))));
 
         Open();
     }
@@ -28,15 +33,48 @@ public class Arduino implements Component
 
         _methods = new HashMap<>();
 
+        _methods.put("DigitalRead", this::ManageDigitalRead);
+        _methods.put("AnalogRead", this::ManageAnalogRead);
+        _methods.put("Print", () -> System.out.println(GetParam((0))));
+
         if(open)
             Open();
     }
    
+    public enum ArduinoPinMode
+    {
+        Input(0),
+        Output(1),
+        Input_Pullup(2);
+
+        private final int value;
+        private ArduinoPinMode(int value)
+        {
+            this.value = value;
+        }
+        public int GetValue()
+        {
+            return value;
+        }
+
+        @Override
+        public String toString()
+        {
+            return Integer.toString(value);
+        }
+    }
+
     private SerialPort _serial;
     private SerialPort.Port _port;
     private int _baudRate;
 
     private HashMap<String, Action> _methods;
+
+    private HashMap<Integer, DigitalReadCallback> _digitalReadCallback;
+    private Action _anyPinDigitalReadCallback;
+
+    private HashMap<Integer, AnalogReadCallback> _analogReadCallback;
+    private Action _anyPinAnalogReadCallback;
 
     private boolean _isOpen = false;
     private boolean _isReading = false;
@@ -102,6 +140,54 @@ public class Arduino implements Component
     }
     
     /**
+     * Get the ammount of avalaible param
+     * @return The amount of param
+     */
+    public int GetParamCount()
+    {
+        if(_currentParams == null)
+            return 0;
+
+        return _currentParams.length;
+    }
+
+    /**
+     * Set the callback from the digital read command
+     * @param callback The callback of the digital read command
+     */
+    public void SetDigitalReadCallback(Action callback)
+    {
+        _anyPinDigitalReadCallback = callback;
+    }
+    /**
+     * Set the callback from the digital read command with a specific pin
+     * @param pin The pin to set the callback to
+     * @param callback The function to call with the pin state as parameter
+     */
+    public void SetDigitalReadCallback(int pin, DigitalReadCallback callback)
+    {
+        _digitalReadCallback.put(pin, callback);
+    }
+
+    /**
+     * Set the callback from the analog read command
+     * @param callback The callback of the analog read command
+     */
+    public void SetAnalogReadCallback(Action callback)
+    {
+        _anyPinAnalogReadCallback = callback;
+    }
+    /**
+     * Set the callback from the analog read command with a specific pin
+     * @param pin The pin to set the callback to
+     * @param callback the function to call with the pin value as parameter
+     */
+    public void SetAnalogReadCallback(int pin, AnalogReadCallback callback)
+    {
+        _analogReadCallback.put(pin, callback);
+    }
+
+    /**
      * Get the selected parameter of the current incoming method
      * @param index The index of the parameter
      * @return The selected parameter of the current incoming method
@@ -122,6 +208,51 @@ public class Arduino implements Component
         return _currentParams;
     }
 
+    /**
+     * Set the mode of the selected pin
+     * @param pin The pin to set the mode to
+     * @param mode The mode to set the pin to
+     */
+    public void PinMode(int pin, ArduinoPinMode mode)
+    {
+        SendCommand("PinMode", pin, mode);
+    }
+    /**
+     * Write a digital value to a pin
+     * @param pin The pin to set the value to
+     * @param value The value to set the pin to
+     */
+    public void DigitalWrite(int pin, boolean value)
+    {
+        SendCommand("DigitalWrite", pin, value);
+    }
+    /**
+     * Read the digital value of a pin
+     * @param pin The pin to read the value from
+     */
+    public void DigitalRead(int pin)
+    {
+        SendCommand("DigitalRead", pin);
+    }
+    /**
+     * Write an analog value to a pin
+     * @param pin The pin tot set the value to
+     * @param value The value to set the pin to
+     */
+    public void AnalogWrite(int pin, int value)
+    {
+        SendCommand("AnalogWrite", pin, value);
+    }
+    /**
+     * Read the analog value of a pin
+     * @param pin The pin to read the value from
+     */
+    public void AnalogRead(int pin)
+
+    {
+        SendCommand("AnalogRead", pin);
+    }
+    
     /**
      * Send a command to the arduino
      * @param CommandName The name of the command
@@ -145,7 +276,7 @@ public class Arduino implements Component
 
         for(int i = 0; i < Params.length; i++)
         {
-            stringParams[i] = Params[i].toString();
+            stringParams[i] = String.valueOf(Params[i]);
         }
 
         SendCommand(CommandName, stringParams);
@@ -172,5 +303,24 @@ public class Arduino implements Component
 
         _serial.close();
         _isOpen = false;
+    }
+
+    private void ManageDigitalRead()
+    {
+        _anyPinDigitalReadCallback.Invoke();
+
+        int pin = Integer.parseInt(GetParam(0));
+
+        if(_digitalReadCallback.containsKey(pin))
+            _digitalReadCallback.get(pin).Invoke(Boolean.parseBoolean(GetParam(1)));
+    }
+    private void ManageAnalogRead()
+    {
+        _anyPinAnalogReadCallback.Invoke();
+
+        int pin = Integer.parseInt(GetParam(0));
+
+        if(_analogReadCallback.containsKey(pin))
+            _analogReadCallback.get(pin).Invoke(Integer.parseInt(GetParam(1)));
     }
 }
