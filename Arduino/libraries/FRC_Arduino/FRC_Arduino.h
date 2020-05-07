@@ -25,6 +25,8 @@ class FRC_Arduino
     float NextParamFloat();
     bool NextParamBool();
 	void SendCommand(const char* CommandName, char* Params[], int ParamCount);
+	void Print(char* text);
+	void Print(const char* text);
 
     private:
     int _baudrate;

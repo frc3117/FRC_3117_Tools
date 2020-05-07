@@ -118,6 +118,8 @@ void FRC_Arduino::SetDefaultCommand(void (*function)())
 
 void FRC_Arduino::CallCommand(char* CommandName)
 {
+	bool isRegistred = false;
+
 	for (int i = 0; i < INIT_COMMAND_COUNT; i++)
 	{
 		if (strcmp(CommandName, _initCommand[i]) == 0)
@@ -229,4 +231,15 @@ void FRC_Arduino::SendCommand(const char* CommandName, char* Params[], int Param
 		Serial.print(Params[i]);
 		delay(5);
 	}
+}
+
+void FRC_Arduino::Print(char* text)
+{
+	char* param[] = { text };
+
+	SendCommand("Print", param, 1);
+}
+void FRC_Arduino::Print(const char* text)
+{
+	Print((char*)text);
 }
