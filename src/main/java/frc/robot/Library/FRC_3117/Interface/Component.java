@@ -7,5 +7,6 @@ public interface Component
 {
     public void Awake();
     public void Init();
+    public void Disabled();
     public void DoComponent();
 }

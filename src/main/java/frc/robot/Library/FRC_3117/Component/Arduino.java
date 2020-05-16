@@ -93,6 +93,11 @@ public class Arduino implements Component
         
     }
 
+    public void Disabled()
+    {
+        Close();
+    }
+
     public void DoComponent()
     {
         //Data available

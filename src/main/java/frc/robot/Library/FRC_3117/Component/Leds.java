@@ -82,6 +82,11 @@ public class Leds implements Component {
         _priority = 0;
     }
 
+    public void Disabled()
+    {
+        
+    }
+
     /**
      * Set the new color of the led strip
      * @param color The new color

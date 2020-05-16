@@ -145,6 +145,12 @@ public class Swerve implements Component {
         
     }
 
+    public void Disabled()
+    {
+        
+    }
+
+
     /**
      * Set the current drive mode of the swerve drive
      * @param Mode The drive mode
