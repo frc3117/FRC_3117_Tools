@@ -140,18 +140,6 @@ public class Arduino implements Component
     }
     
     /**
-     * Get the ammount of avalaible param
-     * @return The amount of param
-     */
-    public int GetParamCount()
-    {
-        if(_currentParams == null)
-            return 0;
-
-        return _currentParams.length;
-    }
-
-    /**
      * Set the callback from the digital read command
      * @param callback The callback of the digital read command
      */
@@ -172,7 +160,7 @@ public class Arduino implements Component
     /**
      * Set the callback from the analog read command
      * @param callback The callback of the analog read command
-     */
+     */  
     public void SetAnalogReadCallback(Action callback)
     {
         _anyPinAnalogReadCallback = callback;
@@ -185,6 +173,18 @@ public class Arduino implements Component
     public void SetAnalogReadCallback(int pin, AnalogReadCallback callback)
     {
         _analogReadCallback.put(pin, callback);
+    }
+
+    /**
+     * Get the ammount of avalaible param
+     * @return The amount of param
+     */
+    public int GetParamCount()
+    {
+        if(_currentParams == null)
+            return 0;
+
+        return _currentParams.length;
     }
 
     /**
@@ -290,6 +290,8 @@ public class Arduino implements Component
         if(_isOpen)
             return;
 
+        SendCommand("Connect");
+
         _serial = new SerialPort(_baudRate, _port);
         _isOpen = true;
     }
@@ -300,6 +302,8 @@ public class Arduino implements Component
     {
         if(!_isOpen)
             return;
+
+        SendCommand("Disconnect");
 
         _serial.close();
         _isOpen = false;
