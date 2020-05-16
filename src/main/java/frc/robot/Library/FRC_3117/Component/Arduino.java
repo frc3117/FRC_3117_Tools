@@ -93,7 +93,7 @@ public class Arduino implements Component
         
     }
 
-    public void DoSystem()
+    public void DoComponent()
     {
         //Data available
         while(_serial.getBytesReceived() > 0)

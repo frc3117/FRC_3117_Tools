@@ -7,5 +7,5 @@ public interface Component
 {
     public void Awake();
     public void Init();
-    public void DoSystem();
+    public void DoComponent();
 }

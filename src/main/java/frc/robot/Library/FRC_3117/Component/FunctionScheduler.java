@@ -49,7 +49,7 @@ public class FunctionScheduler implements Component
         _repeatCount = 0;
     }
 
-    public void DoSystem()
+    public void DoComponent()
     {
         if(_isStarted && !_isPaused)
         {

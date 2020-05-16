@@ -172,7 +172,7 @@ public class Leds implements Component {
         _cycle.put(CycleName, current);
     }
 
-    public void DoSystem() {  
+    public void DoComponent() {  
         Color CurrentColor;
 
         if(_isCycle)

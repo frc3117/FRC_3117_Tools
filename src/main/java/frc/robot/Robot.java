@@ -1,7 +1,6 @@
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.Library.FRC_3117.Interface.Component;
@@ -11,7 +10,7 @@ public class Robot extends TimedRobot {
 
   public static Robot instance;
 
-  private List<Component> _componentList;
+  private LinkedHashMap<String, Component> _componentList;
   private boolean _hasBeenInit = false;
 
   @Override
@@ -19,12 +18,12 @@ public class Robot extends TimedRobot {
   {
     instance = this;
 
-    _componentList = new ArrayList<>();
+    _componentList = new LinkedHashMap<>();
     _hasBeenInit = false;
 
-    CreateSystemInstance();
+    CreateComponentInstance();
 
-    for(var component : _componentList)
+    for(var component : _componentList.values())
     {
       component.Awake();
     }
@@ -60,7 +59,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() 
   {
-    SystemLoop();
+    ComponentLoop();
   }
 
   @Override
@@ -81,14 +80,14 @@ public class Robot extends TimedRobot {
 
   }
 
-  public void CreateSystemInstance()
+  public void CreateComponentInstance()
   {
 
   }
 
   public void Init()
   {
-    for(var component : _componentList)
+    for(var component : _componentList.values())
     {
       component.Init();
     }
@@ -96,18 +95,24 @@ public class Robot extends TimedRobot {
     _hasBeenInit = true;
   }
 
-  public void SystemLoop()
+  public void ComponentLoop()
   {
     Timer.Calculate();
 
-    for(var component : _componentList)
+    for(var component : _componentList.values())
     {
-      component.DoSystem();
+      component.DoComponent();
     }
   }
 
-  public static void AddSystem(Component component)
+  public static void AddComponent(String name, Component component)
   {
-    instance._componentList.add(component);
+    instance._componentList.put(name, component);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> T GetComponent(String name)
+  {
+    return (T)instance._componentList.get(name);
   }
 }

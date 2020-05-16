@@ -434,7 +434,7 @@ public class Swerve implements Component {
     }
 
     int f = 0;
-    public void DoSystem()
+    public void DoComponent()
     {
         /*
         Robot.Println("(0): " + ((_directionEncoder[0].getValue() / 4096f) * 2 * 3.1415f));
