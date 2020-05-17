@@ -39,6 +39,29 @@ public class MotorController
         _pid = new PID(0, 0, 0);
         _usePID = false;
     }
+    public MotorController(MotorControllerType type, int Channel, boolean IsBrushless, double Kp, double Ki, double Kd)
+    {
+        _controllerType = type;
+
+        switch(type)
+        {
+            case SparkMax:
+            _sparkMax = new CANSparkMax(Channel, IsBrushless ? MotorType.kBrushless : MotorType.kBrushed);
+            break;
+
+            case TalonSRX:
+            _talonSRX = new WPI_TalonSRX(Channel);
+            break;
+
+            case TalonFX:
+            _talonFX = new TalonFX(Channel);
+            _encoderResolution = 2048;
+            break;
+        }
+
+        _pid = new PID(Kp, Ki, Kd);
+        _usePID = true;
+    }
     public MotorController(MotorControllerType type, int Channel, boolean IsBrushless, int EncoderChannelA, int EncoderChannelB, double Kp, double Ki, double Kd)
     {
         _controllerType = type;
@@ -133,16 +156,19 @@ public class MotorController
      */
     public double GetEncoderVelocity()
     {
+        if(_encoder != null)
+            return _encoder.getRate() / _encoderResolution;
+
         switch(_controllerType)
         {
             case SparkMax:
             return _sparkMax.getEncoder().getVelocity() / 60.;
 
             case TalonSRX:
-            return _talonSRX.getSelectedSensorVelocity() / _encoderResolution;
+            return (double)_talonSRX.getSelectedSensorVelocity() / _encoderResolution;
 
             case TalonFX:
-            return _talonFX.getSelectedSensorVelocity();
+            return (double)_talonFX.getSelectedSensorVelocity() / _encoderResolution;
         }
 
         return 0;
@@ -159,7 +185,7 @@ public class MotorController
             case SparkMax:
             if(_usePID)
             {
-                _sparkMax.set(_pid.Evaluate(Value - (_encoder.getRate() / _encoderResolution)));
+                _sparkMax.set(_pid.Evaluate(Value - GetEncoderVelocity()));
             }
             else
             {
@@ -170,7 +196,7 @@ public class MotorController
             case TalonSRX:
             if(_usePID)
             {
-                _talonSRX.set(_pid.Evaluate(Value - (_encoder.getRate() / _encoderResolution)));
+                _talonSRX.set(_pid.Evaluate(Value - GetEncoderVelocity()));
             }
             else
             {
@@ -181,7 +207,7 @@ public class MotorController
             case TalonFX:
             if(_usePID)
             {
-                _talonFX.set(TalonFXControlMode.PercentOutput, _pid.Evaluate(Value - (_encoder.getRate() / _encoderResolution)));
+                _talonFX.set(TalonFXControlMode.PercentOutput, _pid.Evaluate(Value - GetEncoderVelocity()));
             }
             else
             {
@@ -190,14 +216,6 @@ public class MotorController
             break;
         }
     }
-    /**
-     * Get the instantaneous velocity of the encoder
-     * @return The instantaneous velocity of the encoder
-     */
-    /*public double GetEncoderVelocity()
-    {
-        return _encoder.getRate() / _encoderResolution;
-    }*/
 
     /**
      * Get the current voltage of the motor controller
