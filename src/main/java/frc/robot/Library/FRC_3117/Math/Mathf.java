@@ -56,6 +56,17 @@ public class Mathf
     {
         return Math.max(min, Math.min(max, value));
     }
+    /**
+     * Force your value to stay betwen the min and the max value
+     * @param value The value to clamp
+     * @param min The min value
+     * @param max The max value
+     * @return The clamped value
+     */
+    public static int Clamp(int value, int min, int max)
+    {
+        return Math.max(min, Math.min(max, value));
+    }
     
     /**
      * Make a linear interpolation between to value

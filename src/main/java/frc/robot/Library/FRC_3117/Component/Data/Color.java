@@ -2,6 +2,8 @@ package frc.robot.Library.FRC_3117.Component.Data;
 
 import java.util.Random;
 
+import frc.robot.Library.FRC_3117.Math.Mathf;
+
 /**
  * The color class used to set the led strip color
  */
@@ -75,6 +77,56 @@ public class Color
         A = 255;
 
         return this;
+    }
+
+    /**
+     * Convert a temperature to a color
+     * @param Kelvin The temperature to get the color from (Betwen 1000 and 40000)
+     * @return The color from the temperature
+     */
+    public static Color FromTemperature(int Kelvin)
+    {
+        Kelvin = Mathf.Clamp(Kelvin, 1000, 40000) / 100;
+
+        int R = 0;
+        int G = 0;
+        int B = 0;
+
+        if(Kelvin <= 66)
+        {
+            R = 255;
+
+            G = Kelvin;
+            G = (int)(99.4708025861 * Math.log(G) - 161.1195681661);
+
+            G = Mathf.Clamp(G, 0, 255);
+        }
+        else
+        {
+            R = Kelvin - 60;
+            R = (int)(329.698727446 * Math.pow(R, -0.1332047592));
+
+            R = Mathf.Clamp(R, 0, 255);
+
+            G = Kelvin - 60;
+            G = (int)(288.1221695283 * Math.pow(G ,-0.0755148492));
+
+            G = Mathf.Clamp(G, 0, 255);
+        }
+
+        if(Kelvin >= 66)
+        {
+            B = 255;
+        }
+        else
+        {
+            B = Kelvin - 10;
+            B = (int)(138.5177312231 * Math.log(B) - 305.0447927307);
+
+            B = Mathf.Clamp(B, 0, 255);
+        }
+
+        return new Color(R, G, B, 255);
     }
 
     /**
