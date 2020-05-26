@@ -50,6 +50,10 @@ public class Color
     public int B;
     public int A;
 
+    /**
+     * Generate the solenoid version of the color from the PWM
+     * @return The current color
+     */
     public Color GenerateSolenoid()
     {
         bool_R = R >= 127;
@@ -58,15 +62,25 @@ public class Color
 
         return this;
     }
+    /**
+     * Generate the PWM version of the color from the solenoid
+     * @return
+     */
     public Color GeneratePWM()
     {
         R = bool_R ? 255 : 0;
         G = bool_G ? 255 : 0;
         B = bool_B ? 255 : 0;
 
+        A = 255;
+
         return this;
     }
 
+    /**
+     * Generate a random color
+     * @return The random color
+     */
     public static Color RandomColor()
     {
         Random rand = new Random();
