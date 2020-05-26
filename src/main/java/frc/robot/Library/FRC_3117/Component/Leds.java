@@ -3,6 +3,7 @@ package frc.robot.Library.FRC_3117.Component;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.PWM;
+import frc.robot.Library.FRC_3117.Component.Data.Color;
 import frc.robot.Library.FRC_3117.Component.Data.SolenoidValve;
 import frc.robot.Library.FRC_3117.Interface.Component;
 import frc.robot.Library.FRC_3117.Math.Timer;
@@ -49,27 +50,20 @@ public class Leds implements Component {
             green = SolenoidValve.CreateSingle(greenChannel, 1);
             blue = SolenoidValve.CreateSingle(blueChannel, 1);
             red = SolenoidValve.CreateSingle(redChannel, 1);
-
-            //Default color in the list
-            ColorList.put("white", new Color(true, true, true));
-
-            ColorList.put("red", new Color(true, false, false));
-            ColorList.put("green", new Color(false, true, false));
-            ColorList.put("blue", new Color(false, false, true));
         }
         else
         {
             greenPWM = new PWM(greenChannel);
             bluePWM = new PWM(blueChannel);
-            redPWM = new PWM(redChannel);
-
-            //Default color in the list
-            ColorList.put("white", new Color(255, 255, 255));
-
-            ColorList.put("red", new Color(255, 0, 0));
-            ColorList.put("green", new Color(0, 255, 0));
-            ColorList.put("blue", new Color(0, 0, 255));
+            redPWM = new PWM(redChannel);            
         }
+
+        //Default color in the list
+        ColorList.put("white", Color.WHITE);
+
+        ColorList.put("red", Color.RED);
+        ColorList.put("green", Color.GREEN);
+        ColorList.put("blue", Color.BLUE);
     }
 
     public void Awake()
@@ -96,7 +90,6 @@ public class Leds implements Component {
     public void SetColor(String color, Integer priority, Integer newPriority) {
         if (priority >= _priority) {
             _priority = newPriority;
-            _color = ColorList.get(color);
 
             if(_cycle.containsKey(color))
             {
@@ -108,6 +101,7 @@ public class Leds implements Component {
             }
             else
             {
+                _color = ColorList.get(color);
                 _isCycle = false;
             }
         }
@@ -164,7 +158,7 @@ public class Leds implements Component {
             }
             else
             {
-                color[i] = new Color(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2]));
+                color[i] = new Color(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2]), data.length == 4 ? Integer.parseInt(data[3]) : 255);
                 time[i] = Double.parseDouble(data[3]);
             }
 
@@ -209,9 +203,9 @@ public class Leds implements Component {
         }
         else
         {
-            redPWM.setRaw(CurrentColor.R);
-            greenPWM.setRaw(CurrentColor.G);
-            bluePWM.setRaw(CurrentColor.B);
+            redPWM.setRaw((int)(CurrentColor.R * (CurrentColor.A / 255.)));
+            greenPWM.setRaw((int)(CurrentColor.G * (CurrentColor.A / 255.)));
+            bluePWM.setRaw((int)(CurrentColor.B * (CurrentColor.A / 255.)));
         }
     }
 
@@ -219,28 +213,5 @@ public class Leds implements Component {
     {
         public Color[] Color;
         public double[] Time;
-    }
-    private class Color
-    {
-        public Color(boolean Red, boolean Green, boolean Blue)
-        {
-            bool_R = Red;
-            bool_G = Green;
-            bool_B = Blue;
-        }
-        public Color(int Red, int Green, int Blue)
-        {
-            R = Red;
-            G = Green;
-            B = Blue;
-        }
-
-        public boolean bool_R;
-        public boolean bool_G;
-        public boolean bool_B;
-
-        public int R;
-        public int G;
-        public int B;
     }
 }
