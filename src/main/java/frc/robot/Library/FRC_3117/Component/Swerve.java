@@ -12,6 +12,7 @@ import frc.robot.Library.FRC_3117.Math.PID;
 import frc.robot.Library.FRC_3117.Math.Polar;
 import frc.robot.Library.FRC_3117.Math.RateLimiter;
 import frc.robot.Library.FRC_3117.Math.Timer;
+import frc.robot.Library.FRC_3117.Math.UnitConverter;
 
 import com.analog.adis16448.frc.ADIS16448_IMU;
 
@@ -588,7 +589,7 @@ public class Swerve implements Component {
                 _driveMotor[i].Set(Mathf.Clamp(Sum.radius, -1, 1) * _flipDriveMultiplicator[i]);
 
                 double deltaAngle = GetDeltaAngle(i, Sum.vector());
-                if(Math.abs(deltaAngle) <= 0.5 * Mathf.DEG_2_RAD)
+                if(Math.abs(deltaAngle) <= UnitConverter.DegreesToRadian(0.5))
                 {         
                     deltaAngle = 0;
                 }

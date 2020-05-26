@@ -10,22 +10,9 @@ import java.lang.Math;
 public class Mathf 
 {
     /**
-     * Convert degree to radian
+     * The representation of the smallest number
      */
-    public final static double DEG_2_RAD = 0.0174533;
-    /**
-     * Convert radian to degree
-     */
-    public final static double RAD_2_DEG = 57.2958;
-
-    /**
-     * Convert meter to feet
-     */
-    public final static double METER_2_FEET = 3.28084;
-    /**
-     * Convert feet to meter
-     */
-    public final static double FEET_2_METER = 0.3048;
+    public static final double kEPSILON = 1e-12;
 
     /**
      * Round the current number to the closest base
@@ -301,5 +288,27 @@ public class Mathf
     public static double Cot(double x)
     {
         return 1 / Math.tan(x);
+    }
+
+    /**
+     * Compare if 2 number a close enough to be equal
+     * @param a The first number
+     * @param b The second number
+     * @return If the number are close enough
+     */
+    public static boolean EpsilonEqual(double a, double b)
+    {
+        return EpsilionEqual(a, b, kEPSILON);
+    }
+    /**
+     * Compare if 2 number a close enough to be equal
+     * @param a The first number
+     * @param b The second number
+     * @param Epsilon The representation of the smallest number
+     * @return If the number are close enough
+     */
+    public static boolean EpsilionEqual(double a, double b, double Epsilon)
+    {
+        return (a - Epsilon <= b) && (a + Epsilon >= b);
     }
 }
