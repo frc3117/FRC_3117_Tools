@@ -311,4 +311,40 @@ public class Mathf
     {
         return (a - Epsilon <= b) && (a + Epsilon >= b);
     }
+
+    /**
+     * Get the next power of two bigger than the number
+     * @param number The number to get the next power of two from
+     * @return The next power of two
+     */
+    public static int NextPowerOfTwo(int number)
+    {
+        return (int)Math.ceil(Math.log(number)/Math.log(2));
+    }
+    /**
+     * Get the closest number of two
+     * @param number The number to get the closest power of two from
+     * @return The closest power of two
+     */
+    public static int ClosestPowerOfTwo(int number)
+    {
+        if(number <= 2)
+        {
+            return 2;
+        }
+        else
+        {
+            int Next = NextPowerOfTwo(number);
+            int Previous = Next / 2;
+
+            if(Next - number >= number - Previous)
+            {
+                return Next;
+            }
+            else
+            {
+                return Previous;
+            }
+        }
+    }
 }
