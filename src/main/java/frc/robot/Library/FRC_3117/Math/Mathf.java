@@ -1,6 +1,7 @@
 package frc.robot.Library.FRC_3117.Math;
 
 import edu.wpi.first.wpilibj.drive.Vector2d;
+import frc.robot.Library.FRC_3117.Component.Data.Color;
 
 import java.lang.Math;
 
@@ -89,6 +90,22 @@ public class Mathf
     public static Vector2d Lerp(Vector2d p1, Vector2d p2, double x)
     {
         return new Vector2d(x, (p1.y + ((p2.y - p1.y)/(p2.x - p1.x)) * (x - p1.x)));
+    }
+    /**
+     * Get the interpolated color at a given x
+     * @param c1 The first color
+     * @param c2 The second color
+     * @param x The x value to interpolate
+     * @return The interpolated color at a given x
+     */
+    public static Color Lerp(Color c1, Color c2, double x)
+    {
+        int R = (int)Lerp(c1.R, c2.R, x);
+        int G = (int)Lerp(c1.R, c2.R, x);
+        int B = (int)Lerp(c1.R, c2.R, x);
+        int A = (int)Lerp(c1.R, c2.R, x);
+
+        return new Color(R, G, B, A);
     }
 
     /**
