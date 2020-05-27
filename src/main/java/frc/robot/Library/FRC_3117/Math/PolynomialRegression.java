@@ -1,5 +1,6 @@
 package frc.robot.Library.FRC_3117.Math;
 
+import edu.wpi.first.wpilibj.drive.Vector2d;
 import frc.robot.Library.FRC_3117.Math.Jama.Matrix;
 import frc.robot.Library.FRC_3117.Math.Jama.QRDecomposition;
 
@@ -8,6 +9,18 @@ public class PolynomialRegression {
     private Matrix beta; // the polynomial regression coefficients
     private double sse; // sum of squares due to error
     private double sst; // total sum of squares
+
+    public PolynomialRegression(Vector2d[] points, int degree)
+    {
+        double[] x = new double[points.length];
+        double[] y = new double[points.length];
+        for(int i = 0; i < points.length; ++i)
+        {
+            x[i] = points[i].x;
+            y[i] = points[i].y;
+        }
+        Solve(x, y, degree);
+    }
 
     public PolynomialRegression(double[][] xy, int degree) {
         double[] x = new double[xy.length];
@@ -123,7 +136,7 @@ public class PolynomialRegression {
      *            the value of the predictor variable
      * @return the expected response {@code y} given the value of the predictor variable {@code x}
      */
-    public double Predict(double x) {
+    public double Evaluate(double x) {
         // horner's method
         double y = 0.0;
         for (int j = degree; j >= 0; j--)
