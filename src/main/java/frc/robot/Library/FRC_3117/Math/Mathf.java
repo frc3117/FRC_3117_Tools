@@ -69,6 +69,10 @@ public class Mathf
         return Math.max(min, Math.min(max, value));
     }
     
+    public static int Lerp(int v1, int v2, double t)
+    {
+        return (int)((t * (v2 - v1)) + v1);
+    }
     /**
      * Make a linear interpolation between to value
      * @param v1 The first value

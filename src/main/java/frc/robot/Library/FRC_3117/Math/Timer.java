@@ -19,10 +19,10 @@ public class Timer
         _startTime = GetCurrentTime();
     }
     /**
-     * Calculate the current delta time
+     * Evaluate the current delta time
      * @return The current deltat time
      */
-    public static double Calculate()
+    public static double Evaluate()
     {
         //Estimate the delta time betwen the last time
         long currentTime = System.nanoTime();
@@ -55,7 +55,7 @@ public class Timer
      */
     public static double GetTimeSinceStart()
     {
-        return GetCurrentTime() - _startTime;
+        return GetElasped(_startTime);
     }
     /**
      * Get the left in the current period
@@ -64,5 +64,14 @@ public class Timer
     public static double GetPeriodTime()
     {
         return edu.wpi.first.wpilibj.Timer.getMatchTime();
+    }
+    /**
+     * Get the elapsed time since the given time
+     * @param time The time to evaluate from
+     * @return The elapsed time
+     */
+    public static double GetElasped(double time)
+    {
+        return GetCurrentTime() - time;
     }
 }

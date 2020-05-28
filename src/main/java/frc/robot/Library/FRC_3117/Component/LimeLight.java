@@ -9,13 +9,28 @@ import frc.robot.Library.FRC_3117.Component.Data.LimeLightData;
 public class LimeLight {
 
     private static NetworkTable _table = NetworkTableInstance.getDefault().getTable("limelight");
+    private static boolean isUpsideDown = false;
 
     /**
      * Get the current data from the limelight
-     * @return
+     * @return The data from the limelight
      */
     public static LimeLightData GetCurrent()
     {        
+        NetworkTableEntry tx = _table.getEntry("tx"); //X Angle (degree)
+        NetworkTableEntry ty = _table.getEntry("ty"); //Y Angle (degree)
+        NetworkTableEntry ta = _table.getEntry("ta"); //Screen Space (Percent)
+        NetworkTableEntry tv = _table.getEntry("tv"); //Is Target (1 or 0)
+
+        return new LimeLightData(tx.getDouble(0) * (isUpsideDown ? -1 : 1), ty.getDouble(0) * (isUpsideDown ? -1 : 1), ta.getDouble(0), tv.getDouble(0));
+    }
+
+    /**
+     * Get the current raw data 
+     * @return The raw data from the limelight
+     */
+    public static LimeLightData GetCurrentRaw()
+    {
         NetworkTableEntry tx = _table.getEntry("tx"); //X Angle (degree)
         NetworkTableEntry ty = _table.getEntry("ty"); //Y Angle (degree)
         NetworkTableEntry ta = _table.getEntry("ta"); //Screen Space (Percent)
@@ -41,6 +56,15 @@ public class LimeLight {
         _table.getEntry("camMode").setNumber(0);
 
         TurnOnLight();
+    }
+
+    /**
+     * Set if the limelight is instaled upside down
+     * @param state If the limelight is upside down
+     */
+    public void SetUpsideDown(boolean state)
+    {
+        isUpsideDown = state;
     }
 
     public static void Zoom()
@@ -103,5 +127,23 @@ public class LimeLight {
     public static int GetCurrentPipeline()
     {
         return (int)_table.getEntry("getpipe").getDouble(0);
+    }
+
+    /**
+     * Get the network table instance of the limelight
+     * @return The network table instance of the limelight
+     */
+    public static NetworkTable GetTable()
+    {
+        return _table;
+    }
+    /**
+     * Get an entry from the limelight network table
+     * @param key The key of the entry
+     * @return The entry from the network table
+     */
+    public static NetworkTableEntry GetEntry(String key)
+    {
+        return _table.getEntry(key);
     }
 }

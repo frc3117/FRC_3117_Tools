@@ -28,7 +28,7 @@ public class Color
         G = Integer.valueOf( HexColor.substring( 3, 5 ), 16 );
         B = Integer.valueOf( HexColor.substring( 5, 7 ), 16 );
 
-        if(HexColor.length() == 9)
+        if(HexColor.length() >= 9)
         {
             A = Integer.valueOf( HexColor.substring( 7, 9 ), 16 );
         }
@@ -38,6 +38,8 @@ public class Color
         }
     }
 
+    public static final Color ZERO = new Color(0, 0, 0, 0).GenerateSolenoid();
+    public static final Color BLACK = new Color(0, 0, 0, 255).GenerateSolenoid();
     public static final Color WHITE = new Color(255, 255, 255, 255).GenerateSolenoid();
     public static final Color RED = new Color(255, 0 , 0, 255).GenerateSolenoid();
     public static final Color GREEN = new Color(0, 255, 0, 255).GenerateSolenoid();

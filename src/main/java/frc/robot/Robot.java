@@ -120,7 +120,7 @@ public class Robot extends TimedRobot {
 
   public void ComponentLoop()
   {
-    Timer.Calculate();
+    Timer.Evaluate();
 
     for(var component : _componentList.values())
     {

@@ -207,6 +207,11 @@ public class PID {
         }
 
         _integral += Error * Dt;
+        if(_useMinMax)
+        {
+            _integral = Mathf.Clamp(_integral, _min, _max);
+        }
+
         if(_isDebug)
         {
             _integral = Mathf.Clamp(_integral,  SmartDashboard.getNumber(_integralSaturationMinName, -999999), SmartDashboard.getNumber(_integralSaturationMaxName, 999999));
