@@ -10,6 +10,8 @@ public class Timer
     private static double _lastTime = 0;
     private static double _dt = 0;
 
+    private static int _frameCount = 0;
+
     /**
      * Initialize the clock of the timer
      */
@@ -17,6 +19,8 @@ public class Timer
     {
         _lastTime = System.nanoTime();
         _startTime = GetCurrentTime();
+
+        _frameCount = 0;
     }
     /**
      * Evaluate the current delta time
@@ -28,6 +32,8 @@ public class Timer
         long currentTime = System.nanoTime();
         _dt = (currentTime - _lastTime) / 1e9;
         _lastTime = currentTime; 
+
+        _frameCount++;
 
         return currentTime;
     }
@@ -73,5 +79,14 @@ public class Timer
     public static double GetElasped(double time)
     {
         return GetCurrentTime() - time;
+    }
+
+    /**
+     * Get the amount of frame have passed since the start
+     * @return The amount of frame
+     */
+    public static int GetFrameCount()
+    {
+        return _frameCount;
     }
 }
