@@ -1,29 +1,40 @@
 package frc.robot.Library.FRC_3117.Component.Data;
 
 import edu.wpi.first.wpilibj.drive.Vector2d;
+import frc.robot.Library.FRC_3117.Component.Data.Tupple.Pair;
 
 public class WheelData
 {
     public WheelData() {}
 
-    public WheelData(int driveChannel, int directionChannel, Vector2d driveEncoder, int directionEncoderChannel, int shifterChannel, Vector2d wheelPosition, double angleOffset)
+    public WheelData(MotorController driveController, MotorController directionController, Pair<Integer, Integer> driveEncoder, int directionEncoderChannel, Vector2d wheelPosition, double angleOffset)
     {
-        DriveChannel = driveChannel;
-        DirectionChannel = directionChannel;
-        DriveEncoderA = (int)driveEncoder.x;
-        DriveEncoderB = (int)driveEncoder.y;
+        DriveController = driveController;
+        DirectionController = directionController;
+        DriveEncoderA = driveEncoder.Item1;
+        DriveEncoderB = driveEncoder.Item2;
+        DirectionEncoderChannel = directionEncoderChannel;
+        WheelPosition = wheelPosition;
+        AngleOffset = angleOffset;
+    }
+    public WheelData(MotorController driveController, MotorController directionController, Pair<Integer, Integer> driveEncoder, int directionEncoderChannel, int shifterChannel, Vector2d wheelPosition, double angleOffset)
+    {
+        DirectionController = directionController;
+        DriveController = driveController;
+        DriveEncoderA = driveEncoder.Item1;
+        DriveEncoderB = driveEncoder.Item2;
         DirectionEncoderChannel = directionEncoderChannel;
         ShifterChannel = shifterChannel;
         WheelPosition = wheelPosition;
         AngleOffset = angleOffset;
     }
 
-    public int DriveChannel;
-    public int DirectionChannel;
+    public MotorController DriveController;
+    public MotorController DirectionController;
     public int DriveEncoderA;
     public int DriveEncoderB;
     public int DirectionEncoderChannel;
-    public int ShifterChannel;
+    public int ShifterChannel = -1;
 
     public Vector2d WheelPosition;
 

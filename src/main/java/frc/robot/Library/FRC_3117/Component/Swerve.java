@@ -5,7 +5,6 @@ import frc.robot.Library.FRC_3117.Component.Data.InputManager;
 import frc.robot.Library.FRC_3117.Component.Data.MotorController;
 import frc.robot.Library.FRC_3117.Component.Data.SolenoidValve;
 import frc.robot.Library.FRC_3117.Component.Data.WheelData;
-import frc.robot.Library.FRC_3117.Component.Data.MotorController.MotorControllerType;
 import frc.robot.Library.FRC_3117.Interface.Component;
 import frc.robot.Library.FRC_3117.Math.Mathf;
 import frc.robot.Library.FRC_3117.Math.PID;
@@ -21,7 +20,7 @@ import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Swerve implements Component {
-    public Swerve(WheelData[] WheelsData)
+    public Swerve(WheelData[] WheelsData, boolean IsShifter)
     {
         _wheelCount = WheelsData.length;
 
@@ -44,14 +43,20 @@ public class Swerve implements Component {
         _verticaRateLimiter = new RateLimiter(10000, 0);
         _rotationRateLimiter = new RateLimiter(10000, 0);
 
+        _isShifter = IsShifter;
+
         //Initializing all component of the swerve swerve system
         for(int i  = 0; i < _wheelCount; i++)
         {
-            _driveMotor[i] = new MotorController(MotorControllerType.TalonFX, WheelsData[i].DriveChannel, true);
-            _directionMotor[i] = new MotorController(MotorControllerType.TalonSRX , WheelsData[i].DirectionChannel, false);
+            _driveMotor[i] = WheelsData[i].DriveController;
+            _directionMotor[i] = WheelsData[i].DirectionController;
             _directionEncoder[i] = new AnalogInput(WheelsData[i].DirectionEncoderChannel);
-            _shifterValve[i] = SolenoidValve.CreateSingle(WheelsData[i].ShifterChannel, 0);
-            _shifterValve[i].SetState(false);
+
+            if(IsShifter)
+            {
+                _shifterValve[i] = SolenoidValve.CreateSingle(WheelsData[i].ShifterChannel, 0);
+                _shifterValve[i].SetState(false);
+            }
 
             _rotationVector[i] = WheelsData[i].GetWheelRotationVector();
             _wheelPosition[i] = WheelsData[i].WheelPosition;
@@ -112,6 +117,7 @@ public class Swerve implements Component {
     private RateLimiter _verticaRateLimiter;
     private RateLimiter _rotationRateLimiter;
 
+    private boolean _isShifter;
     private boolean _shiftState = false;
 
     private double _minShiftTime;
@@ -453,83 +459,86 @@ public class Swerve implements Component {
 
         double dt = Timer.GetDeltaTime();
 
-        //Override the shift state of the robot for a peculiar task
-        if(_isShiftOverriden)
+        if(_isShifter)
         {
-            if(_shiftState != _overridenShiftState)
+            //Override the shift state of the robot for a peculiar task
+            if(_isShiftOverriden)
             {
-                for(int i = 0; i < _wheelCount; i++)
+                if(_shiftState != _overridenShiftState)
                 {
-                    _shifterValve[i].SetState(_overridenShiftState);   
-                }
-
-                _shiftState = _overridenShiftState;
-            }
-        }
-        else
-        {
-            switch(_shiftMode)
-            {
-                case Automatic:
-                //Autoshift only if the delta time is reach and the robot velocity reach the threshold
-                if(Timer.GetCurrentTime() - _lastAutomaticShiftTime >= _minShiftTime)
-                {
-                    Vector2d velocityVector = new Vector2d(0, 0);
-
                     for(int i = 0; i < _wheelCount; i++)
                     {
-                        velocityVector = Mathf.Vector2Sum(velocityVector, GetWheelVector(i));
+                        _shifterValve[i].SetState(_overridenShiftState);   
                     }
-                    double Mag = velocityVector.magnitude();
 
-                    if(_shiftState && Mag<= _downshiftThreshold)
-                    {
-                        _lastAutomaticShiftTime = Timer.GetCurrentTime();
-                        _shiftState = false;
-
-                        for(int i = 0; i < _shifterValve.length; i++)
-                        {
-                            _shifterValve[i].SetState(_shiftState);
-                        }
-                    }
-                    else if (!_shiftState && Mag>= _upshiftThreshold)
-                    {
-                        _lastAutomaticShiftTime = Timer.GetCurrentTime();
-                        _shiftState = true;
-
-                        for(int i = 0; i < _shifterValve.length; i++)
-                        {
-                            _shifterValve[i].SetState(_shiftState);
-                        }
-
-                        _horizontalRateLimiter.SetCurrent(_horizontalRateLimiter.GetCurrent() * 0.4);
-                        _verticaRateLimiter.SetCurrent(_verticaRateLimiter.GetCurrent() * 0.4);
-                        _rotationRateLimiter.SetCurrent(_rotationRateLimiter.GetCurrent() * 0.4);
-                    }
+                    _shiftState = _overridenShiftState;
                 }
-
-                SmartDashboard.putBoolean("Gear", _shiftState);
-                break;
-
-                case Manual:
-                
-                if(InputManager.GetButtonDown("GearShift"))
-                {
-                    _shiftState = !_shiftState;
-
-                    for(int i = 0; i < _shifterValve.length; i++)
-                    {
-                        _shifterValve[i].SetState(_shiftState);
-                    }
-                }
-
-                SmartDashboard.putBoolean("Gear", _shiftState);
-
-                break;
             }
-        }
+            else
+            {
+                switch(_shiftMode)
+                {
+                    case Automatic:
+                    //Autoshift only if the delta time is reach and the robot velocity reach the threshold
+                    if(Timer.GetCurrentTime() - _lastAutomaticShiftTime >= _minShiftTime)
+                    {
+                        Vector2d velocityVector = new Vector2d(0, 0);
 
-        _isShiftOverriden = false;
+                        for(int i = 0; i < _wheelCount; i++)
+                        {
+                            velocityVector = Mathf.Vector2Sum(velocityVector, GetWheelVector(i));
+                        }
+                        double Mag = velocityVector.magnitude();
+
+                        if(_shiftState && Mag<= _downshiftThreshold)
+                        {
+                            _lastAutomaticShiftTime = Timer.GetCurrentTime();
+                            _shiftState = false;
+
+                            for(int i = 0; i < _shifterValve.length; i++)
+                            {
+                                _shifterValve[i].SetState(_shiftState);
+                            }
+                        }
+                        else if (!_shiftState && Mag>= _upshiftThreshold)
+                        {
+                            _lastAutomaticShiftTime = Timer.GetCurrentTime();
+                            _shiftState = true;
+
+                            for(int i = 0; i < _shifterValve.length; i++)
+                            {
+                                _shifterValve[i].SetState(_shiftState);
+                            }
+
+                            _horizontalRateLimiter.SetCurrent(_horizontalRateLimiter.GetCurrent() * 0.4);
+                            _verticaRateLimiter.SetCurrent(_verticaRateLimiter.GetCurrent() * 0.4);
+                            _rotationRateLimiter.SetCurrent(_rotationRateLimiter.GetCurrent() * 0.4);
+                        }
+                    }
+
+                    SmartDashboard.putBoolean("Gear", _shiftState);
+                    break;
+
+                    case Manual:
+                
+                    if(InputManager.GetButtonDown("GearShift"))
+                    {
+                        _shiftState = !_shiftState;
+
+                        for(int i = 0; i < _shifterValve.length; i++)
+                        {
+                            _shifterValve[i].SetState(_shiftState);
+                        }
+                    }
+
+                    SmartDashboard.putBoolean("Gear", _shiftState);
+
+                    break;
+                }
+            }
+
+            _isShiftOverriden = false;
+        }
 
         switch(_mode)
         {
