@@ -1,5 +1,6 @@
 package frc.robot.Library.FRC_3117.Component;
 
+import frc.robot.Robot;
 import frc.robot.Library.FRC_3117.Component.Data.Input;
 import frc.robot.Library.FRC_3117.Component.Data.InputManager;
 import frc.robot.Library.FRC_3117.Component.Data.MotorController;
@@ -44,6 +45,8 @@ public class Swerve implements Component {
         _rotationRateLimiter = new RateLimiter(10000, 0);
 
         _isShifter = IsShifter;
+
+        _IMU = new ADIS16448_IMU();
 
         //Initializing all component of the swerve swerve system
         for(int i  = 0; i < _wheelCount; i++)
@@ -149,7 +152,7 @@ public class Swerve implements Component {
 
     public void Init()
     {
-        
+        InitIMU();
     }
 
     public void Disabled()
@@ -257,8 +260,6 @@ public class Swerve implements Component {
      */
     public void InitIMU()
     {
-        _IMU = new ADIS16448_IMU();
-
         RecalibrateIMU();
     }
     /**
@@ -450,11 +451,11 @@ public class Swerve implements Component {
     public void DoComponent()
     {
         /*
-        Robot.Println("(0): " + ((_directionEncoder[0].getValue() / 4096f) * 2 * 3.1415f));
-        Robot.Println("(1): " + ((_directionEncoder[1].getValue() / 4096f) * 2 * 3.1415f));
+        System.out.println("(0): " + ((_directionEncoder[0].getValue() / 4096f) * 2 * 3.1415f));
+        System.out.println("(1): " + ((_directionEncoder[1].getValue() / 4096f) * 2 * 3.1415f));
 
-        Robot.Println("(2): " + ((_directionEncoder[2].getValue() / 4096f) * 2 * 3.1415f));
-        Robot.Println("(3): " + ((_directionEncoder[3].getValue() / 4096f) * 2 * 3.1415f));
+        System.out.println("(2): " + ((_directionEncoder[2].getValue() / 4096f) * 2 * 3.1415f));
+        System.out.println("(3): " + ((_directionEncoder[3].getValue() / 4096f) * 2 * 3.1415f));
         */
 
         double dt = Timer.GetDeltaTime();
