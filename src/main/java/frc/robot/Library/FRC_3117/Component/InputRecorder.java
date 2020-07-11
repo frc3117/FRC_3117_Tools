@@ -8,9 +8,6 @@ import frc.robot.Library.FRC_3117.Component.Data.InputPlayback;
  */
 public class InputRecorder 
 {
-    private String[] _allButtons;
-    private String[] _allAxis;
-
     public InputRecorder()
     {
         _current = new InputPlayback();
@@ -23,12 +20,12 @@ public class InputRecorder
      */
     public void AddFrame()
     {
-        for (String button : _allButtons) 
+        for (String button : InputManager.AllButton) 
         {
             _current.AddButtonValue(button, InputManager.GetButton(button));
         }
 
-        for (String axis : _allAxis) 
+        for (String axis : InputManager.AllAxis) 
         {
             _current.AddAxisValue(axis, InputManager.GetAxis(axis));
         }

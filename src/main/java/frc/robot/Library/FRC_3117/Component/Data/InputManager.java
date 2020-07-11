@@ -12,8 +12,8 @@ import frc.robot.Library.FRC_3117.Interface.Action;;
  */
 public class InputManager 
 {
-    private static String[] _allButton;
-    private static String[] _allAxis;
+    public static String[] AllButton;
+    public static String[] AllAxis;
 
     private static HashMap<String, Boolean> _lastState = new HashMap<String, Boolean>();
     private static HashMap<String, Boolean> _currentState = new HashMap<String, Boolean>();
@@ -31,15 +31,15 @@ public class InputManager
      */
     public static void Init()
     {
-        _allButton = Input.GetAllButton();
-        _allAxis = Input.GetAllAxis();
+        AllButton = Input.GetAllButton();
+        AllAxis = Input.GetAllAxis();
 
-        for (String key : _allButton)
+        for (String key : AllButton)
         {
             _lastState.put(key, false);
             _currentState.put(key, false);
         }
-        for (String key : _allAxis)
+        for (String key : AllAxis)
         {
             _currentAxisValue.put(key, 0.);
         }
@@ -101,7 +101,7 @@ public class InputManager
             }
         }
 
-        for (String key : _allButton)
+        for (String key : AllButton)
         {
             boolean last = _currentState.get(key);
             boolean current = Input.GetButton(key);
@@ -132,7 +132,7 @@ public class InputManager
             }
         }
 
-        for (String key : _allAxis)
+        for (String key : AllAxis)
         {
                 _currentAxisValue.put(key, Input.GetAxis(key));
         }
