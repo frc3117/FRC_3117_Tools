@@ -12,7 +12,7 @@ public class Robot extends TimedRobot {
 
   public enum AutonomousMode
   {
-
+    
   }
 
   public static Robot instance;
@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
     }
     SmartDashboard.putData("AutonomousSelector", _autoChooser);
 
+    CreateInput();
     CreateComponentInstance();
     for(var component : _componentList.values())
     {
@@ -104,6 +105,11 @@ public class Robot extends TimedRobot {
   }
 
   public void CreateComponentInstance()
+  {
+
+  }
+
+  public void CreateInput()
   {
 
   }
