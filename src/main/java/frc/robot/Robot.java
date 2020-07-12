@@ -12,7 +12,7 @@ public class Robot extends TimedRobot {
 
   public enum AutonomousMode
   {
-    
+
   }
 
   public static Robot instance;
@@ -142,6 +142,13 @@ public class Robot extends TimedRobot {
   @SuppressWarnings("unchecked")
   public static <T> T GetComponent(String name)
   {
-    return (T)instance._componentList.get(name);
+    try
+    {
+      return (T)instance._componentList.get(name);
+    }
+    catch (Exception ex)
+    {
+      return null;
+    }
   }
 }
