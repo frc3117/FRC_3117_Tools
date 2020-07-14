@@ -1,11 +1,12 @@
 package frc.robot.Library.FRC_3117.Math;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Library.FRC_3117.Interface.BasePID;
 
 /**
  * The universal pid class
  */
-public class PID {
+public class PID implements BasePID {
     
     public PID() {}
     public PID(double KP, double KI, double KD)

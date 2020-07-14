@@ -1,9 +1,11 @@
 package frc.robot.Library.FRC_3117.Math;
 
+import frc.robot.Library.FRC_3117.Interface.BaseFilter;
+
 /**
  * A highpass and lowpass filter using the butterworth algorithm
  */
-public class ButterworthFilter 
+public class ButterworthFilter implements BaseFilter
 {
     public enum PassType
     {

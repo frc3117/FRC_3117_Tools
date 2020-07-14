@@ -1,11 +1,12 @@
 package frc.robot.Library.FRC_3117.Math;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Library.FRC_3117.Interface.BaseController;
 
 /**
  * The take back half controller class
  */
-public class TakeBackHalf 
+public class TakeBackHalf implements BaseController
 {
     public TakeBackHalf() {}
     public TakeBackHalf(double Gain)

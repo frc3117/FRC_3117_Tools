@@ -1,11 +1,12 @@
 package frc.robot.Library.FRC_3117.Math;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Library.FRC_3117.Interface.BaseController;
 
 /**
  * The bang bang controller class
  */
-public class BangBang 
+public class BangBang implements BaseController
 {
     public BangBang() {}
     public BangBang(double PositiveResult, double NeurtralResult, double NegativeResult)
