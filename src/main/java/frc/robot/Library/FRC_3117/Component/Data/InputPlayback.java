@@ -1,5 +1,10 @@
 package frc.robot.Library.FRC_3117.Component.Data;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,9 +73,54 @@ public class InputPlayback
     /**
      * Save the current sequence to a file
      */
-    public void SaveToFile()
+    public void SaveToFile(String Path)
     {
-        //TODO
+        File file = new File(Path + ".playback");
+
+        if(file.delete())
+        {
+            try
+            {
+                file.createNewFile();
+            }
+            catch (IOException e) { }
+        }
+
+        try
+        {
+            FileWriter writer = new FileWriter(file);
+            StringBuilder fileContent = new StringBuilder();
+
+            for(int i = 0; i < GetFrameCount(); i++)
+            {
+                List<Pair<String, Double>> axis = _frames.get(i).AxisList;
+                for(int o = 0; o < axis.size(); o++)
+                {
+                    fileContent.append("A/");
+                    fileContent.append(axis.get(o).Item1);
+                    fileContent.append("/");
+                    fileContent.append(axis.get(o).Item2);
+                    fileContent.append(System.lineSeparator());
+                }
+
+                List<Pair<String, Boolean>> button = _frames.get(i).ButtonList;
+                for(int o = 0; o < button.size(); o++)
+                {
+                    fileContent.append("B/");
+                    fileContent.append(button.get(o).Item1);
+                    fileContent.append("/");
+                    fileContent.append(button.get(o).Item2);
+                    fileContent.append(System.lineSeparator());
+                }
+
+                fileContent.append("#");
+                fileContent.append(System.lineSeparator()); 
+            }
+
+            writer.write(fileContent.toString());
+            writer.close();
+        }
+        catch (IOException e) { }
     }
     /**
      * Load a sequence from a file
@@ -81,7 +131,37 @@ public class InputPlayback
     {
         InputPlayback current = new InputPlayback();
 
-        //TODO
+        File file = new File(Path + ".playback");
+        if(!file.exists())
+            return null;
+
+        try
+        {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String currentLine;
+
+            while ((currentLine = reader.readLine()) != null) 
+            {
+                String[] Split = currentLine.split("/", 0);
+
+                switch(Split[0])
+                {
+                    case "#":
+                    current.SaveFrame();
+                    break;
+
+                    case "A":
+                    current.AddAxisValue(Split[1], Double.parseDouble(Split[2]));
+                    break;
+
+                    case "B":
+                    current.AddButtonValue(Split[1], Boolean.parseBoolean(Split[2]));
+                    break;
+                }
+            }  
+            reader.close();
+        }
+        catch (IOException e) { return null; }
 
         return current;
     }
