@@ -6,8 +6,8 @@ import frc.robot.Library.FRC_3117.Component.Data.MotorController;
 import frc.robot.Library.FRC_3117.Component.Data.SolenoidValve;
 import frc.robot.Library.FRC_3117.Component.Data.WheelData;
 import frc.robot.Library.FRC_3117.Interface.Component;
+import frc.robot.Library.FRC_3117.Math.AdvancedPID;
 import frc.robot.Library.FRC_3117.Math.Mathf;
-import frc.robot.Library.FRC_3117.Math.PID;
 import frc.robot.Library.FRC_3117.Math.Polar;
 import frc.robot.Library.FRC_3117.Math.RateLimiter;
 import frc.robot.Library.FRC_3117.Math.Timer;
@@ -30,7 +30,7 @@ public class Swerve implements Component {
         _shifterValve = new SolenoidValve[_wheelCount];
         _rotationVector = new Vector2d[_wheelCount];
         _wheelPosition = new Vector2d[_wheelCount];
-        _directionPID = new PID[_wheelCount];
+        _directionPID = new AdvancedPID[_wheelCount];
         _angleOffset = new double[_wheelCount];
 
         _flipAngleOffset = new double[_wheelCount];
@@ -65,7 +65,7 @@ public class Swerve implements Component {
             _flipAngleOffset[i] = 0;
             _flipDriveMultiplicator[i] = 1;
 
-            _directionPID[i] = new PID();
+            _directionPID[i] = new AdvancedPID();
         }
     }
 
@@ -101,7 +101,7 @@ public class Swerve implements Component {
 
     private double[] _lastAngle;
 
-    private PID[] _directionPID;
+    private AdvancedPID[] _directionPID;
 
     private DrivingMode _mode = DrivingMode.Local;
     private ShifterMode _shiftMode = ShifterMode.Manual;

@@ -4,16 +4,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Library.FRC_3117.Interface.BasePID;
 
 /**
- * The universal pid class
+ * The advanced PID class
  */
-public class PID implements BasePID {
+public class AdvancedPID implements BasePID {
     
-    public PID() {}
-    public PID(double KP, double KI, double KD)
+    public AdvancedPID() {}
+    public AdvancedPID(double KP, double KI, double KD)
     {
         SetGain(KP, KI, KD);
     }
-    public PID(double KP, double KI, double KD, String DebugName)
+    public AdvancedPID(double KP, double KI, double KD, String DebugName)
     {
         SetGain(KP, KI, KD);
         
