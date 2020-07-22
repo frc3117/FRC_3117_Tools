@@ -9,7 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Encoder;
-import frc.robot.Library.FRC_3117.Math.PID;
+import frc.robot.Library.FRC_3117.Math.AdvancedPID;
 
 /**
  * The universal motor controller
@@ -36,7 +36,7 @@ public class MotorController
             break;
         }
 
-        _pid = new PID(0, 0, 0);
+        _pid = new AdvancedPID(0, 0, 0);
         _usePID = false;
     }
     public MotorController(MotorControllerType type, int Channel, boolean IsBrushless, double Kp, double Ki, double Kd)
@@ -59,7 +59,7 @@ public class MotorController
             break;
         }
 
-        _pid = new PID(Kp, Ki, Kd);
+        _pid = new AdvancedPID(Kp, Ki, Kd);
         _usePID = true;
     }
     public MotorController(MotorControllerType type, int Channel, boolean IsBrushless, int EncoderChannelA, int EncoderChannelB, double Kp, double Ki, double Kd)
@@ -84,7 +84,7 @@ public class MotorController
 
         _encoder = new Encoder(EncoderChannelA, EncoderChannelB);
 
-        _pid = new PID(Kp, Ki, Kd);
+        _pid = new AdvancedPID(Kp, Ki, Kd);
         _usePID = true;
     }
 
@@ -96,7 +96,7 @@ public class MotorController
     }
 
     private MotorControllerType _controllerType;
-    private PID _pid;
+    private AdvancedPID _pid;
 
     private boolean _usePID;
 

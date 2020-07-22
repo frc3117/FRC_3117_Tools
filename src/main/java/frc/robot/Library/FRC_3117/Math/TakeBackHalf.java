@@ -48,7 +48,7 @@ public class TakeBackHalf implements BaseController
     /**
      * Disable the debug mode
      */
-    public void StopDebugmode()
+    public void StopDebugMode()
     {
         if(_isDebug)
         {
