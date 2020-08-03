@@ -6,15 +6,16 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Library.FRC_3117.Component.InputRecorder;
 import frc.robot.Library.FRC_3117.Component.Swerve;
 import frc.robot.Library.FRC_3117.Component.Data.Input;
+import frc.robot.Library.FRC_3117.Component.Data.InputManager;
 import frc.robot.Library.FRC_3117.Component.Data.MotorController;
 import frc.robot.Library.FRC_3117.Component.Data.WheelData;
 import frc.robot.Library.FRC_3117.Component.Data.MotorController.MotorControllerType;
 import frc.robot.Library.FRC_3117.Component.Data.Tupple.Pair;
 import frc.robot.Library.FRC_3117.Component.Swerve.DrivingMode;
 import frc.robot.Library.FRC_3117.Interface.Component;
-import frc.robot.Library.FRC_3117.Math.PID;
 import frc.robot.Library.FRC_3117.Math.Timer;
 
 public class Robot extends TimedRobot {
@@ -30,6 +31,10 @@ public class Robot extends TimedRobot {
   private SendableChooser<AutonomousMode> _autoChooser;
   private LinkedHashMap<String, Component> _componentList;
   private boolean _hasBeenInit;
+
+  private InputRecorder _recorder = new InputRecorder();
+  boolean _isRecording = false;
+  boolean _isPlaying = false;
 
   @Override
   public void robotInit() 
@@ -115,10 +120,18 @@ public class Robot extends TimedRobot {
 
   public void CreateComponentInstance()
   {
+    Input.CreateButton("StartRecording", 0, 3);
+    Input.CreateButton("StopRecording", 0, 1);
+    Input.CreateButton("PlayRecording", 0, 2);
+    
     Input.CreateAxis("Horizontal", 0, 0, false);
-    Input.CreateAxis("Vertical", 0, 1, false);
+    Input.CreateAxis("Vertical", 0, 1, true);
     Input.CreateAxis("Rotation", 0, 2, false);
     Input.SetAxisNegative("Rotation", 0, 3, false);
+
+    Input.SetAxisDeadzone("Horizontal", 0.15);
+    Input.SetAxisDeadzone("Vertical", 0.15);
+    Input.SetAxisDeadzone("Rotation", 0.15);
 
     WheelData[] Wheels = {
       new WheelData(new MotorController(MotorControllerType.TalonFX, 20, true), new MotorController(MotorControllerType.SparkMax, 17, true), new Pair<>(0, 0), 0, new Vector2d(1, 1), 0.12578271 - 1.57+ 3.1415 + 3.1415),
@@ -145,6 +158,8 @@ public class Robot extends TimedRobot {
 
   public void Init()
   {
+    InputManager.Init();
+
     for(var component : _componentList.values())
     {
       component.Init();
@@ -155,7 +170,33 @@ public class Robot extends TimedRobot {
 
   public void ComponentLoop()
   {
+    if(Input.GetButton("StartRecording"))
+    {
+      _recorder = new InputRecorder();
+      _isRecording = true;
+    }
+    if(Input.GetButton("StopRecording"))
+    {
+      _isRecording = false;
+    }
+    if(Input.GetButton("PlayRecording") && !_isPlaying)
+    {
+      _isRecording = false;
+      InputManager.StartPlayback(_recorder.GetPlayback());
+    }
+
+    if(_isRecording)
+    {
+      _recorder.AddFrame();
+    }
+
+    InputManager.DoInputManager();
     Timer.Evaluate();
+
+    Swerve swerve = GetComponent("Swerve");
+    swerve.OverrideHorizontalAxis(InputManager.GetAxis("Horizontal") * -1);
+    swerve.OverrideVerticalAxis(InputManager.GetAxis("Vertical"));
+    swerve.OverrideRotationAxis(InputManager.GetAxis("Rotation"));
 
     for(var component : _componentList.values())
     {
