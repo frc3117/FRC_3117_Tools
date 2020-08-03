@@ -1,5 +1,6 @@
 package frc.robot.Library.FRC_3117.Component;
 
+import frc.robot.Robot;
 import frc.robot.Library.FRC_3117.Component.Data.Input;
 import frc.robot.Library.FRC_3117.Component.Data.InputManager;
 import frc.robot.Library.FRC_3117.Component.Data.MotorController;
