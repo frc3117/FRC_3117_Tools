@@ -51,6 +51,9 @@ public class Robot extends TimedRobot {
     }
     SmartDashboard.putData("AutonomousSelector", _autoChooser);
 
+    SmartDashboard.putNumber("TranslationRatio", 1);
+    SmartDashboard.putNumber("RotationRatio", 1);
+
     CreateInput();
     CreateComponentInstance();
     for(var component : _componentList.values())
@@ -120,10 +123,12 @@ public class Robot extends TimedRobot {
 
   public void CreateComponentInstance()
   {
+    /*
     Input.CreateButton("StartRecording", 0, 3);
     Input.CreateButton("StopRecording", 0, 1);
     Input.CreateButton("PlayRecording", 0, 2);
-    
+    */
+
     Input.CreateAxis("Horizontal", 0, 0, false);
     Input.CreateAxis("Vertical", 0, 1, true);
     Input.CreateAxis("Rotation", 0, 2, false);
@@ -170,6 +175,7 @@ public class Robot extends TimedRobot {
 
   public void ComponentLoop()
   {
+    /*
     if(Input.GetButton("StartRecording"))
     {
       _recorder = new InputRecorder();
@@ -184,19 +190,22 @@ public class Robot extends TimedRobot {
       _isRecording = false;
       InputManager.StartPlayback(_recorder.GetPlayback());
     }
-
     if(_isRecording)
     {
       _recorder.AddFrame();
     }
+    */
 
     InputManager.DoInputManager();
     Timer.Evaluate();
 
+    double translationRatio = SmartDashboard.getNumber("TranslationRatio", 1);
+    double rotationRatio = SmartDashboard.getNumber("RotationRatio", 1);
+
     Swerve swerve = GetComponent("Swerve");
-    swerve.OverrideHorizontalAxis(InputManager.GetAxis("Horizontal") * -1);
-    swerve.OverrideVerticalAxis(InputManager.GetAxis("Vertical"));
-    swerve.OverrideRotationAxis(InputManager.GetAxis("Rotation"));
+    swerve.OverrideHorizontalAxis(InputManager.GetAxis("Horizontal") * -1 * translationRatio);
+    swerve.OverrideVerticalAxis(InputManager.GetAxis("Vertical") * translationRatio);
+    swerve.OverrideRotationAxis(InputManager.GetAxis("Rotation") * rotationRatio);
 
     for(var component : _componentList.values())
     {
