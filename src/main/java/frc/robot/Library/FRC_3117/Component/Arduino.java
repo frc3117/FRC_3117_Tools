@@ -295,10 +295,10 @@ public class Arduino implements Component
         if(_isOpen)
             return;
 
-        SendCommand("Connect");
-
         _serial = new SerialPort(_baudRate, _port);
         _isOpen = true;
+
+        SendCommand("Connect");
     }
     /**
      * Stop the comunication between the roborio and the arduino

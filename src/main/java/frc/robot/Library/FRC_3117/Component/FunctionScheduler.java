@@ -192,5 +192,10 @@ public class FunctionScheduler implements Component
             _isCompeted = true;
             return;
         }
+
+        if(_steps[_currentStep].GetType() == StepType.Wait)
+            _nextStepTime = Timer.GetCurrentTime() + _steps[_currentStep].GetDelay()
+
+        DoComponent();
     }
 }
