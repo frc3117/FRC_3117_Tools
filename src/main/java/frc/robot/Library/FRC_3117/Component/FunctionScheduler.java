@@ -51,7 +51,7 @@ public class FunctionScheduler implements Component
 
     public void Disabled()
     {
-        
+        Stop();
     }
 
     public void DoComponent()
@@ -101,21 +101,29 @@ public class FunctionScheduler implements Component
         }
     }
 
-    public void AddWait(double delay)
+    public FunctionScheduler AddWait(double delay)
     {
         _steps.add(new FunctionSchedulerStep(delay));
+
+        return this;
     }
-    public void AddWaituntil(Condition condition)
+    public FunctionScheduler AddWaituntil(Condition condition)
     {
         _steps.add(new FunctionSchedulerStep(condition));
+
+        return this;
     }
-    public void AddFunction(Action function)
+    public FunctionScheduler AddFunction(Action function)
     {
         _steps.add(new FunctionSchedulerStep(function));
+
+        return this;
     }
-    public void AddRepeatFunction(Action function, double delay, int repeat)
+    public FunctionScheduler AddRepeatFunction(Action function, double delay, int repeat)
     {
         _steps.add(new FunctionSchedulerStep(function, delay, repeat));
+
+        return this;
     }
 
     public void Start()
