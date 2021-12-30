@@ -8,7 +8,17 @@ import frc.robot.Library.FRC_3117.Component.Data.LimeLightData;
  */
 public class LimeLight {
 
-    private static NetworkTable _table = NetworkTableInstance.getDefault().getTable("limelight");
+    public static final String LIMELIGHT_TABLE = "limelight";
+    public static final String X_ANGLE_ENTRY = "tx";
+    public static final String Y_ANGLE_ENTRY = "ty";
+    public static final String SCREE_SPACE_ENTRY = "ta";
+    public static final String IS_TARGET_ENTRY = "tv";
+    public static final String CAM_MODE_ENTRY = "camMode";
+    public static final String LED_MODE_ENTRY = "ledMode";
+    public static final String PIPELINE_ENTRY = "pipeline";
+    public static final String GET_PIPELINE_ENTRY = "getPipe";
+
+    private static NetworkTable _table = NetworkTableInstance.getDefault().getTable(LIMELIGHT_TABLE);
     private static boolean isUpsideDown = false;
 
     /**
@@ -17,10 +27,10 @@ public class LimeLight {
      */
     public static LimeLightData GetCurrent()
     {        
-        NetworkTableEntry tx = _table.getEntry("tx"); //X Angle (degree)
-        NetworkTableEntry ty = _table.getEntry("ty"); //Y Angle (degree)
-        NetworkTableEntry ta = _table.getEntry("ta"); //Screen Space (Percent)
-        NetworkTableEntry tv = _table.getEntry("tv"); //Is Target (1 or 0)
+        NetworkTableEntry tx = _table.getEntry(X_ANGLE_ENTRY); //X Angle (degree)
+        NetworkTableEntry ty = _table.getEntry(Y_ANGLE_ENTRY); //Y Angle (degree)
+        NetworkTableEntry ta = _table.getEntry(SCREE_SPACE_ENTRY); //Screen Space (Percent)
+        NetworkTableEntry tv = _table.getEntry(IS_TARGET_ENTRY); //Is Target (1 or 0)
 
         return new LimeLightData(tx.getDouble(0) * (isUpsideDown ? -1 : 1), ty.getDouble(0) * (isUpsideDown ? -1 : 1), ta.getDouble(0), tv.getDouble(0));
     }
@@ -31,10 +41,10 @@ public class LimeLight {
      */
     public static LimeLightData GetCurrentRaw()
     {
-        NetworkTableEntry tx = _table.getEntry("tx"); //X Angle (degree)
-        NetworkTableEntry ty = _table.getEntry("ty"); //Y Angle (degree)
-        NetworkTableEntry ta = _table.getEntry("ta"); //Screen Space (Percent)
-        NetworkTableEntry tv = _table.getEntry("tv"); //Is Target (1 or 0)
+        NetworkTableEntry tx = _table.getEntry(X_ANGLE_ENTRY); //X Angle (degree)
+        NetworkTableEntry ty = _table.getEntry(Y_ANGLE_ENTRY); //Y Angle (degree)
+        NetworkTableEntry ta = _table.getEntry(SCREE_SPACE_ENTRY); //Screen Space (Percent)
+        NetworkTableEntry tv = _table.getEntry(IS_TARGET_ENTRY); //Is Target (1 or 0)
 
         return new LimeLightData(tx.getDouble(0), ty.getDouble(0), ta.getDouble(0), tv.getDouble(0));
     }
@@ -44,7 +54,7 @@ public class LimeLight {
      */
     public static void SetDriveMode()
     {
-        _table.getEntry("camMode").setNumber(1);
+        _table.getEntry(CAM_MODE_ENTRY).setNumber(1);
 
         TurnOffLight();
     }
@@ -53,7 +63,7 @@ public class LimeLight {
      */
     public static void SetRecognitionMode()
     {
-        _table.getEntry("camMode").setNumber(0);
+        _table.getEntry(CAM_MODE_ENTRY).setNumber(0);
 
         TurnOnLight();
     }
@@ -88,28 +98,28 @@ public class LimeLight {
      */
     public static void BlinkLight()
     {
-        _table.getEntry("ledMode").setNumber(2);
+        _table.getEntry(LED_MODE_ENTRY).setNumber(2);
     }
     /**
      * Turn on the light on the limelight
      */
     public static void TurnOnLight()
     {
-        _table.getEntry("ledMode").setNumber(3);
+        _table.getEntry(LED_MODE_ENTRY).setNumber(3);
     }
     /**
      * Turn off the light on the limelight
      */
     public static void TurnOffLight()
     {
-        _table.getEntry("ledMode").setNumber(1);
+        _table.getEntry(LED_MODE_ENTRY).setNumber(1);
     }
     /**
      * Make the light be on the state specified by the current pipeline
      */
     public static void SetLightDefault()
     {
-        _table.getEntry("ledMode").setNumber(0);
+        _table.getEntry(LED_MODE_ENTRY).setNumber(0);
     }
 
     /**
@@ -118,7 +128,7 @@ public class LimeLight {
      */
     public static void SetPipeline(int id)
     {
-        _table.getEntry("pipeline").setNumber(id);
+        _table.getEntry(PIPELINE_ENTRY).setNumber(id);
     }
     /**
      * Get the current pipeline running on the limelight
@@ -126,7 +136,7 @@ public class LimeLight {
      */
     public static int GetCurrentPipeline()
     {
-        return (int)_table.getEntry("getpipe").getDouble(0);
+        return (int)_table.getEntry(GET_PIPELINE_ENTRY).getDouble(0);
     }
 
     /**
