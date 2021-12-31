@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import frc.robot.Library.FRC_3117.Component.Data.FunctionSchedulerStep;
+import frc.robot.Library.FRC_3117.Component.Data.FunctionSchedulerStep.StepType;
 import frc.robot.Library.FRC_3117.Interface.Action;
 import frc.robot.Library.FRC_3117.Interface.Component;
 import frc.robot.Library.FRC_3117.Interface.Condition;
@@ -201,8 +202,8 @@ public class FunctionScheduler implements Component
             return;
         }
 
-        if(_steps[_currentStep].GetType() == StepType.Wait)
-            _nextStepTime = Timer.GetCurrentTime() + _steps[_currentStep].GetDelay()
+        if(_steps.get(_currentStep).GetType() == StepType.Wait)
+            _nextStepTime = Timer.GetCurrentTime() + _steps.get(_currentStep).GetDelay();
 
         DoComponent();
     }

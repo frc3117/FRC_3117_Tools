@@ -13,10 +13,9 @@ import frc.robot.Library.FRC_3117.Math.RateLimiter;
 import frc.robot.Library.FRC_3117.Math.Timer;
 import frc.robot.Library.FRC_3117.Math.UnitConverter;
 
-import com.analog.adis16448.frc.ADIS16448_IMU;
-
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.drive.Vector2d;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Swerve implements Component {
@@ -92,7 +91,7 @@ public class Swerve implements Component {
 
     private Vector2d[] _wheelPosition;
 
-    private ADIS16448_IMU _IMU;
+    private Gyro _IMU;
 
     private double[] _angleOffset;
 
@@ -257,8 +256,6 @@ public class Swerve implements Component {
      */
     public void InitIMU()
     {
-        _IMU = new ADIS16448_IMU();
-
         RecalibrateIMU();
     }
     /**
@@ -269,7 +266,7 @@ public class Swerve implements Component {
         _IMU.reset();
         _IMU.calibrate();
 
-        _headingOffset = (_IMU.getGyroAngleZ() / 180) * 3.1415 + 3.1415;
+        _headingOffset = (_IMU.getAngle() / 180) * 3.1415 + 3.1415;
     }
 
     /**
@@ -371,7 +368,7 @@ public class Swerve implements Component {
      */
     public double GetHeading()
     {
-        return (_IMU.getGyroAngleZ() / 180) * 3.1415 - _headingOffset;
+        return (_IMU.getAngle() / 180) * 3.1415 - _headingOffset;
     }
     /**
      * Get the current estimated position of the swerve drive
@@ -568,7 +565,7 @@ public class Swerve implements Component {
             Polar translationPolar = Polar.fromVector(translation);
 
             //Remove the angle of the gyroscope to the azymuth to make the driving relative to the world
-            translationPolar.azymuth -= _mode == DrivingMode.World ? (_IMU.getGyroAngleZ() % 360) * 0.01745 + 3.1415: 0;
+            translationPolar.azymuth -= _mode == DrivingMode.World ? (_IMU.getAngle() % 360) * 0.01745 + 3.1415: 0;
 
             double rotationAxis = _isRotationAxisOverriden ? _rotationAxisOverride * _roationSpeedRatio : _rotationRateLimiter.GetCurrent() * _roationSpeedRatio;
 
