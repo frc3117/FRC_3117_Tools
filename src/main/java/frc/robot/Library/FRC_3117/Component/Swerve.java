@@ -394,7 +394,7 @@ public class Swerve implements Component {
      */
     public Vector2d GetWheelVector(int ID)
     {
-        double Angle = ((_directionEncoder[ID].getValue() / 4096f) * 2 * 3.1415f) - _angleOffset[ID] - 3.1415;
+        var Angle = ((_directionEncoder[ID].getValue() / 4096f) * 2 * 3.1415f) - _angleOffset[ID] - 3.1415;
 
         if(Angle > 3.1415)
         {
@@ -405,7 +405,7 @@ public class Swerve implements Component {
             Angle += 2 * 3.1415;
         }
 
-        Vector2d vec = new Polar((_driveMotor[ID].GetEncoderVelocity() / 256.) * 3.1415 * 2, Angle).vector();
+        var vec = new Polar((_driveMotor[ID].GetEncoderVelocity() / 256.) * 3.1415 * 2, Angle).vector();
 
         return vec;
     }
@@ -479,13 +479,13 @@ public class Swerve implements Component {
                     //Autoshift only if the delta time is reach and the robot velocity reach the threshold
                     if(Timer.GetCurrentTime() - _lastAutomaticShiftTime >= _minShiftTime)
                     {
-                        Vector2d velocityVector = new Vector2d(0, 0);
+                        var velocityVector = new Vector2d(0, 0);
 
                         for(int i = 0; i < _wheelCount; i++)
                         {
                             velocityVector = Mathf.Vector2Sum(velocityVector, GetWheelVector(i));
                         }
-                        double Mag = velocityVector.magnitude();
+                        var Mag = velocityVector.magnitude();
 
                         if(_shiftState && Mag<= _downshiftThreshold)
                         {
@@ -543,15 +543,15 @@ public class Swerve implements Component {
             case World:
 
             //Adding a rate limiter to the translation joystick to make the driving smoother
-            double horizontal = Input.GetAxis("Horizontal");
-            double vertical = Input.GetAxis("Vertical");
-            double rotation = Input.GetAxis("Rotation");
+            var horizontal = Input.GetAxis("Horizontal");
+            var vertical = Input.GetAxis("Vertical");
+            var rotation = Input.GetAxis("Rotation");
 
-            double x = _horizontalRateLimiter.Evaluate(horizontal);
-            double y = _verticaRateLimiter.Evaluate(vertical);
-            double z = _rotationRateLimiter.Evaluate(rotation);
+            var x = _horizontalRateLimiter.Evaluate(horizontal);
+            var y = _verticaRateLimiter.Evaluate(vertical);
+            var z = _rotationRateLimiter.Evaluate(rotation);
 
-            double mag = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
+            var mag = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
 
             if(mag > 1)
             {
@@ -561,21 +561,21 @@ public class Swerve implements Component {
             }
 
             //Translation vector is equal to the translation joystick axis
-            Vector2d translation = new Vector2d(_isHorizontalAxisOverride ? _horizontalAxisOverride : _horizontalRateLimiter.GetCurrent() * _speedRatio * -1, (_isVerticalAxisOverride ? _verticalAxisOverride : _verticaRateLimiter.GetCurrent()) * _speedRatio);
-            Polar translationPolar = Polar.fromVector(translation);
+            var translation = new Vector2d(_isHorizontalAxisOverride ? _horizontalAxisOverride : _horizontalRateLimiter.GetCurrent() * _speedRatio * -1, (_isVerticalAxisOverride ? _verticalAxisOverride : _verticaRateLimiter.GetCurrent()) * _speedRatio);
+            var translationPolar = Polar.fromVector(translation);
 
             //Remove the angle of the gyroscope to the azymuth to make the driving relative to the world
             translationPolar.azymuth -= _mode == DrivingMode.World ? (_IMU.getAngle() % 360) * 0.01745 + 3.1415: 0;
 
-            double rotationAxis = _isRotationAxisOverriden ? _rotationAxisOverride * _roationSpeedRatio : _rotationRateLimiter.GetCurrent() * _roationSpeedRatio;
+            var rotationAxis = _isRotationAxisOverriden ? _rotationAxisOverride * _roationSpeedRatio : _rotationRateLimiter.GetCurrent() * _roationSpeedRatio;
 
             for(int i = 0; i < _wheelCount; i++)
             {
                 //Each wheel have a predetermined rotation vector based on wheel position
-                Vector2d scaledRotationVector = new Vector2d(_rotationVector[i].x * rotationAxis, _rotationVector[i].y * rotationAxis);               
+                var scaledRotationVector = new Vector2d(_rotationVector[i].x * rotationAxis, _rotationVector[i].y * rotationAxis);               
 
-                Vector2d SumVec = Mathf.Vector2Sum(scaledRotationVector, translationPolar.vector());
-                Polar Sum = Polar.fromVector(SumVec);
+                var SumVec = Mathf.Vector2Sum(scaledRotationVector, translationPolar.vector());
+                var Sum = Polar.fromVector(SumVec);
 
                 //Radius = Wheel Speed
                 //Azymuth = Wheel Heading
@@ -594,7 +594,7 @@ public class Swerve implements Component {
 
                 _driveMotor[i].Set(Mathf.Clamp(Sum.radius, -1, 1) * _flipDriveMultiplicator[i]);
 
-                double deltaAngle = GetDeltaAngle(i, Sum.vector());
+                var deltaAngle = GetDeltaAngle(i, Sum.vector());
                 if(Math.abs(deltaAngle) <= UnitConverter.DegreesToRadian(0.5))
                 {         
                     deltaAngle = 0;
@@ -607,11 +607,11 @@ public class Swerve implements Component {
             break;
 
             case Point:
-            Vector2d point = GetPoint(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            var point = GetPoint(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-            Polar[] wheelPol = new Polar[_wheelCount];
+            var wheelPol = new Polar[_wheelCount];
 
-            double average = 0;
+            var average = 0;
             for(int i = 0; i < _wheelCount; i++)
             {
                 wheelPol[i] = Polar.fromVector(Mathf.Vector2Sub(point, _wheelPosition[i]));
@@ -659,7 +659,7 @@ public class Swerve implements Component {
 
     private double GetDeltaAngle(int ID, Vector2d Target)
     {
-        double Source = ((_directionEncoder[ID].getValue() / 4096f) * 2 * 3.1415f) - _angleOffset[ID] - 3.1415;
+        var Source = ((_directionEncoder[ID].getValue() / 4096f) * 2 * 3.1415f) - _angleOffset[ID] - 3.1415;
 
         if(Source > 3.1415)
         {
@@ -670,10 +670,10 @@ public class Swerve implements Component {
             Source += 2 * 3.1415;
         }
 
-        double xPrim = Target.x * Math.cos(Source) - Target.y * Math.sin(Source); //Change of coordinate system
-        double yPrim = Target.x * Math.sin(Source) + Target.y * Math.cos(Source);
+        var xPrim = Target.x * Math.cos(Source) - Target.y * Math.sin(Source); //Change of coordinate system
+        var yPrim = Target.x * Math.sin(Source) + Target.y * Math.cos(Source);
 
-        double angle = Math.atan2(yPrim * _flipDriveMultiplicator[ID], xPrim * _flipDriveMultiplicator[ID]); //Angle betwen Source and target
+        var angle = Math.atan2(yPrim * _flipDriveMultiplicator[ID], xPrim * _flipDriveMultiplicator[ID]); //Angle betwen Source and target
 
         if(Math.abs(angle) > (3.1415 / 2)) //Check if it's faster to just flip the drive motor instead of doing 180° turn
         {

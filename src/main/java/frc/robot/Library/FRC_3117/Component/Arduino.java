@@ -108,11 +108,11 @@ public class Arduino implements Component
                 if(_serial.getBytesReceived() < _byteToRead)
                     return;
 
-                String result = new String(_serial.read(_byteToRead));
+                var result = new String(_serial.read(_byteToRead));
                 
                 //[0] = Method Name
                 //All The Other Are Parameters (If there is any);
-                String[] Split = result.split("|", 0);
+                var Split = result.split("|", 0);
                 
                 if(Split.length >= 2)
                     _currentParams = Arrays.copyOfRange(Split, 1, Split.length);
@@ -277,7 +277,7 @@ public class Arduino implements Component
      */
     public void SendCommand(String CommandName, Object... Params)
     {
-        String[] stringParams = new String[Params.length];
+        var stringParams = new String[Params.length];
 
         for(int i = 0; i < Params.length; i++)
         {
@@ -318,7 +318,7 @@ public class Arduino implements Component
     {
         _anyPinDigitalReadCallback.Invoke();
 
-        int pin = Integer.parseInt(GetParam(0));
+        var pin = Integer.parseInt(GetParam(0));
 
         if(_digitalReadCallback.containsKey(pin))
             _digitalReadCallback.get(pin).Invoke(Boolean.parseBoolean(GetParam(1)));
@@ -327,7 +327,7 @@ public class Arduino implements Component
     {
         _anyPinAnalogReadCallback.Invoke();
 
-        int pin = Integer.parseInt(GetParam(0));
+        var pin = Integer.parseInt(GetParam(0));
 
         if(_analogReadCallback.containsKey(pin))
             _analogReadCallback.get(pin).Invoke(Integer.parseInt(GetParam(1)));

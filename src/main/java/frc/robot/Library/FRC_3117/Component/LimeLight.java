@@ -27,10 +27,10 @@ public class LimeLight {
      */
     public static LimeLightData GetCurrent()
     {        
-        NetworkTableEntry tx = _table.getEntry(X_ANGLE_ENTRY); //X Angle (degree)
-        NetworkTableEntry ty = _table.getEntry(Y_ANGLE_ENTRY); //Y Angle (degree)
-        NetworkTableEntry ta = _table.getEntry(SCREE_SPACE_ENTRY); //Screen Space (Percent)
-        NetworkTableEntry tv = _table.getEntry(IS_TARGET_ENTRY); //Is Target (1 or 0)
+        var tx = _table.getEntry(X_ANGLE_ENTRY); //X Angle (degree)
+        var ty = _table.getEntry(Y_ANGLE_ENTRY); //Y Angle (degree)
+        var ta = _table.getEntry(SCREE_SPACE_ENTRY); //Screen Space (Percent)
+        var tv = _table.getEntry(IS_TARGET_ENTRY); //Is Target (1 or 0)
 
         return new LimeLightData(tx.getDouble(0) * (isUpsideDown ? -1 : 1), ty.getDouble(0) * (isUpsideDown ? -1 : 1), ta.getDouble(0), tv.getDouble(0));
     }
@@ -41,10 +41,10 @@ public class LimeLight {
      */
     public static LimeLightData GetCurrentRaw()
     {
-        NetworkTableEntry tx = _table.getEntry(X_ANGLE_ENTRY); //X Angle (degree)
-        NetworkTableEntry ty = _table.getEntry(Y_ANGLE_ENTRY); //Y Angle (degree)
-        NetworkTableEntry ta = _table.getEntry(SCREE_SPACE_ENTRY); //Screen Space (Percent)
-        NetworkTableEntry tv = _table.getEntry(IS_TARGET_ENTRY); //Is Target (1 or 0)
+        var tx = _table.getEntry(X_ANGLE_ENTRY); //X Angle (degree)
+        var ty = _table.getEntry(Y_ANGLE_ENTRY); //Y Angle (degree)
+        var ta = _table.getEntry(SCREE_SPACE_ENTRY); //Screen Space (Percent)
+        var tv = _table.getEntry(IS_TARGET_ENTRY); //Is Target (1 or 0)
 
         return new LimeLightData(tx.getDouble(0), ty.getDouble(0), ta.getDouble(0), tv.getDouble(0));
     }

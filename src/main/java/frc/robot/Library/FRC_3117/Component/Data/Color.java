@@ -90,9 +90,9 @@ public class Color
     {
         Kelvin = Mathf.Clamp(Kelvin, 1000, 40000) / 100;
 
-        int R = 0;
-        int G = 0;
-        int B = 0;
+        var R = 0;
+        var G = 0;
+        var B = 0;
 
         if(Kelvin <= 66)
         {
@@ -137,11 +137,11 @@ public class Color
      */
     public static Color RandomColor()
     {
-        Random rand = new Random();
+        var rand = new Random();
 
-        int R = rand.nextInt(255);
-        int G = rand.nextInt(255);
-        int B = rand.nextInt(255);
+        var R = rand.nextInt(255);
+        var G = rand.nextInt(255);
+        var B = rand.nextInt(255);
 
         return new Color(R, G, B, 255);
     }

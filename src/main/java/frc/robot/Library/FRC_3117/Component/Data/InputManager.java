@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import frc.robot.Library.FRC_3117.Component.Data.Tupple.Pair;
 import frc.robot.Library.FRC_3117.Interface.Action;;
 
 /**
@@ -34,12 +33,12 @@ public class InputManager
         AllButton = Input.GetAllButton();
         AllAxis = Input.GetAllAxis();
 
-        for (String key : AllButton)
+        for (var key : AllButton)
         {
             _lastState.put(key, false);
             _currentState.put(key, false);
         }
-        for (String key : AllAxis)
+        for (var key : AllAxis)
         {
             _currentAxisValue.put(key, 0.);
         }
@@ -59,40 +58,40 @@ public class InputManager
             }
             else
             {
-                InputPlaybackFrame currentFrame = _currentPlayback.GetFrame(_currentPlaybackTime++);
+                var currentFrame = _currentPlayback.GetFrame(_currentPlaybackTime++);
 
-                for(Pair<String, Boolean> button : currentFrame.ButtonList)
+                for(var button : currentFrame.ButtonList)
                 {
-                    boolean last = _currentState.get(button.Item1);
-                    boolean current = button.Item2;
+                    var last = _currentState.get(button.Item1);
+                    var current = button.Item2;
 
                     _lastState.put(button.Item1, last);
                     _currentState.put(button.Item1, current);
 
                     if(current && _buttonCallback.containsKey(button.Item1))
                     {
-                        for(Action callback : _buttonCallback.get(button.Item1))
+                        for(var callback : _buttonCallback.get(button.Item1))
                         {
                             callback.Invoke();
                         }
                     }
                     if((current && !last) && _buttonCallback.containsKey("Down/" + button.Item1))
                     {
-                        for(Action callback : _buttonCallback.get("Down/" + button.Item1))
+                        for(var callback : _buttonCallback.get("Down/" + button.Item1))
                         {
                             callback.Invoke();
                         }
                     }
                     else if((!current && last) && _buttonCallback.containsKey("Up/" + button.Item1))
                     {
-                        for(Action callback : _buttonCallback.get("Up/" + button.Item1))
+                        for(var callback : _buttonCallback.get("Up/" + button.Item1))
                         {
                             callback.Invoke();
                         }
                     }
                 }
 
-                for(Pair<String, Double> axis : currentFrame.AxisList)
+                for(var axis : currentFrame.AxisList)
                 {
                     _currentAxisValue.put(axis.Item1, axis.Item2);
                 }
@@ -101,31 +100,31 @@ public class InputManager
             }
         }
 
-        for (String key : AllButton)
+        for (var key : AllButton)
         {
-            boolean last = _currentState.get(key);
-            boolean current = Input.GetButton(key);
+            var last = _currentState.get(key);
+            var current = Input.GetButton(key);
 
             _lastState.put(key, last);
             _currentState.put(key, current);
 
             if(current && _buttonCallback.containsKey(key))
             {
-                for(Action callback : _buttonCallback.get(key))
+                for(var callback : _buttonCallback.get(key))
                 {
                     callback.Invoke();
                 }
             }
             if((current && !last) && _buttonCallback.containsKey("Down/" + key))
             {
-                for(Action callback : _buttonCallback.get("Down/" + key))
+                for(var callback : _buttonCallback.get("Down/" + key))
                 {
                     callback.Invoke();
                 }
             }
             else if((!current && last) && _buttonCallback.containsKey("Up/" + key))
             {
-                for(Action callback : _buttonCallback.get("Up/" + key))
+                for(var callback : _buttonCallback.get("Up/" + key))
                 {
                     callback.Invoke();
                 }

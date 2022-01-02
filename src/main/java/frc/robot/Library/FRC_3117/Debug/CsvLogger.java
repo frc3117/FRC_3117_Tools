@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import frc.robot.Library.FRC_3117.Math.Timer;
 
@@ -73,15 +72,15 @@ public class CsvLogger
      */
     public static void SaveToFile(String FileName)
     {
-        Map<String, String> env = System.getenv();
+        var env = System.getenv();
 
-        File directory = new File(env.get("HOME") + "/Debug");
+        var directory = new File(env.get("HOME") + "/Debug");
         if(!directory.exists())
         {
             directory.mkdir();
         }
 
-        File file = new File(env.get("Home") + "/Debug/" + FileName + ".csv");
+        var file = new File(env.get("Home") + "/Debug/" + FileName + ".csv");
         if(file.delete())
         {
             try
@@ -93,7 +92,7 @@ public class CsvLogger
 
         try
         {
-            FileWriter writer = new FileWriter(file);
+            var writer = new FileWriter(file);
             writer.write(_fileContent.toString());
             writer.close();
         }

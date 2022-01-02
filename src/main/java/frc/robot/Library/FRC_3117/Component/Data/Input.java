@@ -2,7 +2,6 @@ package frc.robot.Library.FRC_3117.Component.Data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -90,7 +89,7 @@ public class Input
             _joysticks.put(JoystickID, new Joystick(JoystickID));
         }
 
-        Input current = _inputs.get("Axis/" + Name);
+        var current = _inputs.get("Axis/" + Name);
 
         current._joystickIDNegative = JoystickID;
         current._inputNegative = InputID;
@@ -122,15 +121,15 @@ public class Input
      * @return The current value of the axis
      */
     public static double GetAxis(String Name) {
-        Input current = _inputs.get("Axis/" + Name);
-        double negative = 0;
+        var current = _inputs.get("Axis/" + Name);
+        var negative = 0.;
 
         if(current._joystickIDNegative != 9999)
         {
             negative = _joysticks.get(current._joystickIDNegative).getRawAxis(current._inputNegative) * (current._isInputNegativeInverted ? -1 : 1);
         }
 
-        double val = (_joysticks.get(current._joystickID).getRawAxis(current._input) * (current._isInputInverted ? -1 : 1)) - negative;
+        var val = (_joysticks.get(current._joystickID).getRawAxis(current._input) * (current._isInputInverted ? -1 : 1)) - negative;
 
         if(Math.abs(val) <= _deadzone.get("Axis/" + Name))
         {
@@ -146,7 +145,7 @@ public class Input
      * @return The current state of the button
      */
     public static boolean GetButton(String Name) {
-         Input current = _inputs.get("Button/" + Name);
+        var current = _inputs.get("Button/" + Name);
 
         return _joysticks.get(current._joystickID).getRawButton(current._input);
     }
@@ -157,9 +156,9 @@ public class Input
      */
     public static String[] GetAllAxis()
     {
-        List<String> keys = new ArrayList<String>();
+        var keys = new ArrayList<String>();
         
-        for (String key : _inputs.keySet())
+        for (var key : _inputs.keySet())
         {
             if(key.contains("Axis/"))
             {
@@ -175,9 +174,9 @@ public class Input
      */
     public static String[] GetAllButton()
     {
-        List<String> keys = new ArrayList<String>();
+        var keys = new ArrayList<String>();
         
-        for (String key : _inputs.keySet())
+        for (var key : _inputs.keySet())
         {
             if(key.contains("Button/"))
             {

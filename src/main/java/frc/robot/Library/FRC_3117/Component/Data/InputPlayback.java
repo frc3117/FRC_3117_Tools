@@ -75,7 +75,7 @@ public class InputPlayback
      */
     public void SaveToFile(String Path)
     {
-        File file = new File(Path + ".playback");
+        var file = new File(Path + ".playback");
 
         if(file.delete())
         {
@@ -88,12 +88,12 @@ public class InputPlayback
 
         try
         {
-            FileWriter writer = new FileWriter(file);
-            StringBuilder fileContent = new StringBuilder();
+            var writer = new FileWriter(file);
+            var fileContent = new StringBuilder();
 
             for(int i = 0; i < GetFrameCount(); i++)
             {
-                List<Pair<String, Double>> axis = _frames.get(i).AxisList;
+                var axis = _frames.get(i).AxisList;
                 for(int o = 0; o < axis.size(); o++)
                 {
                     fileContent.append("A/");
@@ -103,7 +103,7 @@ public class InputPlayback
                     fileContent.append(System.lineSeparator());
                 }
 
-                List<Pair<String, Boolean>> button = _frames.get(i).ButtonList;
+                var button = _frames.get(i).ButtonList;
                 for(int o = 0; o < button.size(); o++)
                 {
                     fileContent.append("B/");
@@ -129,20 +129,20 @@ public class InputPlayback
      */
     public static InputPlayback LoadFromFile(String Path)
     {
-        InputPlayback current = new InputPlayback();
+        var current = new InputPlayback();
 
-        File file = new File(Path + ".playback");
+        var file = new File(Path + ".playback");
         if(!file.exists())
             return null;
 
         try
         {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String currentLine;
+            var reader = new BufferedReader(new FileReader(file));
+            var currentLine = "";
 
             while ((currentLine = reader.readLine()) != null) 
             {
-                String[] Split = currentLine.split("/", 0);
+                var Split = currentLine.split("/", 0);
 
                 switch(Split[0])
                 {

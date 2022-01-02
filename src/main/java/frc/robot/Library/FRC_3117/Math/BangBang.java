@@ -101,7 +101,7 @@ public class BangBang implements BaseController
      */
     public double Evaluate(double Current)
     {
-        double error = _target - Current;
+        var error = _target - Current;
 
         if(Math.abs(error) <= _tolerency)
         {

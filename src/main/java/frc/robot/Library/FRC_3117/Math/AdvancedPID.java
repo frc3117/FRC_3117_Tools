@@ -222,13 +222,13 @@ public class AdvancedPID implements BasePID {
             _integral = Mathf.Clamp(_integral,  _saturationIntegralMin, _staturationIntegralMax);
         }
 
-        double averageError = (Error + _previousError) / 2;
-        double derivative = (averageError - _previousAverageError) / Dt;
+        var averageError = (Error + _previousError) / 2;
+        var derivative = (averageError - _previousAverageError) / Dt;
 
         _previousError = Error;
         _previousAverageError = averageError;
 
-        double target;
+        var target = 0.;
 
         if(_isDebug)
         {

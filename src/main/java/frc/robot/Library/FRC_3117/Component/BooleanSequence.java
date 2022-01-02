@@ -60,7 +60,7 @@ public class BooleanSequence
      */
     public boolean Evaluate()
     {
-        int currentIndex = (int)((Timer.GetCurrentTime() - _startTime) / _resolution) % _values.size();
+        var currentIndex = (int)((Timer.GetCurrentTime() - _startTime) / _resolution) % _values.size();
         _currentValue = _values.get(currentIndex);
 
         return _currentValue;

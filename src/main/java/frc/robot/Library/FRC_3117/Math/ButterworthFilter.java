@@ -94,7 +94,7 @@ public class ButterworthFilter implements BaseFilter
      */
     public double Update(double newInput)
     {
-        double newOutput = _a1 * newInput + _a2 * _lastInput[0] + _a3 * _lastInput[1] - _b1 * _lastOutput[0] - _b2 * _lastOutput[1];
+        var newOutput = _a1 * newInput + _a2 * _lastInput[0] + _a3 * _lastInput[1] - _b1 * _lastOutput[0] - _b2 * _lastOutput[1];
 
         _lastInput[1] = _lastInput[0];
         _lastInput[0] = newInput;

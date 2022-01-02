@@ -142,14 +142,14 @@ public class Leds implements Component {
         if(_cycle.containsKey(CycleName))
             return;
 
-        String[] Split = Cycle.split(":", 0);
+        var Split = Cycle.split(":", 0);
 
-        Color[] color = new Color[Split.length];
-        double[] time = new double[Split.length];
+        var color = new Color[Split.length];
+        var time = new double[Split.length];
 
         for(int i = 0; i < Split.length; i++)
         {
-            String[] data = Split[i].split("_", 0);
+            var data = Split[i].split("_", 0);
 
             if(_mode == Mode.Solenoid || data.length == 2)
             {
@@ -164,7 +164,7 @@ public class Leds implements Component {
 
         }
 
-        ColorCycle current = new ColorCycle();
+        var current = new ColorCycle();
         current.Color = color;
         current.Time = time;
 
@@ -172,11 +172,11 @@ public class Leds implements Component {
     }
 
     public void DoComponent() {  
-        Color CurrentColor;
+        var CurrentColor = Color.ZERO;
 
         if(_isCycle)
         {
-            ColorCycle current = _cycle.get(_cycleName);
+            var current = _cycle.get(_cycleName);
 
             if(current.Time[_currentCycleIndex] <= Timer.GetCurrentTime() - _startTime)
             {

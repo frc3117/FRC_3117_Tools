@@ -20,12 +20,12 @@ public class InputRecorder
      */
     public void AddFrame()
     {
-        for (String button : InputManager.AllButton) 
+        for (var button : InputManager.AllButton) 
         {
             _current.AddButtonValue(button, InputManager.GetButton(button));
         }
 
-        for (String axis : InputManager.AllAxis) 
+        for (var axis : InputManager.AllAxis) 
         {
             _current.AddAxisValue(axis, InputManager.GetAxis(axis));
         }

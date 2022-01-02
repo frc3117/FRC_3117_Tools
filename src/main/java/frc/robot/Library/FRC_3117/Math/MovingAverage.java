@@ -32,7 +32,7 @@ public class MovingAverage
             _numbers.remove(0);
         }
 
-        double sum = 0;
+        var sum = 0.;
         for(var num : _numbers)
         {
             sum += num;

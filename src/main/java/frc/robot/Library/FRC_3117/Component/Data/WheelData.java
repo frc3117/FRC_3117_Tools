@@ -43,8 +43,8 @@ public class WheelData
     public Vector2d GetWheelRotationVector()
     {
         //Rotation vector is a normalized normal vector from the wheel position
-        Vector2d vec = new Vector2d(-WheelPosition.y, WheelPosition.x);
-        double mag = vec.magnitude();
+        var vec = new Vector2d(-WheelPosition.y, WheelPosition.x);
+        var mag = vec.magnitude();
 
         vec.x /= mag;
         vec.y /= mag;

@@ -104,8 +104,8 @@ public class SimplePID implements BasePID
      */
     public double Evaluate(double Error, double Dt)
     {
-        double derivative = (_previousError - Error) / Dt;
-        double target;
+        var derivative = (_previousError - Error) / Dt;
+        var target = 0.;
 
         _integral += Error * Dt;
         _previousError = Error;

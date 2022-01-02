@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
     _componentList = new LinkedHashMap<>();
     _hasBeenInit = false;
 
-    for(AutonomousMode mode : AutonomousMode.values())
+    for(var mode : AutonomousMode.values())
     {
       _autoChooser.addOption(mode.toString(), mode);
     }

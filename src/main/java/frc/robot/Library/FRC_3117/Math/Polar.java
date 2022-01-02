@@ -23,8 +23,8 @@ public class Polar
      */
     public Polar add(Polar pol)
     {
-        Vector2d vec1 = vector();
-        Vector2d vec2 = pol.vector();
+        var vec1 = vector();
+        var vec2 = pol.vector();
 
         return Polar.fromVector(new Vector2d(vec1.x + vec2.x, vec1.y + vec2.y));
     }
@@ -35,8 +35,8 @@ public class Polar
      */
     public Polar sub(Polar pol)
     {
-        Vector2d vec1 = vector();
-        Vector2d vec2 = pol.vector();
+        var vec1 = vector();
+        var vec2 = pol.vector();
 
         return Polar.fromVector(new Vector2d(vec1.x - vec2.x, vec1.y - vec2.y));
     }

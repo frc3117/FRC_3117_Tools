@@ -104,10 +104,10 @@ public class Mathf
      */
     public static Color Lerp(Color c1, Color c2, double x)
     {
-        int R = (int)Lerp(c1.R, c2.R, x);
-        int G = (int)Lerp(c1.R, c2.R, x);
-        int B = (int)Lerp(c1.R, c2.R, x);
-        int A = (int)Lerp(c1.R, c2.R, x);
+        var R = (int)Lerp(c1.R, c2.R, x);
+        var G = (int)Lerp(c1.R, c2.R, x);
+        var B = (int)Lerp(c1.R, c2.R, x);
+        var A = (int)Lerp(c1.R, c2.R, x);
 
         return new Color(R, G, B, A);
     }
@@ -130,12 +130,12 @@ public class Mathf
      */
     public static double DeltaAngle(Vector2d Source, Vector2d Target)
     {
-        double SourceAngle = Polar.fromVector(Source).azymuth;
+        var SourceAngle = Polar.fromVector(Source).azymuth;
 
-        double xPrim = Target.x * Math.cos(SourceAngle) - Target.y * Math.sin(SourceAngle); //Change of coordinate system
-        double yPrim = Target.x * Math.sin(SourceAngle) + Target.y * Math.cos(SourceAngle);
+        var xPrim = Target.x * Math.cos(SourceAngle) - Target.y * Math.sin(SourceAngle); //Change of coordinate system
+        var yPrim = Target.x * Math.sin(SourceAngle) + Target.y * Math.cos(SourceAngle);
 
-        double angle = Math.atan2(yPrim, xPrim); //Angle betwen Source and target
+        var angle = Math.atan2(yPrim, xPrim); //Angle betwen Source and target
 
         return angle;
     }
@@ -159,11 +159,11 @@ public class Mathf
      */
     public static Vector2d RotatePoint(Vector2d Vector, double angle)
     {
-        double sin = Math.sin(angle);
-        double cos = Math.cos(angle);
+        var sin = Math.sin(angle);
+        var cos = Math.cos(angle);
         
-        double tx = Vector.x;
-        double ty = Vector.y;
+        var tx = Vector.x;
+        var ty = Vector.y;
 
         return new Vector2d((cos * tx) - (sin * ty), (sin * tx) + (cos * ty));
     }
@@ -176,7 +176,7 @@ public class Mathf
      */
     public static Vector2d Vector2Scale(Vector2d v1, double value)
     {
-        Vector2d vec = new Vector2d(v1.x, v1.y);
+        var vec = new Vector2d(v1.x, v1.y);
 
         vec.x *= value;
         vec.y *= value;
@@ -202,7 +202,7 @@ public class Mathf
      */
     public static Vector2d Vector2Sum(Vector2d v1, Vector2d v2)
     {
-        Vector2d vec = new Vector2d(v1.x, v1.y);
+        var vec = new Vector2d(v1.x, v1.y);
 
         vec.x += v2.x;
         vec.y += v2.y;
@@ -217,7 +217,7 @@ public class Mathf
      */
     public static Vector2d Vector2Sum(Vector2d v1, double val)
     {
-        Vector2d vec = new Vector2d(v1.x, v1.y);
+        var vec = new Vector2d(v1.x, v1.y);
 
         vec.x += val;
         vec.y += val;
@@ -243,7 +243,7 @@ public class Mathf
      */
     public static Vector2d Vector2Sub(Vector2d v1, Vector2d v2)
     {
-        Vector2d vec = new Vector2d(v1.x, v1.y);
+        var vec = new Vector2d(v1.x, v1.y);
 
         vec.x -= v2.x;
         vec.y -= v2.y;
@@ -258,7 +258,7 @@ public class Mathf
      */
     public static Vector2d Vector2Sub(Vector2d v1, double val)
     {
-        Vector2d vec = new Vector2d(v1.x, v1.y);
+        var vec = new Vector2d(v1.x, v1.y);
 
         vec.x -= val;
         vec.y -= val;
@@ -273,7 +273,7 @@ public class Mathf
      */
     public static Vector2d Vector2Sub(double val, Vector2d v1)
     {
-        Vector2d vec = new Vector2d(val, val);
+        var vec = new Vector2d(val, val);
 
         vec.x -= v1.x;
         vec.y -= v1.y;
@@ -288,7 +288,7 @@ public class Mathf
      */
     public static Vector2d Normalize(Vector2d v)
     {
-        double mag = v.magnitude();
+        var mag = v.magnitude();
 
         return new Vector2d(v.x / mag, v.y / mag);
     }
@@ -366,8 +366,8 @@ public class Mathf
         }
         else
         {
-            int Next = NextPowerOfTwo(number);
-            int Previous = Next / 2;
+            var Next = NextPowerOfTwo(number);
+            var Previous = Next / 2;
 
             if(Next - number >= number - Previous)
             {

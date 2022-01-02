@@ -59,7 +59,7 @@ public class FunctionScheduler implements Component
     {
         if(_isStarted && !_isPaused)
         {
-            FunctionSchedulerStep step = _steps.get(_currentStep);
+            var step = _steps.get(_currentStep);
             
             switch(step.GetType())
             {
