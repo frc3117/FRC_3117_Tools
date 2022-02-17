@@ -1,13 +1,13 @@
-package frc.robot.Library.FRC_3117.Component;
+package frc.robot.Library.FRC_3117_Tools.Component;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.SerialPort;
-import frc.robot.Library.FRC_3117.Interface.Action;
-import frc.robot.Library.FRC_3117.Interface.AnalogReadCallback;
-import frc.robot.Library.FRC_3117.Interface.Component;
-import frc.robot.Library.FRC_3117.Interface.DigitalReadCallback;
+import frc.robot.Library.FRC_3117_Tools.Interface.Action;
+import frc.robot.Library.FRC_3117_Tools.Interface.AnalogReadCallback;
+import frc.robot.Library.FRC_3117_Tools.Interface.Component;
+import frc.robot.Library.FRC_3117_Tools.Interface.DigitalReadCallback;
 
 /**
  * A class to comunicate to an arduino through a serial port

@@ -1,4 +1,4 @@
-package frc.robot.Library.FRC_3117.Component.Data;
+package frc.robot.Library.FRC_3117_Tools.Component.Data;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -9,7 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Encoder;
-import frc.robot.Library.FRC_3117.Math.AdvancedPID;
+import frc.robot.Library.FRC_3117_Tools.Math.AdvancedPID;
 
 /**
  * The universal motor controller

@@ -1,8 +1,8 @@
-package frc.robot.Library.FRC_3117.Component.Data;
+package frc.robot.Library.FRC_3117_Tools.Component.Data;
 
 import java.util.Random;
 
-import frc.robot.Library.FRC_3117.Math.Mathf;
+import frc.robot.Library.FRC_3117_Tools.Math.Mathf;
 
 /**
  * The color class used to set the led strip color

@@ -1,13 +1,13 @@
-package frc.robot.Library.FRC_3117.Component;
+package frc.robot.Library.FRC_3117_Tools.Component;
 
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import frc.robot.Library.FRC_3117.Component.Data.Color;
-import frc.robot.Library.FRC_3117.Component.Data.SolenoidValve;
-import frc.robot.Library.FRC_3117.Interface.Component;
-import frc.robot.Library.FRC_3117.Math.Timer;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.Color;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.SolenoidValve;
+import frc.robot.Library.FRC_3117_Tools.Interface.Component;
+import frc.robot.Library.FRC_3117_Tools.Math.Timer;
 
 /**
  * The LED controller

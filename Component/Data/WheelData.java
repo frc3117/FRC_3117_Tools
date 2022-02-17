@@ -1,7 +1,7 @@
-package frc.robot.Library.FRC_3117.Component.Data;
+package frc.robot.Library.FRC_3117_Tools.Component.Data;
 
 import edu.wpi.first.wpilibj.drive.Vector2d;
-import frc.robot.Library.FRC_3117.Component.Data.Tupple.Pair;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.Tupple.Pair;
 
 public class WheelData
 {

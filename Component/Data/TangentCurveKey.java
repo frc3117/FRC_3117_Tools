@@ -1,4 +1,4 @@
-package frc.robot.Library.FRC_3117.Component.Data;
+package frc.robot.Library.FRC_3117_Tools.Component.Data;
 
 public class TangentCurveKey 
 {

@@ -1,5 +1,5 @@
 
-package frc.robot.Library.FRC_3117.Interface;
+package frc.robot.Library.FRC_3117_Tools.Interface;
 
 /**
  * The interface for function to be used as condition

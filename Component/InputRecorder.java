@@ -1,7 +1,7 @@
-package frc.robot.Library.FRC_3117.Component;
+package frc.robot.Library.FRC_3117_Tools.Component;
 
-import frc.robot.Library.FRC_3117.Component.Data.InputManager;
-import frc.robot.Library.FRC_3117.Component.Data.InputPlayback;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.InputManager;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.InputPlayback;
 
 /**
  * Record all the input and save it into a playback

@@ -1,7 +1,7 @@
-package frc.robot.Library.FRC_3117.Math;
+package frc.robot.Library.FRC_3117_Tools.Math;
 
 import edu.wpi.first.wpilibj.drive.Vector2d;
-import frc.robot.Library.FRC_3117.Component.Data.Color;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.Color;
 
 import java.lang.Math;
 

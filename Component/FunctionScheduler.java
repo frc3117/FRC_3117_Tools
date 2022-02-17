@@ -1,14 +1,14 @@
-package frc.robot.Library.FRC_3117.Component;
+package frc.robot.Library.FRC_3117_Tools.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import frc.robot.Library.FRC_3117.Component.Data.FunctionSchedulerStep;
-import frc.robot.Library.FRC_3117.Component.Data.FunctionSchedulerStep.StepType;
-import frc.robot.Library.FRC_3117.Interface.Action;
-import frc.robot.Library.FRC_3117.Interface.Component;
-import frc.robot.Library.FRC_3117.Interface.Condition;
-import frc.robot.Library.FRC_3117.Math.Timer;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.FunctionSchedulerStep;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.FunctionSchedulerStep.StepType;
+import frc.robot.Library.FRC_3117_Tools.Interface.Action;
+import frc.robot.Library.FRC_3117_Tools.Interface.Component;
+import frc.robot.Library.FRC_3117_Tools.Interface.Condition;
+import frc.robot.Library.FRC_3117_Tools.Math.Timer;
 
 /**
  * A class to create sequence with delay and condition

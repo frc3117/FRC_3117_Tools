@@ -1,6 +1,6 @@
-package frc.robot.Library.FRC_3117.Math;
+package frc.robot.Library.FRC_3117_Tools.Math;
 
-import frc.robot.Library.FRC_3117.Component.Data.TangentCurveKey;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.TangentCurveKey;
 
 public class TangentCurve 
 {

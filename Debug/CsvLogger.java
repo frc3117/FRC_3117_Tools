@@ -1,4 +1,4 @@
-package frc.robot.Library.FRC_3117.Debug;
+package frc.robot.Library.FRC_3117_Tools.Debug;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import frc.robot.Library.FRC_3117.Math.Timer;
+import frc.robot.Library.FRC_3117_Tools.Math.Timer;
 
 /**
  * A logger to save data in a csv form

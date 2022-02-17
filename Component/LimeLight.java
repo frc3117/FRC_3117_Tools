@@ -1,7 +1,7 @@
-package frc.robot.Library.FRC_3117.Component;
+package frc.robot.Library.FRC_3117_Tools.Component;
 
 import edu.wpi.first.networktables.*;
-import frc.robot.Library.FRC_3117.Component.Data.LimeLightData;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.LimeLightData;
 
 /**
  * The limelight vision class

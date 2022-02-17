@@ -1,9 +1,9 @@
-package frc.robot.Library.FRC_3117.Component;
+package frc.robot.Library.FRC_3117_Tools.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import frc.robot.Library.FRC_3117.Math.Timer;
+import frc.robot.Library.FRC_3117_Tools.Math.Timer;
 
 /**
  * A boolean sequence tool

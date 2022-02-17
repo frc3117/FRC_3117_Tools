@@ -1,8 +1,8 @@
-package frc.robot.Library.FRC_3117.Math;
+package frc.robot.Library.FRC_3117_Tools.Math;
 
 import edu.wpi.first.wpilibj.drive.Vector2d;
-import frc.robot.Library.FRC_3117.Math.Jama.Matrix;
-import frc.robot.Library.FRC_3117.Math.Jama.QRDecomposition;
+import frc.robot.Library.FRC_3117_Tools.Math.Jama.Matrix;
+import frc.robot.Library.FRC_3117_Tools.Math.Jama.QRDecomposition;
 
 public class PolynomialRegression {
     private int degree; // degree of the polynomial regression
