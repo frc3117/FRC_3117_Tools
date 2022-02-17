@@ -174,6 +174,7 @@ public class AdvancedPID implements BasePID {
      * Set the current feed foward value
      * @param FeedForward The current feed foward value
      */
+    @Override
     public void SetFeedForward(double FeedForward)
     {
         _feedFoward = FeedForward;

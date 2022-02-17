@@ -96,4 +96,9 @@ public class TakeBackHalf implements BaseController
         _output = 0;
         _tbh = 0;
     }
+    @Override
+    public void SetFeedForward(double feedforward) {
+        // TODO Implement
+        
+    }
 }

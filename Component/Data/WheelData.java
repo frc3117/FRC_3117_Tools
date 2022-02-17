@@ -17,24 +17,12 @@ public class WheelData
         WheelPosition = wheelPosition;
         AngleOffset = angleOffset;
     }
-    public WheelData(MotorController driveController, MotorController directionController, Pair<Integer, Integer> driveEncoder, int directionEncoderChannel, int shifterChannel, Vector2d wheelPosition, double angleOffset)
-    {
-        DirectionController = directionController;
-        DriveController = driveController;
-        DriveEncoderA = driveEncoder.Item1;
-        DriveEncoderB = driveEncoder.Item2;
-        DirectionEncoderChannel = directionEncoderChannel;
-        ShifterChannel = shifterChannel;
-        WheelPosition = wheelPosition;
-        AngleOffset = angleOffset;
-    }
-
+    
     public MotorController DriveController;
     public MotorController DirectionController;
     public int DriveEncoderA;
     public int DriveEncoderB;
     public int DirectionEncoderChannel;
-    public int ShifterChannel = -1;
 
     public Vector2d WheelPosition;
 

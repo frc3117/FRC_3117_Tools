@@ -6,6 +6,7 @@ package frc.robot.Library.FRC_3117.Interface;
 public interface BaseController 
 {
     public double Evaluate(double Error);
+    public void SetFeedForward(double feedforward);
     public void SetDebugMode(String Name);
     public void StopDebugMode();
 }

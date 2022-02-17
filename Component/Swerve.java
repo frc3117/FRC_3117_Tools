@@ -1,9 +1,7 @@
 package frc.robot.Library.FRC_3117.Component;
 
 import frc.robot.Library.FRC_3117.Component.Data.Input;
-import frc.robot.Library.FRC_3117.Component.Data.InputManager;
 import frc.robot.Library.FRC_3117.Component.Data.MotorController;
-import frc.robot.Library.FRC_3117.Component.Data.SolenoidValve;
 import frc.robot.Library.FRC_3117.Component.Data.WheelData;
 import frc.robot.Library.FRC_3117.Interface.Component;
 import frc.robot.Library.FRC_3117.Math.AdvancedPID;
@@ -16,17 +14,15 @@ import frc.robot.Library.FRC_3117.Math.UnitConverter;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Swerve implements Component {
-    public Swerve(WheelData[] WheelsData, boolean IsShifter)
+    public Swerve(WheelData[] WheelsData, Gyro imu)
     {
         _wheelCount = WheelsData.length;
 
         _driveMotor = new MotorController[_wheelCount];
         _directionMotor = new MotorController[_wheelCount];
         _directionEncoder = new AnalogInput[_wheelCount];
-        _shifterValve = new SolenoidValve[_wheelCount];
         _rotationVector = new Vector2d[_wheelCount];
         _wheelPosition = new Vector2d[_wheelCount];
         _directionPID = new AdvancedPID[_wheelCount];
@@ -42,20 +38,12 @@ public class Swerve implements Component {
         _verticaRateLimiter = new RateLimiter(10000, 0);
         _rotationRateLimiter = new RateLimiter(10000, 0);
 
-        _isShifter = IsShifter;
-
         //Initializing all component of the swerve swerve system
         for(int i  = 0; i < _wheelCount; i++)
         {
             _driveMotor[i] = WheelsData[i].DriveController;
             _directionMotor[i] = WheelsData[i].DirectionController;
             _directionEncoder[i] = new AnalogInput(WheelsData[i].DirectionEncoderChannel);
-
-            if(IsShifter)
-            {
-                _shifterValve[i] = SolenoidValve.CreateSingle(WheelsData[i].ShifterChannel, 0);
-                _shifterValve[i].SetState(false);
-            }
 
             _rotationVector[i] = WheelsData[i].GetWheelRotationVector();
             _wheelPosition[i] = WheelsData[i].WheelPosition;
@@ -66,6 +54,8 @@ public class Swerve implements Component {
 
             _directionPID[i] = new AdvancedPID();
         }
+
+        _IMU = imu;
     }
 
     public enum DrivingMode
@@ -75,18 +65,12 @@ public class Swerve implements Component {
         World,
         Tank
     }
-    public enum ShifterMode
-    {
-        Automatic,
-        Manual
-    }
 
     private int _wheelCount;
 
     private MotorController[] _driveMotor;
     private MotorController[] _directionMotor;
     private AnalogInput[] _directionEncoder;
-    private SolenoidValve[] _shifterValve;
     private Vector2d[] _rotationVector;
 
     private Vector2d[] _wheelPosition;
@@ -103,7 +87,6 @@ public class Swerve implements Component {
     private AdvancedPID[] _directionPID;
 
     private DrivingMode _mode = DrivingMode.Local;
-    private ShifterMode _shiftMode = ShifterMode.Manual;
     private double _speedRatio = 0.5;
     private double _roationSpeedRatio = 0.5;
 
@@ -115,18 +98,6 @@ public class Swerve implements Component {
     private RateLimiter _horizontalRateLimiter;
     private RateLimiter _verticaRateLimiter;
     private RateLimiter _rotationRateLimiter;
-
-    private boolean _isShifter;
-    private boolean _shiftState = false;
-
-    private double _minShiftTime;
-    private double _lastAutomaticShiftTime;
-
-    private double _downshiftThreshold;
-    private double _upshiftThreshold;
-
-    private boolean _isShiftOverriden = false;
-    private boolean _overridenShiftState = false;
 
     private double _rotationAxisOverride = 0;
     private boolean _isRotationAxisOverriden = false;
@@ -148,7 +119,7 @@ public class Swerve implements Component {
 
     public void Init()
     {
-        
+        InitIMU();
     }
 
     public void Disabled()
@@ -206,50 +177,6 @@ public class Swerve implements Component {
     {
         _pointDistance = Distance;
     }
-
-    /**
-     * Set the current shift mode of the swerve drive
-     * @param Mode The shift mode
-     */
-    public void SetShifterMode(ShifterMode Mode)
-    {
-        _shiftMode = Mode;
-    }
-    /**
-     * Set the current shift mode of the swerve drive
-     * @param Mode The shift mode
-     */
-    public void SetShifterMode(int Mode)
-    {
-        switch(Mode)
-        {
-            case 0:
-            _shiftMode = ShifterMode.Automatic;
-            break;
-
-            case 1:
-            _shiftMode = ShifterMode.Manual;
-            break;
-        }
-    }
-    /**
-     * Set the minimum time between automatic shift
-     * @param Time The minimum time between automatic shift
-     */
-    public void SetShiftMinTime(double Time)
-    {
-        _minShiftTime = Time;
-    }
-    /**
-     * Set the threshold of the automatic shifter
-     * @param Downshift
-     * @param Upshift
-     */
-    public void SetShiftThreshold(double Downshift, double Upshift)
-    {
-        _downshiftThreshold = Downshift;
-        _upshiftThreshold = Upshift;
-    }
     
     /**
      * Initialize the IMU
@@ -291,15 +218,6 @@ public class Swerve implements Component {
     }
 
     /**
-     * Get the current shift state
-     * @return The current shift state
-     */
-    public boolean GetGear()
-    {
-        return _shiftState;
-    }
-
-    /**
      * Set the rate limiter max speed
      * @param MaxSpeed The max speed of the rate limiter
      */
@@ -317,23 +235,6 @@ public class Swerve implements Component {
         _rotationRateLimiter.SetVelocity(MaxSpeed);
     }
 
-    /**
-     * Override the current shift state
-     * @param Speed The shift state to set
-     */
-    public void OverrideShift(int Speed)
-    {
-        if(Speed == 0)
-        {
-            _overridenShiftState = true;
-            _isShiftOverriden = true;
-        }
-        else if (Speed == 1)
-        {
-            _overridenShiftState = false;
-            _isShiftOverriden = true;
-        }
-    }
     /**
      * Override the current rotation axis value
      * @param AxisValue The rotation value to set
@@ -446,97 +347,15 @@ public class Swerve implements Component {
     int f = 0;
     public void DoComponent()
     {
-        /*
-        Robot.Println("(0): " + ((_directionEncoder[0].getValue() / 4096f) * 2 * 3.1415f));
-        Robot.Println("(1): " + ((_directionEncoder[1].getValue() / 4096f) * 2 * 3.1415f));
+        
+        //System.out.println("(0): " + ((_directionEncoder[0].getValue() / 4096f) * 2 * 3.1415f));
+        //System.out.println("(1): " + ((_directionEncoder[1].getValue() / 4096f) * 2 * 3.1415f));
 
-        Robot.Println("(2): " + ((_directionEncoder[2].getValue() / 4096f) * 2 * 3.1415f));
-        Robot.Println("(3): " + ((_directionEncoder[3].getValue() / 4096f) * 2 * 3.1415f));
-        */
-
+        //System.out.println("(2): " + ((_directionEncoder[2].getValue() / 4096f) * 2 * 3.1415f));
+        //System.out.println("(3): " + ((_directionEncoder[3].getValue() / 4096f) * 2 * 3.1415f));
+       
         double dt = Timer.GetDeltaTime();
-
-        if(_isShifter)
-        {
-            //Override the shift state of the robot for a peculiar task
-            if(_isShiftOverriden)
-            {
-                if(_shiftState != _overridenShiftState)
-                {
-                    for(int i = 0; i < _wheelCount; i++)
-                    {
-                        _shifterValve[i].SetState(_overridenShiftState);   
-                    }
-
-                    _shiftState = _overridenShiftState;
-                }
-            }
-            else
-            {
-                switch(_shiftMode)
-                {
-                    case Automatic:
-                    //Autoshift only if the delta time is reach and the robot velocity reach the threshold
-                    if(Timer.GetCurrentTime() - _lastAutomaticShiftTime >= _minShiftTime)
-                    {
-                        var velocityVector = new Vector2d(0, 0);
-
-                        for(int i = 0; i < _wheelCount; i++)
-                        {
-                            velocityVector = Mathf.Vector2Sum(velocityVector, GetWheelVector(i));
-                        }
-                        var Mag = velocityVector.magnitude();
-
-                        if(_shiftState && Mag<= _downshiftThreshold)
-                        {
-                            _lastAutomaticShiftTime = Timer.GetCurrentTime();
-                            _shiftState = false;
-
-                            for(int i = 0; i < _shifterValve.length; i++)
-                            {
-                                _shifterValve[i].SetState(_shiftState);
-                            }
-                        }
-                        else if (!_shiftState && Mag>= _upshiftThreshold)
-                        {
-                            _lastAutomaticShiftTime = Timer.GetCurrentTime();
-                            _shiftState = true;
-
-                            for(int i = 0; i < _shifterValve.length; i++)
-                            {
-                                _shifterValve[i].SetState(_shiftState);
-                            }
-
-                            _horizontalRateLimiter.SetCurrent(_horizontalRateLimiter.GetCurrent() * 0.4);
-                            _verticaRateLimiter.SetCurrent(_verticaRateLimiter.GetCurrent() * 0.4);
-                            _rotationRateLimiter.SetCurrent(_rotationRateLimiter.GetCurrent() * 0.4);
-                        }
-                    }
-
-                    SmartDashboard.putBoolean("Gear", _shiftState);
-                    break;
-
-                    case Manual:
-                
-                    if(InputManager.GetButtonDown("GearShift"))
-                    {
-                        _shiftState = !_shiftState;
-
-                        for(int i = 0; i < _shifterValve.length; i++)
-                        {
-                            _shifterValve[i].SetState(_shiftState);
-                        }
-                    }
-
-                    SmartDashboard.putBoolean("Gear", _shiftState);
-
-                    break;
-                }
-            }
-
-            _isShiftOverriden = false;
-        }
-
+ 
         switch(_mode)
         {
             case Local:

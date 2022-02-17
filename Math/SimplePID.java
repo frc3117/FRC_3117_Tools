@@ -87,6 +87,11 @@ public class SimplePID implements BasePID
         Kd = KD;
     }
 
+    public void SetFeedForward(double feedforward) 
+    {
+        _feedFoward = feedforward;
+    }
+
     /**
      * Evaluate the current pid
      * @param Error The error of the system

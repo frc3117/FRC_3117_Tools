@@ -1,6 +1,7 @@
 package frc.robot.Library.FRC_3117.Component.Data;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
@@ -9,15 +10,15 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
  */
 public class SolenoidValve 
 {
-    private SolenoidValve(int ChannelA, int PcmId)
+    private SolenoidValve(int ChannelA, PneumaticsModuleType moduleType)
     {
         _type = SolenoidType.Single;
-        _singleSolenoid = new Solenoid(PcmId, ChannelA);
+        _singleSolenoid = new Solenoid(moduleType, ChannelA);
     }
-    private SolenoidValve(int ChannelA, int ChannelB, int PcmId)
+    private SolenoidValve(int ChannelA, int ChannelB, PneumaticsModuleType moduleType)
     {
         _type = SolenoidType.Double;
-        _doubleSolenoid = new DoubleSolenoid(PcmId, ChannelA, ChannelB);
+        _doubleSolenoid = new DoubleSolenoid(moduleType, ChannelA, ChannelB);
     }
 
     private enum SolenoidType
@@ -36,10 +37,10 @@ public class SolenoidValve
      * @param ChannelA The channel of the solenoid valve
      * @return The single action solenoid valve
      */
-    public static SolenoidValve CreateSingle(int ChannelA, int PcmId)
+    public static SolenoidValve CreateSingle(int ChannelA, PneumaticsModuleType moduleType)
     {
         
-        return new SolenoidValve(ChannelA, PcmId);
+        return new SolenoidValve(ChannelA, moduleType);
     }
     /**
      * Create a double action solenoid valve
@@ -47,9 +48,9 @@ public class SolenoidValve
      * @param ChannelB The reverse channel of the solenoid valve
      * @return The double action solenoid valve
      */
-    public static SolenoidValve CreateDouble(int ChannelA, int ChannelB, int PcmId)
+    public static SolenoidValve CreateDouble(int ChannelA, int ChannelB, PneumaticsModuleType moduleType)
     {
-        return new SolenoidValve(ChannelA, ChannelB, PcmId);
+        return new SolenoidValve(ChannelA, ChannelB, moduleType);
     }
 
     /**

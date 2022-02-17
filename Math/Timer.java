@@ -1,5 +1,11 @@
 package frc.robot.Library.FRC_3117.Math;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import frc.robot.Library.FRC_3117.Component.Data.Tupple.Pair;
+import frc.robot.Library.FRC_3117.Interface.Action;
+
 /**
  * The timer class fot the robot
  */
@@ -12,6 +18,8 @@ public class Timer
 
     private static int _frameCount = 0;
 
+    private static List<Pair<Double, Action>> _scheduledEvents = new ArrayList<>();
+
     /**
      * Initialize the clock of the timer
      */
@@ -21,6 +29,8 @@ public class Timer
         _startTime = GetCurrentTime();
 
         _frameCount = 0;
+
+        _scheduledEvents = new ArrayList<>();
     }
     /**
      * Evaluate the current delta time
@@ -29,11 +39,23 @@ public class Timer
     public static double Evaluate()
     {
         //Estimate the delta time betwen the last time
-        long currentTime = System.nanoTime();
-        _dt = (currentTime - _lastTime) / 1e9;
+        var currentTime = GetCurrentTime();
+        _dt = (currentTime - _lastTime);
         _lastTime = currentTime; 
 
         _frameCount++;
+
+        //Check for scheduled event
+        var toRemove = new ArrayList<Pair<Double, Action>>();
+        for(var event : _scheduledEvents)
+        {
+            if(currentTime >= event.Item1)
+            {
+                event.Item2.Invoke();
+                toRemove.add(event);
+            }
+        }
+        _scheduledEvents.removeAll(toRemove);
 
         return currentTime;
     }
@@ -88,5 +110,22 @@ public class Timer
     public static int GetFrameCount()
     {
         return _frameCount;
+    }
+
+    /**
+     * Schedule an event to be run in a specific amount of time
+     * @param time The time before the event in seconds
+     * @param callback The event to be called
+     */
+    public static void ScheduleEvent(double time, Action callback)
+    {
+        _scheduledEvents.add(new Pair<Double,Action>(time + GetCurrentTime(), callback));
+    }
+    /**
+     * Clear the events list
+     */
+    public static void ClearEvents()
+    {
+        _scheduledEvents.clear();
     }
 }

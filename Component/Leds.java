@@ -3,6 +3,7 @@ package frc.robot.Library.FRC_3117.Component;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.Library.FRC_3117.Component.Data.Color;
 import frc.robot.Library.FRC_3117.Component.Data.SolenoidValve;
 import frc.robot.Library.FRC_3117.Interface.Component;
@@ -39,7 +40,7 @@ public class Leds implements Component {
     private boolean _isCycle = false;
     private String _cycleName = "";
 
-    public Leds(int greenChannel, int blueChannel, int redChannel, Mode mode) { 
+    public Leds(int greenChannel, int blueChannel, int redChannel, Mode mode, PneumaticsModuleType moduleType) { 
         _cycle = new HashMap<String, ColorCycle>();
         _mode = mode;
 
@@ -47,9 +48,9 @@ public class Leds implements Component {
 
         if(mode == Mode.Solenoid)
         {
-            green = SolenoidValve.CreateSingle(greenChannel, 1);
-            blue = SolenoidValve.CreateSingle(blueChannel, 1);
-            red = SolenoidValve.CreateSingle(redChannel, 1);
+            green = SolenoidValve.CreateSingle(greenChannel, moduleType);
+            blue = SolenoidValve.CreateSingle(blueChannel, moduleType);
+            red = SolenoidValve.CreateSingle(redChannel, moduleType);
         }
         else
         {

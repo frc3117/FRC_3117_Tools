@@ -110,4 +110,9 @@ public class BangBang implements BaseController
 
         return Math.signum(error) == 1 ? (_isDebug ? SmartDashboard.getNumber(_positiveName, _positive) : _positive) : (_isDebug ? SmartDashboard.getNumber(_negativeName, _negative) : _negative);
     }
+    @Override
+    public void SetFeedForward(double feedforward) 
+    {
+        // TODO Implement
+    }
 }
