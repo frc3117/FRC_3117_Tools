@@ -1,4 +1,4 @@
-package frc.robot.Library.FRC_3117.Math;
+package frc.robot.Library.FRC_3117_Tools.Math;
 
 /**
  * The rate limiter class
