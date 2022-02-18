@@ -1,7 +1,7 @@
-package frc.robot.Library.FRC_3117.Math;
+package frc.robot.Library.FRC_3117_Tools.Math;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Library.FRC_3117.Interface.BasePID;
+import frc.robot.Library.FRC_3117_Tools.Interface.BasePID;
 
 /**
  * The simple PID class

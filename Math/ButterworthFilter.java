@@ -1,6 +1,6 @@
-package frc.robot.Library.FRC_3117.Math;
+package frc.robot.Library.FRC_3117_Tools.Math;
 
-import frc.robot.Library.FRC_3117.Interface.BaseFilter;
+import frc.robot.Library.FRC_3117_Tools.Interface.BaseFilter;
 
 /**
  * A highpass and lowpass filter using the butterworth algorithm

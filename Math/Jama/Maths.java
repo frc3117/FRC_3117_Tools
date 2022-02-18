@@ -1,4 +1,4 @@
-package frc.robot.Library.FRC_3117.Math.Jama;
+package frc.robot.Library.FRC_3117_Tools.Math.Jama;
 
 public class Maths {
 
