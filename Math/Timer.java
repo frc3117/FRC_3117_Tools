@@ -1,10 +1,10 @@
-package frc.robot.Library.FRC_3117.Math;
+package frc.robot.Library.FRC_3117_Tools.Math;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import frc.robot.Library.FRC_3117.Component.Data.Tupple.Pair;
-import frc.robot.Library.FRC_3117.Interface.Action;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.Tupple.Pair;
+import frc.robot.Library.FRC_3117_Tools.Interface.Action;
 
 /**
  * The timer class fot the robot
