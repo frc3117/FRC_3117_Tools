@@ -1,4 +1,4 @@
-package frc.robot.Library.FRC_3117_Tools.Component;
+package frc.robot.Library.FRC_3117_Tools.Component.CAN;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

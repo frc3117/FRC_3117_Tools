@@ -1,4 +1,4 @@
-package frc.robot.Library.FRC_3117_Tools.Component;
+package frc.robot.Library.FRC_3117_Tools.Component.CAN;
 
 import edu.wpi.first.hal.CANData;
 import edu.wpi.first.wpilibj.CAN;
