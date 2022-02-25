@@ -14,18 +14,18 @@ import frc.robot.Library.FRC_3117_Tools.Math.Timer;
  */
 public class CsvLogger 
 {
-    private static int _columnCount = 0;
-    private static HashMap<String, Integer> _columnIndex ;
+    private int _columnCount = 0;
+    private HashMap<String, Integer> _columnIndex ;
 
-    private static int _currentFrame = 0;
-    private static List<String> _currentRow;
+    private int _currentFrame = 0;
+    private List<String> _currentRow;
 
-    private static StringBuilder _fileContent;
+    private StringBuilder _fileContent;
 
     /**
      * Initialize the CsvLogger
      */
-    public static void Init()
+    public void Init()
     {
         _columnIndex = new HashMap<>();
         _currentRow = new ArrayList<>();
@@ -40,7 +40,7 @@ public class CsvLogger
      * Add a new column to the csv
      * @param ColumnName The name of the new column
      */
-    public static void AddColumn(String ColumnName)
+    public void AddColumn(String ColumnName)
     {
         _columnIndex.put(ColumnName, ++_columnCount);
     }
@@ -50,7 +50,7 @@ public class CsvLogger
      * @param ColumnName The name of the column
      * @param Value The value of the column
      */
-    public static void SetValue(String ColumnName, Object Value)
+    public void SetValue(String ColumnName, Object Value)
     {
         if(_currentFrame < Timer.GetFrameCount())
         {
@@ -70,7 +70,7 @@ public class CsvLogger
      * Save the current csv to a file
      * @param FileName The name of the created file
      */
-    public static void SaveToFile(String FileName)
+    public void SaveToFile(String FileName)
     {
         var env = System.getenv();
 
