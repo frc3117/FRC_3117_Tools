@@ -115,4 +115,9 @@ public class BangBang implements BaseController
     {
         // TODO Implement
     }
+    @Override
+    public void Reset() {
+        // TODO Auto-generated method stub
+        
+    }
 }

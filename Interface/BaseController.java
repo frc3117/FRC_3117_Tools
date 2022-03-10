@@ -9,4 +9,5 @@ public interface BaseController
     public void SetFeedForward(double feedforward);
     public void SetDebugMode(String Name);
     public void StopDebugMode();
+    public void Reset();
 }
