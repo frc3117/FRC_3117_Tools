@@ -16,7 +16,7 @@ import frc.robot.Library.FRC_3117_Tools.Component.FRC_Robot_Server.Interface.Con
 import frc.robot.Library.FRC_3117_Tools.Component.FRC_Robot_Server.Interface.DatafeedCallback;
 import frc.robot.Library.FRC_3117_Tools.Component.FRC_Robot_Server.Packet.*;
 
-public class RobotServerClient 
+public class RobotServerClient
 {
     public RobotServerClient(String address)
     {
@@ -89,6 +89,8 @@ public class RobotServerClient
                                 }
                                 break;
                             }
+                            default:
+                                break;
                         }
                     }
                 }
