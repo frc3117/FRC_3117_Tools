@@ -11,10 +11,7 @@ public class ResponsePacket
         RequestID = requestID;
         IsSuccess = isSuccess;
 
-        if(data instanceof String)
-            Data = (String)data;
-        else
-            Data = new Gson().toJson(data);
+        Data = new Gson().toJson(data);
     }
 
     @SerializedName("requestID")

@@ -10,10 +10,7 @@ public class Packet
     {
         Type = type;
 
-        if(data instanceof String)
-            Data = (String)data;
-        else
-            Data = new Gson().toJson(data);
+        Data = new Gson().toJson(data);
     }
     public Packet(String recipient, PacketType type, Object data)
     {

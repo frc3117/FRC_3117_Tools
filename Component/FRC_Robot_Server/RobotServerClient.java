@@ -274,7 +274,7 @@ public class RobotServerClient
         switch (command.Command)
         {
             case "print":
-                System.out.println(command.Param);
+                System.out.println(command.GetParam(String.class));
                 return new ResponsePacket(command.RequestID, true, null);
 
             default:

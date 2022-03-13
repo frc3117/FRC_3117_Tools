@@ -11,10 +11,7 @@ public class CommandPacket
         Command = command;
         RequestID = requestID;
 
-        if(param instanceof String)
-            Param = (String)param;
-        else
-            Param = new Gson().toJson(param);
+        Param = new Gson().toJson(param);
     }
 
     @SerializedName("command")

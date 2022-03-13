@@ -10,10 +10,7 @@ public class DataPacket
     {
         Name = name;
 
-        if(data instanceof String)
-            Data = (String)data;
-        else
-            Data = new Gson().toJson(data);
+        Data = new Gson().toJson(data);
     }
 
     @SerializedName("name")
