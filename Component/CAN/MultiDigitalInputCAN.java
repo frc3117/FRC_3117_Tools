@@ -5,15 +5,20 @@ import java.nio.ByteOrder;
 
 import edu.wpi.first.hal.CANData;
 
-public class MultiDigitalInput extends CANDevice
+public class MultiDigitalInputCAN extends CANDevice
 {
-    public MultiDigitalInput(int deviceID) 
+    public MultiDigitalInputCAN(int deviceID) 
     {
         super(deviceID);
     }
     
     private long _value = 0;
 
+    public DigitalInputCAN GetDigitalInput(int digitalInputID)
+    {
+        return new DigitalInputCAN(this, digitalInputID);
+    }
+    
     public boolean GetValue(int digitalInputID)
     {
         var data = new CANData();
