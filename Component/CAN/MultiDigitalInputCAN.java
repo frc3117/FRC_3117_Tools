@@ -25,7 +25,7 @@ public class MultiDigitalInputCAN extends CANDevice
         if (readPacketNew(0, data))
         {
             var bb = ByteBuffer.wrap(data.data);
-            bb.order(ByteOrder.LITTLE_ENDIAN);
+            bb.order(ByteOrder.BIG_ENDIAN);
 
             _value = bb.getLong();
         }
