@@ -1,30 +1,18 @@
 package frc.robot.Library.FRC_3117_Tools.Component.CAN;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
-import edu.wpi.first.hal.CANData;
-
-public class AnalogInputCAN extends CANDevice
+public class AnalogInputCAN
 {
-    public AnalogInputCAN(int deviceID) 
+    public AnalogInputCAN(MultiAnalogInputCAN analogInputs, int Id) 
     {
-        super(deviceID);
+        _analogInputs = analogInputs;
+        _id = Id;
     }
-    
-    private double _currentValue;
+
+    private MultiAnalogInputCAN _analogInputs;
+    private int _id;
 
     public double GetValue()
     {
-        var data = new CANData();
-        if (readPacketNew(0, data))
-        {
-            var bb = ByteBuffer.wrap(data.data);
-            bb.order(ByteOrder.LITTLE_ENDIAN);
-
-            _currentValue = bb.getDouble();
-        }
-
-        return _currentValue;
+        return _analogInputs.GetValue(_id);
     }
 }
