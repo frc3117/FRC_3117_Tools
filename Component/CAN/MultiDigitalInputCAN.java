@@ -21,6 +21,10 @@ public class MultiDigitalInputCAN extends CANDevice
     
     public boolean GetValue(int digitalInputID)
     {
+        return (GetValues() << digitalInputID) < 0;
+    }
+    public long GetValues()
+    {
         var data = new CANData();
         if (readPacketNew(0, data))
         {
@@ -30,6 +34,6 @@ public class MultiDigitalInputCAN extends CANDevice
             _value = bb.getLong();
         }
 
-        return (_value << digitalInputID) < 0;
+        return _value;
     }
 }
