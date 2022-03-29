@@ -11,7 +11,12 @@ public class AnalogInputCAN
     private MultiAnalogInputCAN _analogInputs;
     private int _id;
 
-    public double GetValue()
+    public int GetResolution()
+    {
+        return _analogInputs.GetResolution();
+    }
+
+    public int GetValue()
     {
         return _analogInputs.GetValue(_id);
     }
