@@ -20,4 +20,13 @@ public class AnalogInputCAN
     {
         return _analogInputs.GetValue(_id);
     }
+
+    public double GetValueDegree()
+    {
+        return ((double)GetValue() / GetResolution()) * 360;
+    }
+    public double GetValueRadian()
+    {
+        return ((double)GetValue() / GetResolution()) * 6.28319;
+    }
 }
