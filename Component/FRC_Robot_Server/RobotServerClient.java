@@ -209,7 +209,14 @@ public class RobotServerClient
 
     public void FeedData(String name, Object data)
     {
-        SendPacket(new Packet("Server", PacketType.Data, new DataPacket(name, data)));
+        try
+        {
+            SendPacket(new Packet("Server", PacketType.Data, new DataPacket(name, data)));
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+        }
     }
 
     public Response SendPacket(Packet packet)

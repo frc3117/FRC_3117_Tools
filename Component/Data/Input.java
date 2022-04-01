@@ -4,12 +4,58 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.Library.FRC_3117_Tools.Interface.JoystickInput;
 
 /**
  * The input manager
  */
 public class Input 
 {
+    public enum XboxButton implements JoystickInput
+    {
+        A(0),
+        B(1),
+        X(2),
+        Y(3),
+        LB(4),
+        RB(5),
+        BACK(6),
+        START(7),
+        LJ(8),
+        RJ(9);
+
+        private final int _value;
+        private XboxButton(int value)
+        {
+            _value = value;
+        }
+
+        public int GetValue()
+        {
+            return _value;
+        }
+    }
+    public enum XboxAxis implements JoystickInput
+    {
+        LEFTX(0),
+        LEFTY(1),
+        LEFT_TRIGGER(2),
+        RIGHT_TRIGGER(3),
+        RIGHTX(4),
+        RIGHTY(5);
+        
+        private final int _value;
+        private XboxAxis(int value)
+        {
+            _value = value;
+        }
+
+        public int GetValue()
+        {
+            return _value;
+        }
+    }
+
     private Input(int ID,  int input,  String inputName, boolean invert) {
         if (!_joysticks.containsKey(ID)) {
             _joysticks.put(ID, new Joystick(ID));
@@ -41,9 +87,9 @@ public class Input
      * @param InputID The axis id of the axix
      * @param invert If the value will be multiply by -1
      */
-    public static void CreateAxis(String Name, int JoystickID, int InputID, boolean invert) 
+    public static void CreateAxis(String Name, int JoystickID, JoystickInput InputID, boolean invert) 
     {
-        new Input(JoystickID, InputID, "Axis/" + Name, invert);
+        new Input(JoystickID, InputID.GetValue(), "Axis/" + Name, invert);
     }
     /**
      * Register a button
@@ -51,9 +97,9 @@ public class Input
      * @param JoystickID The joystick id from where the button come from
      * @param InputID The button id of the button
      */
-    public static void CreateButton(String Name, int JoystickID, int InputID) 
+    public static void CreateButton(String Name, int JoystickID, JoystickInput InputID ) 
     {
-        new Input(JoystickID, InputID, "Button/" + Name, false);
+        new Input(JoystickID, InputID.GetValue(), "Button/" + Name, false);
     }
 
     /**
@@ -82,7 +128,7 @@ public class Input
      * @param InputID The axis id of the negative axis
      * @param invert If the value will be multiply by -1
      */
-    public static void SetAxisNegative(String Name, int JoystickID, int InputID, boolean invert)
+    public static void SetAxisNegative(String Name, int JoystickID, JoystickInput InputID , boolean invert)
     {
         if(!_joysticks.containsKey(JoystickID))
         {
@@ -92,7 +138,7 @@ public class Input
         var current = _inputs.get("Axis/" + Name);
 
         current._joystickIDNegative = JoystickID;
-        current._inputNegative = InputID;
+        current._inputNegative = InputID.GetValue();
 
         current._isInputNegativeInverted = invert;
     }
