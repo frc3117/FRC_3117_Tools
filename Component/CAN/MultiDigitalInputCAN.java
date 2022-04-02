@@ -21,7 +21,7 @@ public class MultiDigitalInputCAN extends CANDevice
     
     public boolean GetValue(int digitalInputID)
     {
-        return (GetValues() << digitalInputID) < 0;
+        return (GetValues() << (63 - digitalInputID)) < 0;
     }
     public long GetValues()
     {
@@ -29,7 +29,7 @@ public class MultiDigitalInputCAN extends CANDevice
         if (readPacketNew(0, data))
         {
             var bb = ByteBuffer.wrap(data.data);
-            bb.order(ByteOrder.BIG_ENDIAN);
+            bb.order(ByteOrder.LITTLE_ENDIAN);
 
             _value = bb.getLong();
         }
