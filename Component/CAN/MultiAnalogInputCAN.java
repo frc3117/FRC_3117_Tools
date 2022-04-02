@@ -34,7 +34,7 @@ public class MultiAnalogInputCAN extends CANDevice
             var bb = ByteBuffer.wrap(data.data);
             bb.order(ByteOrder.LITTLE_ENDIAN);
 
-            _values[analogInputID] = bb.getInt() + (bb.getInt() * _resolution);
+            _values[analogInputID] = bb.getInt();
         }
 
         return _values[analogInputID];
