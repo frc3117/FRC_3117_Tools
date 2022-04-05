@@ -13,16 +13,16 @@ public class Input
 {
     public enum XboxButton implements JoystickInput
     {
-        A(0),
-        B(1),
-        X(2),
-        Y(3),
-        LB(4),
-        RB(5),
-        BACK(6),
-        START(7),
-        LJ(8),
-        RJ(9);
+        A(1),
+        B(2),
+        X(3),
+        Y(4),
+        LB(5),
+        RB(6),
+        BACK(7),
+        START(8),
+        LJ(9),
+        RJ(10);
 
         private final int _value;
         private XboxButton(int value)

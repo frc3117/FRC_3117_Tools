@@ -10,9 +10,17 @@ public class DigitalInputCAN
 
     private MultiDigitalInputCAN _digitalInputs;
     private int _id;
+    private boolean _reversed;
 
     public boolean GetValue()
     {
-        return _digitalInputs.GetValue(_id);
+        return _digitalInputs.GetValue(_id) != _reversed;
+    }
+
+    public DigitalInputCAN SetReversed(boolean reversed)
+    {
+        _reversed = reversed;
+        
+        return this;
     }
 }
