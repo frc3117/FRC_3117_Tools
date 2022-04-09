@@ -94,6 +94,7 @@ public class Swerve implements Component {
     private double _pointDistance = 0;
 
     private double _headingOffset;
+    private double _headingOffsetManual;
 
     private RateLimiter _horizontalRateLimiter;
     private RateLimiter _verticaRateLimiter;
@@ -269,7 +270,7 @@ public class Swerve implements Component {
      */
     public double GetHeading()
     {
-        return (_IMU.getAngle() / 180) * 3.1415 - _headingOffset;
+        return (_IMU.getAngle() / 180) * 3.1415 - _headingOffset - _headingOffsetManual;
     }
     /**
      * Get the current estimated position of the swerve drive
@@ -277,6 +278,11 @@ public class Swerve implements Component {
     public Vector2d GetPostion()
     {
         return new Vector2d();
+    }
+
+    public void SetHeadingOffset(double offset)
+    {
+        _headingOffsetManual = offset;
     }
 
     /**
@@ -383,8 +389,10 @@ public class Swerve implements Component {
             var translation = new Vector2d(_isHorizontalAxisOverride ? _horizontalAxisOverride : _horizontalRateLimiter.GetCurrent() * _speedRatio * -1, (_isVerticalAxisOverride ? _verticalAxisOverride : _verticaRateLimiter.GetCurrent()) * _speedRatio);
             var translationPolar = Polar.fromVector(translation);
 
+            translationPolar.azymuth -= _headingOffset + _headingOffsetManual;
+
             //Remove the angle of the gyroscope to the azymuth to make the driving relative to the world
-            translationPolar.azymuth -= _mode == DrivingMode.World ? (_IMU.getAngle() % 360) * 0.01745 + 3.1415: 0;
+            translationPolar.azymuth -= _mode == DrivingMode.World ? ((_IMU.getAngle() - _headingOffsetManual) % 360) * 0.01745 + 3.1415: 0;
 
             var rotationAxis = _isRotationAxisOverriden ? _rotationAxisOverride * _roationSpeedRatio : _rotationRateLimiter.GetCurrent() * _roationSpeedRatio;
 
