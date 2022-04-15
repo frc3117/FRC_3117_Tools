@@ -98,6 +98,17 @@ public class FunctionScheduler implements Component
                     }
                 }
                 break;
+
+                case RunFor:
+                if(Timer.GetCurrentTime() >= _nextStepTime)
+                {
+                    HandleNextStep();
+                }
+                else
+                {
+                    step.CallAction();
+                }
+                break;
             }
         }
     }
@@ -123,6 +134,12 @@ public class FunctionScheduler implements Component
     public FunctionScheduler AddRepeatFunction(Action function, double delay, int repeat)
     {
         _steps.add(new FunctionSchedulerStep(function, delay, repeat));
+
+        return this;
+    }
+    public FunctionScheduler AddRunFor(Action function, double delay)
+    {
+        _steps.add(new FunctionSchedulerStep(function, delay));
 
         return this;
     }
@@ -202,7 +219,7 @@ public class FunctionScheduler implements Component
             return;
         }
 
-        if(_steps.get(_currentStep).GetType() == StepType.Wait)
+        if(_steps.get(_currentStep).GetType() == StepType.Wait || _steps.get(_currentStep).GetType() == StepType.RunFor)
             _nextStepTime = Timer.GetCurrentTime() + _steps.get(_currentStep).GetDelay();
 
         DoComponent();

@@ -26,6 +26,13 @@ public class FunctionSchedulerStep
 
         _type = StepType.Function;
     }
+    public FunctionSchedulerStep(Action action, double delay)
+    {
+        _action = action;
+        _delay = delay;
+
+        _type = StepType.RunFor;
+    }
     public FunctionSchedulerStep(Action action, double delay, int repeat)
     {
         _action = action;
@@ -40,7 +47,8 @@ public class FunctionSchedulerStep
         Wait,
         WaitUntil,
         Function,
-        RepeatFunction
+        RepeatFunction,
+        RunFor;
     }
 
     private double _delay;
