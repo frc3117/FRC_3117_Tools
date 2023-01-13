@@ -1,7 +1,7 @@
 package frc.robot.Library.FRC_3117_Tools.Component.Data;
 
-import edu.wpi.first.wpilibj.drive.Vector2d;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.Tupple.Pair;
+import frc.robot.Library.FRC_3117_Tools.Math.Vector2d;
 
 public class WheelData
 {
@@ -31,11 +31,11 @@ public class WheelData
     public Vector2d GetWheelRotationVector()
     {
         //Rotation vector is a normalized normal vector from the wheel position
-        var vec = new Vector2d(-WheelPosition.y, WheelPosition.x);
-        var mag = vec.magnitude();
+        var vec = new Vector2d(-WheelPosition.Y, WheelPosition.X);
+        var mag = vec.Magnitude();
 
-        vec.x /= mag;
-        vec.y /= mag;
+        vec.X /= mag;
+        vec.Y /= mag;
 
         return vec;
     }

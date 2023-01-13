@@ -57,9 +57,9 @@ public class BangBang implements BaseController
         {
             _isDebug = false;
 
-            SmartDashboard.delete(_positiveName);
-            SmartDashboard.delete(_neutralName);
-            SmartDashboard.delete(_negativeName);
+            SmartDashboard.getEntry(_positiveName).close();
+            SmartDashboard.getEntry(_neutralName).close();
+            SmartDashboard.getEntry(_negativeName).close();
         }
     }
 

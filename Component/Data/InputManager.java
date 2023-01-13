@@ -21,6 +21,9 @@ public class InputManager
 
     private static HashMap<String, Double> _currentAxisValue = new HashMap<>();
 
+    private static HashMap<String, Boolean> _buttonOverride = new HashMap<>();
+    private static HashMap<String, Double> _axisOverride = new HashMap<>();
+
     private static boolean _isPlayback = false;
     private static int _currentPlaybackTime = 0;
     private static InputPlayback _currentPlayback;
@@ -103,7 +106,9 @@ public class InputManager
         for (var key : AllButton)
         {
             var last = _currentState.get(key);
-            var current = Input.GetButton(key);
+            var current = _buttonOverride.containsKey(key) ? _buttonOverride.get(key) : Input.GetButton(key);
+
+            _buttonOverride.remove(key);
 
             _lastState.put(key, last);
             _currentState.put(key, current);
@@ -133,7 +138,9 @@ public class InputManager
 
         for (String key : AllAxis)
         {
-                _currentAxisValue.put(key, Input.GetAxis(key));
+            _currentAxisValue.put(key, _axisOverride.containsKey(key) ? _axisOverride.get(key) : Input.GetAxis(key));
+            
+            _axisOverride.remove(key);
         }
     }
 
@@ -178,6 +185,15 @@ public class InputManager
         }
 
         _buttonCallback.get("Up/" + ButtonName).add(Callback);
+    }
+
+    public static void OverrideButton(String ButtonName, boolean Value)
+    {
+        _buttonOverride.put(ButtonName, Value);
+    }
+    public static void OverrideAxis(String AxisName, double Value)
+    {
+        _axisOverride.put(AxisName, Value);
     }
 
     /**

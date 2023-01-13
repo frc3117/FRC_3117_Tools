@@ -67,16 +67,19 @@ public class Leds implements Component {
         ColorList.put("blue", Color.BLUE);
     }
 
+    @Override
     public void Awake()
     {
         
     }
 
+    @Override
     public void Init() {
         _color = ColorList.get("off");
         _priority = 0;
     }
 
+    @Override
     public void Disabled()
     {
         
@@ -172,6 +175,7 @@ public class Leds implements Component {
         _cycle.put(CycleName, current);
     }
 
+    @Override
     public void DoComponent() {  
         var CurrentColor = Color.ZERO;
 
@@ -208,6 +212,12 @@ public class Leds implements Component {
             greenPWM.setRaw((int)(CurrentColor.G * (CurrentColor.A / 255.)));
             bluePWM.setRaw((int)(CurrentColor.B * (CurrentColor.A / 255.)));
         }
+    }
+
+    @Override
+    public void Print()
+    {
+        
     }
 
     private class ColorCycle

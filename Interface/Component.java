@@ -9,4 +9,5 @@ public interface Component
     public void Init();
     public void Disabled();
     public void DoComponent();
+    public void Print();
 }

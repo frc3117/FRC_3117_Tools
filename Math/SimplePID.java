@@ -68,9 +68,9 @@ public class SimplePID implements BasePID
 
             _isDebug = false;
             
-            SmartDashboard.delete(_kpName);
-            SmartDashboard.delete(_kiName);
-            SmartDashboard.delete(_kdName);
+            SmartDashboard.getEntry(_kpName).close();
+            SmartDashboard.getEntry(_kiName).close();
+            SmartDashboard.getEntry(_kdName).close();
         }
     }
 

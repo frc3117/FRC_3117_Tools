@@ -10,9 +10,8 @@ import frc.robot.Library.FRC_3117_Tools.Math.Polar;
 import frc.robot.Library.FRC_3117_Tools.Math.RateLimiter;
 import frc.robot.Library.FRC_3117_Tools.Math.Timer;
 import frc.robot.Library.FRC_3117_Tools.Math.UnitConverter;
-
+import frc.robot.Library.FRC_3117_Tools.Math.Vector2d;
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class Swerve implements Component {
@@ -113,16 +112,19 @@ public class Swerve implements Component {
     private double _instantVertical = 0;
     private double _instantRotation = 0;
 
+    @Override
     public void Awake()
     {
         
     }
 
+    @Override
     public void Init()
     {
         InitIMU();
     }
 
+    @Override
     public void Disabled()
     {
         
@@ -351,15 +353,10 @@ public class Swerve implements Component {
     }
 
     int f = 0;
+
+    @Override
     public void DoComponent()
     {
-        
-        //System.out.println("(0): " + ((_directionEncoder[0].getValue() / 4096f) * 2 * 3.1415f));
-        //System.out.println("(1): " + ((_directionEncoder[1].getValue() / 4096f) * 2 * 3.1415f));
-
-        //System.out.println("(2): " + ((_directionEncoder[2].getValue() / 4096f) * 2 * 3.1415f));
-        //System.out.println("(3): " + ((_directionEncoder[3].getValue() / 4096f) * 2 * 3.1415f));
-       
         double dt = Timer.GetDeltaTime();
  
         switch(_mode)
@@ -399,7 +396,7 @@ public class Swerve implements Component {
             for(int i = 0; i < _wheelCount; i++)
             {
                 //Each wheel have a predetermined rotation vector based on wheel position
-                var scaledRotationVector = new Vector2d(_rotationVector[i].x * rotationAxis, _rotationVector[i].y * rotationAxis);               
+                var scaledRotationVector = new Vector2d(_rotationVector[i].X * rotationAxis, _rotationVector[i].Y * rotationAxis);               
 
                 var SumVec = Mathf.Vector2Sum(scaledRotationVector, translationPolar.vector());
                 var Sum = Polar.fromVector(SumVec);
@@ -484,6 +481,16 @@ public class Swerve implements Component {
         _isHorizontalAxisOverride = false;
     }
 
+    @Override
+    public void Print()
+    {
+        System.out.println("(0): " + ((_directionEncoder[0].getValue() / 4096f) * 2 * 3.1415f));
+        System.out.println("(1): " + ((_directionEncoder[1].getValue() / 4096f) * 2 * 3.1415f));
+
+        System.out.println("(2): " + ((_directionEncoder[2].getValue() / 4096f) * 2 * 3.1415f));
+        System.out.println("(3): " + ((_directionEncoder[3].getValue() / 4096f) * 2 * 3.1415f));
+    }
+
     private double GetDeltaAngle(int ID, Vector2d Target)
     {
         var Source = ((_directionEncoder[ID].getValue() / 4096f) * 2 * 3.1415f) - _angleOffset[ID] - 3.1415;
@@ -497,8 +504,8 @@ public class Swerve implements Component {
             Source += 2 * 3.1415;
         }
 
-        var xPrim = Target.x * Math.cos(Source) - Target.y * Math.sin(Source); //Change of coordinate system
-        var yPrim = Target.x * Math.sin(Source) + Target.y * Math.cos(Source);
+        var xPrim = Target.X * Math.cos(Source) - Target.Y * Math.sin(Source); //Change of coordinate system
+        var yPrim = Target.X * Math.sin(Source) + Target.Y * Math.cos(Source);
 
         var angle = Math.atan2(yPrim * _flipDriveMultiplicator[ID], xPrim * _flipDriveMultiplicator[ID]); //Angle betwen Source and target
 
