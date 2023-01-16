@@ -1,27 +1,30 @@
 package frc.robot.Library.FRC_3117_Tools.Math;
 
-public class Vector2d 
+public class Vector3d 
 {
-    public Vector2d()
+    public Vector3d()
     {
         X = 0;
         Y = 0;
     }
-    public Vector2d(double x, double y)
+    public Vector3d(double x, double y, double z)
     {
         X = x;
         Y = y;
+        Z = z;
     }
 
     public double X;
     public double Y;
+    public double Z;
 
-    public void Add(Vector2d vec)
+    public void Add(Vector3d vec)
     {
         X += vec.X;
         Y += vec.Y;
+        Z += vec.Z;
     }
-    public Vector2d Sum(Vector2d vec)
+    public Vector3d Sum(Vector3d vec)
     {
         var copy = Copy();
         copy.Add(vec);
@@ -29,12 +32,13 @@ public class Vector2d
         return copy;
     }
 
-    public void Sub(Vector2d vec)
+    public void Sub(Vector3d vec)
     {
         X -= vec.X;
         Y -= vec.Y;
+        Z -= vec.Z;
     }
-    public Vector2d Diff(Vector2d vec)
+    public Vector3d Diff(Vector3d vec)
     {
         var copy = Copy();
         copy.Sub(vec);
@@ -44,7 +48,7 @@ public class Vector2d
 
     public double SqrMagnitude()
     {
-        return Math.pow(X, 2) + Math.pow(Y, 2);
+        return Math.pow(X, 2) + Math.pow(Y, 2) + Math.pow(Z, 2);
     }
     public double Magnitude()
     {
@@ -57,8 +61,9 @@ public class Vector2d
 
         X /= mag;
         Y /= mag;
+        Z /= mag;
     }
-    public Vector2d Normalized()
+    public Vector3d Normalized()
     {
         var copy = Copy();
         copy.Normalize();
@@ -66,13 +71,13 @@ public class Vector2d
         return copy;
     }
 
-    public double Distance(Vector2d vec)
+    public double Distance(Vector3d vec)
     {
         return Diff(vec).Magnitude();
     }
 
-    public Vector2d Copy()
+    public Vector3d Copy()
     {
-        return new Vector2d(X, Y);
+        return new Vector3d(X, Y, Z);
     }
 }
