@@ -9,11 +9,44 @@ public class Transform
 {
     public Transform()
     {
-        this(null);
+        this(new Vector3d(), new Quaternion(), null);
     }
     public Transform(Transform parent)
     {
+        this(new Vector3d(), new Quaternion(), parent);
+    }
+    public Transform(Vector3d position)
+    {
+        this(position, new Quaternion(), null);
+    }
+    public Transform(Vector3d position, Transform parent)
+    {
+        this(position, new Quaternion(), parent);
+    }
+    public Transform(Vector3d position, Vector3d rotation)
+    {
+        this(position, rotation, null);
+    }
+    public Transform(Vector3d position, Quaternion rotation)
+    {
+        this(position, rotation, null);
+    }
+    public Transform(Vector3d position, Vector3d rotation, Transform parent)
+    {
+        this(position, Quaternion.FromEuler(rotation), parent);
+    }
+    public Transform(Vector3d position, Quaternion rotation, Transform parent)
+    {
         Parent = parent;
+
+        LocalPosition = position;
+        LocalRotation = rotation;
+        LocalEulerAngles = rotation.Euler();
+
+        if (parent != null)
+        {
+            //TODO: Implement
+        }
     }
 
     public Transform Parent;
@@ -28,22 +61,61 @@ public class Transform
     public Vector3d EulerAngles;
     public Vector3d LocalEulerAngles;
 
+    private TransformationMatrix _localToWorldMatrix;
+    private TransformationMatrix _worldToLocalMatrix;
+
     public void SetPosition(Vector3d position)
     {
+        Position = position;
 
+        if (Parent == null)
+        {
+            LocalPosition = position;
+        }
+        else
+        {
+
+        }
     }
     public void SetPositionLocal(Vector3d localPosition)
     {
+        LocalPosition = localPosition;
 
+        if (Parent == null)
+        {
+            Position = LocalPosition.Copy();
+        }
+        else
+        {
+
+        }
     }
 
     public void SetRotation(Quaternion rotation)
     {
+        Rotation = rotation;
+        EulerAngles = rotation.Euler();
 
+        if (Parent == null)
+        {
+            LocalRotation = Rotation.Copy();
+            LocalEulerAngles = EulerAngles.Copy();
+        }
     }
     public void SetRotationLocal(Quaternion localRotation)
     {
+        LocalRotation = localRotation;
+        LocalEulerAngles = localRotation.Euler();
 
+        if (Parent == null)
+        {
+            Rotation = LocalRotation.Copy();
+            EulerAngles = LocalEulerAngles.Copy();
+        }
+        else
+        {
+
+        }
     }
 
     public void SetEulerAngles(Vector3d eulerAngles)

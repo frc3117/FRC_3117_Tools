@@ -6,6 +6,7 @@ public class Vector3d
     {
         X = 0;
         Y = 0;
+        Z = 0;
     }
     public Vector3d(double x, double y, double z)
     {
