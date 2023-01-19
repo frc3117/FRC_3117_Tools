@@ -66,11 +66,11 @@ public class Transform
 
     public void SetPosition(Vector3d position)
     {
-        Position = position;
+        Position = position.Copy();
 
         if (Parent == null)
         {
-            LocalPosition = position;
+            LocalPosition = Position.Copy();
         }
         else
         {
@@ -79,7 +79,7 @@ public class Transform
     }
     public void SetPositionLocal(Vector3d localPosition)
     {
-        LocalPosition = localPosition;
+        LocalPosition = localPosition.Copy();
 
         if (Parent == null)
         {
@@ -93,7 +93,7 @@ public class Transform
 
     public void SetRotation(Quaternion rotation)
     {
-        Rotation = rotation;
+        Rotation = rotation.Copy();
         EulerAngles = rotation.Euler();
 
         if (Parent == null)
@@ -101,10 +101,14 @@ public class Transform
             LocalRotation = Rotation.Copy();
             LocalEulerAngles = EulerAngles.Copy();
         }
+        else
+        {
+
+        }
     }
     public void SetRotationLocal(Quaternion localRotation)
     {
-        LocalRotation = localRotation;
+        LocalRotation = localRotation.Copy();
         LocalEulerAngles = localRotation.Euler();
 
         if (Parent == null)
@@ -120,10 +124,32 @@ public class Transform
 
     public void SetEulerAngles(Vector3d eulerAngles)
     {
+        Rotation = Quaternion.FromEuler(eulerAngles);
+        EulerAngles = eulerAngles.Copy();
 
+        if (Parent == null)
+        {
+            LocalRotation = Rotation.Copy();
+            LocalEulerAngles = EulerAngles.Copy();
+        }
+        else
+        {
+
+        }
     }
     public void SetEulerAnglesLocal(Vector3d localEulerAngles)
     {
+        LocalRotation = Quaternion.FromEuler(localEulerAngles);
+        LocalEulerAngles = localEulerAngles.Copy();
 
+        if (Parent == null)
+        {
+            Rotation = LocalRotation.Copy();
+            EulerAngles = LocalEulerAngles.Copy();
+        }
+        else
+        {
+
+        }
     }
 }

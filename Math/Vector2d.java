@@ -4,14 +4,25 @@ public class Vector2d
 {
     public Vector2d()
     {
-        X = 0;
-        Y = 0;
+        this(0, 0);
+    }
+    public Vector2d(double x)
+    {
+        this(x, 0);
     }
     public Vector2d(double x, double y)
     {
         X = x;
         Y = y;
     }
+
+    public static final Vector2d ZERO = new Vector2d(0, 0);
+    public static final Vector2d ONE = new Vector2d(1, 1);
+    public static final Vector2d MINUS = new Vector2d(-1, -1);
+    public static final Vector2d RIGHT = new Vector2d(1, 0);
+    public static final Vector2d LEFT = new Vector2d(-1, 0);
+    public static final Vector2d FORWARD = new Vector2d(0, 1);
+    public static final Vector2d BACKWARD = new Vector2d(0, -1);
 
     public double X;
     public double Y;
@@ -71,8 +82,23 @@ public class Vector2d
         return Diff(vec).Magnitude();
     }
 
+    public Vector3d Vector3d()
+    {
+        return new Vector3d(X, Y);
+    }
+
     public Vector2d Copy()
     {
         return new Vector2d(X, Y);
+    }
+
+    public static Vector3d ToVector3d(Vector2d vec)
+    {
+        return new Vector3d(vec.X, vec.Y);
+    }
+
+    public static Vector2d FromVector3d(Vector3d vec)
+    {
+        return new Vector2d(vec.X, vec.Y);
     }
 }

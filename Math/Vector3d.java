@@ -4,9 +4,15 @@ public class Vector3d
 {
     public Vector3d()
     {
-        X = 0;
-        Y = 0;
-        Z = 0;
+        this(0, 0, 0);
+    }
+    public Vector3d(double x)
+    {
+        this(x, 0, 0);
+    }
+    public Vector3d(double x, double y)
+    {
+        this(x, y, 0);
     }
     public Vector3d(double x, double y, double z)
     {
@@ -14,6 +20,16 @@ public class Vector3d
         Y = y;
         Z = z;
     }
+
+    public static final Vector3d ZERO = new Vector3d(0, 0, 0);
+    public static final Vector3d ONE = new Vector3d(1, 1, 1);
+    public static final Vector3d MINUS = new Vector3d(-1, -1, -1);
+    public static final Vector3d RIGHT = new Vector3d(1, 0, 0);
+    public static final Vector3d LEFT = new Vector3d(-1, 0, 0);
+    public static final Vector3d FRONT = new Vector3d(0, 1, 0);
+    public static final Vector3d BACK =  new Vector3d(0, -1, 0);
+    public static final Vector3d UP = new Vector3d(0, 0, 1);
+    public static final Vector3d DOWN = new Vector3d(0, 0, -1);
 
     public double X;
     public double Y;
@@ -77,8 +93,23 @@ public class Vector3d
         return Diff(vec).Magnitude();
     }
 
+    public Vector2d Vector2d()
+    {
+        return new Vector2d(X, Y);
+    }
+
     public Vector3d Copy()
     {
         return new Vector3d(X, Y, Z);
+    }
+
+    public static Vector2d ToVector2d(Vector3d vec)
+    {
+        return new Vector2d(vec.X, vec.Y);
+    }
+
+    public static Vector3d FromVector2d(Vector2d vec)
+    {
+        return new Vector3d(vec.X, vec.Y);
     }
 }

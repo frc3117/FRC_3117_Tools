@@ -27,6 +27,6 @@ public class TransformationMatrix
 
     public SimpleMatrix GetMatrix()
     {
-        return GetMatrix();
+        return _transformationMatrix.copy();
     }
 }

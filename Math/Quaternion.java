@@ -53,7 +53,7 @@ public class Quaternion
                 return new Vector3d();
         }
     }
-    public static Vector3d ToEulerZYX(Quaternion quaternion)
+    private static Vector3d ToEulerZYX(Quaternion quaternion)
     {
         var y0 = 2 * ((quaternion.W * quaternion.X) + (quaternion.Y * quaternion.Z));
         var x0 = 1 - 2 * ((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y));
