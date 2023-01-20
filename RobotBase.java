@@ -18,14 +18,13 @@ public class RobotBase extends TimedRobot
         _componentList = new LinkedHashMap<>();
         _hasBeenInit = false;
 
-        CreateInput();
         CreateComponentInstance();
+        CreateInput();
         for(var component : _componentList.values())
         {
           component.Awake();
         }
     }
-
     @Override
     public void robotPeriodic() 
     {
@@ -37,7 +36,6 @@ public class RobotBase extends TimedRobot
     {
       Init();
     }
-
     @Override
     public void autonomousPeriodic() 
     {
@@ -55,7 +53,6 @@ public class RobotBase extends TimedRobot
       //Reset the init state for the next time the robot is eneabled
       _hasBeenInit = false;
     }
-
     @Override
     public void teleopPeriodic() 
     {
@@ -72,7 +69,6 @@ public class RobotBase extends TimedRobot
         component.Disabled();
       }
     }
-
     @Override
     public void disabledPeriodic() 
     {
@@ -89,7 +85,6 @@ public class RobotBase extends TimedRobot
     {
 
     }
-
     public void CreateInput()
     {
 
@@ -107,7 +102,6 @@ public class RobotBase extends TimedRobot
   
       _hasBeenInit = true;
     }
-
     public void ComponentLoop()
     {
       Timer.Evaluate();

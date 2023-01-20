@@ -9,8 +9,8 @@ public class SceneObject
 
     public Transform Transform;
 
-    public static SceneObject Instantiate(SceneObject sceneObject, Transform transform)
+    public static SceneObject Instantiate(SceneObject sceneObject)
     {
-        return new SceneObject(transform);
+        return new SceneObject(new Transform());
     }
 }

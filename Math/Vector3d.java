@@ -112,4 +112,41 @@ public class Vector3d
     {
         return new Vector3d(vec.X, vec.Y);
     }
+
+    public static Vector3d Zero()
+    {   
+        return ZERO.Copy();
+    }
+    public static Vector3d One()
+    {
+        return ONE.Copy();
+    }
+    public static Vector3d Minus()
+    {
+        return MINUS.Copy();
+    }
+    public static Vector3d Right()
+    {
+        return RIGHT.Copy();
+    }
+    public static Vector3d Left()
+    {
+        return LEFT.Copy();
+    }
+    public static Vector3d Front()
+    {
+        return FRONT.Copy();
+    }
+    public static Vector3d Back()
+    {
+        return BACK.Copy();
+    }
+    public static Vector3d Up()
+    {
+        return UP.Copy();
+    }
+    public static Vector3d Down()
+    {
+        return DOWN.Copy();
+    }
 }
