@@ -16,6 +16,8 @@ public class Quaternion
         Z = z;
     }
 
+    private static final Quaternion IDENTITY = new Quaternion(0, 0, 0, 1);
+
     public double W;
     public double X;
     public double Y;
@@ -109,5 +111,10 @@ public class Quaternion
         quaternion.Z = (cosEuler.X * cosEuler.Y * sinEuler.Z) - (sinEuler.X * sinEuler.Y * cosEuler.Z);
     
         return quaternion;
+    }
+
+    public static Quaternion Identity()
+    {
+        return Quaternion.IDENTITY.Copy();
     }
 }

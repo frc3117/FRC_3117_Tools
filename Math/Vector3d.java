@@ -1,10 +1,20 @@
 package frc.robot.Library.FRC_3117_Tools.Math;
 
+import frc.robot.Library.FRC_3117_Tools.Physics.TranslationMatrix;
+
 public class Vector3d 
 {
     public Vector3d()
     {
         this(0, 0, 0);
+    }
+    public Vector3d(Vector2d vec)
+    {
+        this(vec.X, vec.Y);
+    }
+    public Vector3d(TranslationMatrix translation)
+    {
+        this(translation.GetX(), translation.GetY(), translation.GetZ());
     }
     public Vector3d(double x)
     {
@@ -95,7 +105,11 @@ public class Vector3d
 
     public Vector2d Vector2d()
     {
-        return new Vector2d(X, Y);
+        return new Vector2d(this);
+    }
+    public TranslationMatrix TranslationMatrix()
+    {
+        return new TranslationMatrix(this);
     }
 
     public Vector3d Copy()
@@ -107,10 +121,18 @@ public class Vector3d
     {
         return new Vector2d(vec.X, vec.Y);
     }
-
     public static Vector3d FromVector2d(Vector2d vec)
     {
         return new Vector3d(vec.X, vec.Y);
+    }
+
+    public static TranslationMatrix ToTranslationMatrix(Vector3d vec)
+    {
+        return new TranslationMatrix(vec);
+    }
+    public static Vector3d FromTranslationMatri(TranslationMatrix translation)
+    {
+        return new Vector3d(translation);
     }
 
     public static Vector3d Zero()

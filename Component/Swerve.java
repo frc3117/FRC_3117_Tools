@@ -11,7 +11,11 @@ import frc.robot.Library.FRC_3117_Tools.Math.RateLimiter;
 import frc.robot.Library.FRC_3117_Tools.Math.Timer;
 import frc.robot.Library.FRC_3117_Tools.Math.UnitConverter;
 import frc.robot.Library.FRC_3117_Tools.Math.Vector2d;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class Swerve implements Component {
@@ -196,7 +200,7 @@ public class Swerve implements Component {
         _IMU.reset();
         _IMU.calibrate();
 
-        _headingOffset = (_IMU.getAngle() / 180) * 3.1415 + 3.1415;
+        _headingOffset = _IMU.getAngle() * Mathf.kDEG2RAD + 3.1415;
     }
 
     /**
@@ -272,7 +276,15 @@ public class Swerve implements Component {
      */
     public double GetHeading()
     {
-        return (_IMU.getAngle() / 180) * 3.1415 - _headingOffset - _headingOffsetManual;
+        var heading = _IMU.getAngle() * Mathf.kDEG2RAD;
+        var totalOffset = _headingOffset + _headingOffsetManual;
+
+        if (heading >= totalOffset)
+            heading -= totalOffset;
+        else
+            heading += totalOffset;
+
+        return heading;
     }
     /**
      * Get the current estimated position of the swerve drive
@@ -303,7 +315,7 @@ public class Swerve implements Component {
      */
     public Vector2d GetWheelVector(int ID)
     {
-        var Angle = ((_directionEncoder[ID].getValue() / 4096f) * 2 * 3.1415f) - _angleOffset[ID] - 3.1415;
+        var Angle = GetWheelAngle(ID) - 3.1415;
 
         if(Angle > 3.1415)
         {
@@ -325,6 +337,21 @@ public class Swerve implements Component {
     public int GetWheelCount()
     {
         return _wheelCount;
+    }
+
+    public double GetWheelAngleRaw(int ID)
+    {
+        return _directionEncoder[ID].getVoltage() / RobotController.getVoltage5V();
+    }
+    public double GetWheelAngle(int ID)
+    {
+        var angle = GetWheelAngleRaw(ID);
+        if (angle >= _angleOffset[ID])
+            angle -= _angleOffset[ID];
+        else
+            angle += _angleOffset[ID];
+
+        return angle * 2 * Math.PI;
     }
 
     /**
@@ -484,16 +511,16 @@ public class Swerve implements Component {
     @Override
     public void Print()
     {
-        System.out.println("(0): " + ((_directionEncoder[0].getValue() / 4096f) * 2 * 3.1415f));
-        System.out.println("(1): " + ((_directionEncoder[1].getValue() / 4096f) * 2 * 3.1415f));
+        System.out.println("(0): " + GetWheelAngleRaw(0) * 2 * Math.PI);
+        System.out.println("(1): " + GetWheelAngleRaw(1) * 2 * Math.PI);
 
-        System.out.println("(2): " + ((_directionEncoder[2].getValue() / 4096f) * 2 * 3.1415f));
-        System.out.println("(3): " + ((_directionEncoder[3].getValue() / 4096f) * 2 * 3.1415f));
+        System.out.println("(2): " + GetWheelAngleRaw(2) * 2 * Math.PI);
+        System.out.println("(3): " + GetWheelAngleRaw(3) * 2 * Math.PI);
     }
 
     private double GetDeltaAngle(int ID, Vector2d Target)
     {
-        var Source = ((_directionEncoder[ID].getValue() / 4096f) * 2 * 3.1415f) - _angleOffset[ID] - 3.1415;
+        var Source = GetWheelAngle(ID) - 3.1415;
 
         if(Source > 3.1415)
         {
