@@ -12,8 +12,6 @@ import frc.robot.Library.FRC_3117_Tools.Math.Timer;
 import frc.robot.Library.FRC_3117_Tools.Math.UnitConverter;
 import frc.robot.Library.FRC_3117_Tools.Math.Vector2d;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AnalogInput;
