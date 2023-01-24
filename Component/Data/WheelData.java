@@ -32,11 +32,6 @@ public class WheelData
     {
         //Rotation vector is a normalized normal vector from the wheel position
         var vec = new Vector2d(-WheelPosition.Y, WheelPosition.X);
-        var mag = vec.Magnitude();
-
-        vec.X /= mag;
-        vec.Y /= mag;
-
-        return vec;
+        return vec.Normalized();
     }
 }

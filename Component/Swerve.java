@@ -14,11 +14,14 @@ import frc.robot.Library.FRC_3117_Tools.Math.Vector2d;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Swerve implements Component {
+public class Swerve implements Component, Sendable {
     public Swerve(WheelData[] WheelsData, Gyro imu)
     {
         _wheelCount = WheelsData.length;
@@ -59,6 +62,8 @@ public class Swerve implements Component {
         }
 
         _IMU = imu;
+
+        SmartDashboard.putData("SwerveDrive", this);
     }
 
     public enum DrivingMode
@@ -345,11 +350,11 @@ public class Swerve implements Component {
     }
     public double GetWheelAngle(int ID)
     {
-        var angle = GetWheelAngleRaw(ID);
-        if (angle >= _angleOffset[ID])
-            angle -= _angleOffset[ID];
-        else
-            angle += _angleOffset[ID];
+        var angle = GetWheelAngleRaw(ID) - _angleOffset[ID];
+        if (angle >= 1)
+            angle -= 1;
+        else if (angle <= 0)
+            angle += 1;
 
         return angle * 2 * Math.PI;
     }
@@ -546,5 +551,16 @@ public class Swerve implements Component {
     private Vector2d GetPoint(double xAxis, double yAxis)
     {
         return new Vector2d(Math.pow(xAxis, _pointExponent) * _pointDistance, Math.pow(yAxis, _pointExponent) * _pointDistance);
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) 
+    {
+        for (var i = 0; i < _wheelCount; i++)
+        {
+            var currentId = i;
+            builder.addDoubleProperty("SteerAngle" + i, () -> GetWheelAngle(currentId), null);
+        }
+        
     }
 }
