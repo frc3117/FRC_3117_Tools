@@ -8,6 +8,6 @@ public class SwerveModuleData
 {
     public Vector3d Position;
 
-    public ServoController DirectionController;
+    public ServoController SteerController;
     public MotorController DriveController;
 }

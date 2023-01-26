@@ -1,24 +1,33 @@
 package frc.robot.Library.FRC_3117_Tools.Component.Drivetrain.Swerve;
 
 import frc.robot.Library.FRC_3117_Tools.Component.Drivetrain.Swerve.Data.SwerveModuleData;
+import frc.robot.Library.FRC_3117_Tools.Math.Vector2d;
 
-public class SwerveModule 
+public class SwerveModule
 {
     public SwerveModuleData Data;
 
-    private double _targetAngle;
-    private double _targetSpeed;
-
-    public void SetDirection(double angle)
+    public double GetSteerAngle()
     {
-        _targetAngle = angle;
+        return Data.SteerController.Encoder.GetAngle();
     }
-    public void SetSpeed(double speed)
+    public double GetDriveVelocity()
     {
-        _targetSpeed = speed;
+        return Data.DriveController.GetEncoderVelocity();
     }
 
-    public void DoModule()
+    public Vector2d GetInstantVector()
+    {
+        var angle = GetSteerAngle();
+        var vel = GetDriveVelocity();
+
+        return new Vector2d(
+            vel * Math.cos(angle),
+            vel * Math.sin(angle)
+        );
+    }
+
+    public void DoModule(Vector2d translation, double rotation)
     {
         
     }

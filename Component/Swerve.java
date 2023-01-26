@@ -36,6 +36,7 @@ public class Swerve implements Component, Sendable {
         _flipDriveMultiplicator = new double[_wheelCount];
 
         _lastAngle = new double[_wheelCount];
+        _lastDirectionCommand = new double[_wheelCount];
 
         //Set default value of the rate limiter to "Infinity" (value that will make the rate limiter go instantly to the target)
         _horizontalRateLimiter = new RateLimiter(10000, 0);
@@ -57,6 +58,8 @@ public class Swerve implements Component, Sendable {
             _flipDriveMultiplicator[i] = 1;
 
             _directionPID[i] = new AdvancedPID();
+
+            _lastDirectionCommand[i] = 0;
         }
 
         _IMU = imu;
@@ -118,6 +121,8 @@ public class Swerve implements Component, Sendable {
     private double _instantHorizontal = 0;
     private double _instantVertical = 0;
     private double _instantRotation = 0;
+
+    private double[] _lastDirectionCommand;
 
     @Override
     public void Awake()
@@ -454,7 +459,9 @@ public class Swerve implements Component, Sendable {
                     deltaAngle = 0;
                 }
 
-                _directionMotor[i].Set(Mathf.Clamp(_directionPID[i].Evaluate(deltaAngle, dt), -1, 1));
+                var directionCommand = Mathf.Clamp(_directionPID[i].Evaluate(deltaAngle, dt), -1, 1);
+                _directionMotor[i].Set(directionCommand);
+                _lastDirectionCommand[i] = directionCommand;
             }
 
             f++;
@@ -557,8 +564,9 @@ public class Swerve implements Component, Sendable {
         for (var i = 0; i < _wheelCount; i++)
         {
             var currentId = i;
-            builder.addDoubleProperty("SteerAngle" + i, () -> GetWheelAngle(currentId), null);
+            builder.addDoubleProperty("SteerAngle_" + i, () -> GetWheelAngle(currentId), null);
+            builder.addDoubleProperty("SteerTargetAngle_" + i, () -> _lastAngle[currentId], null);
+            builder.addDoubleProperty("SteerCommand_" + i, () -> _lastDirectionCommand[currentId], null);
         }
-        
     }
 }

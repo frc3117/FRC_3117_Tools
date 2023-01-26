@@ -1,17 +1,17 @@
 package frc.robot.Library.FRC_3117_Tools.Component;
 
-import edu.wpi.first.wpilibj.AnalogEncoder;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import frc.robot.Library.FRC_3117_Tools.Math.Mathf;
 import frc.robot.Library.FRC_3117_Tools.Math.Range;
+import frc.robot.Library.FRC_3117_Tools.Wrapper.Encoder.Interface.AbsoluteEncoder;
 
 public class ServoController 
 {
-    public ServoController(MotorController controller, AnalogEncoder encoder)
+    public ServoController(MotorController controller, AbsoluteEncoder encoder)
     {
         this(controller, encoder, null);
     }
-    public ServoController(MotorController controller, AnalogEncoder encoder, Range range)
+    public ServoController(MotorController controller, AbsoluteEncoder encoder, Range range)
     {
         Controller = controller;
         Encoder = encoder;
@@ -19,21 +19,35 @@ public class ServoController
 
         if (range == null)
         {
-            range = new Range(0, 360);
+            Continuous = false;
         }
+        else
+            Continuous = true;
     }
 
     public MotorController Controller;
-    public AnalogEncoder Encoder;
+    public AbsoluteEncoder Encoder;
 
+    public boolean Continuous;
     public Range Range;
 
     public void Set(double percentage)
     {
 
     }
-    public void SetAngle(double angle)
+    public void SetAngle(double targetAngle)
     {
+        var currentAngle = Encoder.GetAngle();
+        var error = 0.;
 
+        if (Continuous)
+        {
+            error = Mathf.DeltaAngle(currentAngle, targetAngle);
+        }
+        else
+        {
+            targetAngle = Mathf.Clamp(targetAngle, Range.Min, Range.Max);
+            error = Encoder.GetAngle() - targetAngle;
+        }
     }
 }
