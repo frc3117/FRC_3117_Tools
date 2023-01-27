@@ -1,0 +1,81 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Library.FRC_3117_Tools.RobotBase;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.Input;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.Input.XboxAxis;
+
+public class Robot extends RobotBase {
+
+  public enum AutonomousMode
+  {
+    
+  }
+
+  public static Robot instance;
+  public static AutonomousMode currentAutonomous;
+
+
+  private SendableChooser<AutonomousMode> _autoChooser;
+
+  @Override
+  public void robotInit()
+  {
+    instance = this;
+
+    _autoChooser = new SendableChooser<>();
+
+    for(var mode : AutonomousMode.values())
+    {
+      _autoChooser.addOption(mode.toString(), mode);
+    }
+    SmartDashboard.putData("AutonomousSelector", _autoChooser);
+    
+    super.robotInit();
+  }
+
+  @Override
+  public void autonomousInit()
+  {
+    super.autonomousInit();
+  }
+
+  @Override
+  public void CreateComponentInstance()
+  {
+    super.CreateComponentInstance();
+  }
+
+  @Override
+  public void CreateInput()
+  {
+    super.CreateInput();
+
+    Input.CreateAxis("Horizontal", 0, XboxAxis.LEFTX, false);
+    Input.CreateAxis("Vertical", 0, XboxAxis.LEFTY, true);
+    Input.CreateAxis("Rotation", 0, XboxAxis.LEFT_TRIGGER, false);
+
+    Input.SetAxisNegative("Rotation", 0, XboxAxis.RIGHT_TRIGGER, false);
+
+    Input.SetAxisDeadzone("Horizontal", 0.15);
+    Input.SetAxisDeadzone("Vertical", 0.15);
+    Input.SetAxisDeadzone("Rotation", 0.15);
+  }
+
+  @Override
+  public void Init()
+  {
+    super.Init();
+  }
+
+  @Override
+  public void ComponentLoop()
+  {
+    super.ComponentLoop();
+  }
+}
