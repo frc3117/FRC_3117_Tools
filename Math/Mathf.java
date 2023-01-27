@@ -1,6 +1,5 @@
 package frc.robot.Library.FRC_3117_Tools.Math;
 
-import edu.wpi.first.wpilibj.drive.Vector2d;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.Color;
 
 import java.lang.Math;
@@ -14,6 +13,15 @@ public class Mathf
      * The representation of the smallest number
      */
     public static final double kEPSILON = 1e-12;
+
+    /**
+     * Convertion from radian to degree
+     */
+    public static final double kRAD2DEG = 57.2957;
+    /**
+     * Convertion from degree to radian
+     */
+    public static final double kDEG2RAD = 0.0174;
 
     /**
      * Round the current number to the closest base
@@ -93,7 +101,7 @@ public class Mathf
      */
     public static Vector2d Lerp(Vector2d p1, Vector2d p2, double x)
     {
-        return new Vector2d(x, (p1.y + ((p2.y - p1.y)/(p2.x - p1.x)) * (x - p1.x)));
+        return new Vector2d(x, (p1.Y + ((p2.Y - p1.Y)/(p2.X - p1.X)) * (x - p1.X)));
     }
     /**
      * Get the interpolated color at a given x
@@ -132,8 +140,8 @@ public class Mathf
     {
         var SourceAngle = Polar.fromVector(Source).azymuth;
 
-        var xPrim = Target.x * Math.cos(SourceAngle) - Target.y * Math.sin(SourceAngle); //Change of coordinate system
-        var yPrim = Target.x * Math.sin(SourceAngle) + Target.y * Math.cos(SourceAngle);
+        var xPrim = Target.X * Math.cos(SourceAngle) - Target.Y * Math.sin(SourceAngle); //Change of coordinate system
+        var yPrim = Target.X * Math.sin(SourceAngle) + Target.Y * Math.cos(SourceAngle);
 
         var angle = Math.atan2(yPrim, xPrim); //Angle betwen Source and target
 
@@ -148,7 +156,7 @@ public class Mathf
      */
     public static double GetAngle(Vector2d p1, Vector2d p2)
     {
-        return Math.atan2(p2.y - p1.y, p2.x - p1.x);
+        return Math.atan2(p2.Y - p1.Y, p2.X - p1.X);
     }
 
     /**
@@ -162,8 +170,8 @@ public class Mathf
         var sin = Math.sin(angle);
         var cos = Math.cos(angle);
         
-        var tx = Vector.x;
-        var ty = Vector.y;
+        var tx = Vector.X;
+        var ty = Vector.Y;
 
         return new Vector2d((cos * tx) - (sin * ty), (sin * tx) + (cos * ty));
     }
@@ -176,10 +184,10 @@ public class Mathf
      */
     public static Vector2d Vector2Scale(Vector2d v1, double value)
     {
-        var vec = new Vector2d(v1.x, v1.y);
+        var vec = new Vector2d(v1.X, v1.Y);
 
-        vec.x *= value;
-        vec.y *= value;
+        vec.X *= value;
+        vec.Y *= value;
 
         return vec;
     }
@@ -202,10 +210,10 @@ public class Mathf
      */
     public static Vector2d Vector2Sum(Vector2d v1, Vector2d v2)
     {
-        var vec = new Vector2d(v1.x, v1.y);
+        var vec = new Vector2d(v1.X, v1.Y);
 
-        vec.x += v2.x;
-        vec.y += v2.y;
+        vec.X += v2.X;
+        vec.Y += v2.Y;
 
         return vec;
     }
@@ -217,10 +225,10 @@ public class Mathf
      */
     public static Vector2d Vector2Sum(Vector2d v1, double val)
     {
-        var vec = new Vector2d(v1.x, v1.y);
+        var vec = new Vector2d(v1.X, v1.Y);
 
-        vec.x += val;
-        vec.y += val;
+        vec.X += val;
+        vec.Y += val;
 
         return vec;
     }
@@ -243,10 +251,10 @@ public class Mathf
      */
     public static Vector2d Vector2Sub(Vector2d v1, Vector2d v2)
     {
-        var vec = new Vector2d(v1.x, v1.y);
+        var vec = new Vector2d(v1.X, v1.Y);
 
-        vec.x -= v2.x;
-        vec.y -= v2.y;
+        vec.X -= v2.X;
+        vec.Y -= v2.Y;
 
         return vec;
     }
@@ -258,10 +266,10 @@ public class Mathf
      */
     public static Vector2d Vector2Sub(Vector2d v1, double val)
     {
-        var vec = new Vector2d(v1.x, v1.y);
+        var vec = new Vector2d(v1.X, v1.Y);
 
-        vec.x -= val;
-        vec.y -= val;
+        vec.X -= val;
+        vec.Y -= val;
 
         return vec;
     }
@@ -275,8 +283,8 @@ public class Mathf
     {
         var vec = new Vector2d(val, val);
 
-        vec.x -= v1.x;
-        vec.y -= v1.y;
+        vec.X -= v1.X;
+        vec.Y -= v1.Y;
 
         return vec;
     }
@@ -288,9 +296,9 @@ public class Mathf
      */
     public static Vector2d Normalize(Vector2d v)
     {
-        var mag = v.magnitude();
+        var mag = v.Magnitude();
 
-        return new Vector2d(v.x / mag, v.y / mag);
+        return new Vector2d(v.X / mag, v.Y / mag);
     }
 
     /**

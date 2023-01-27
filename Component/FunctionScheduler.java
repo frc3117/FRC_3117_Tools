@@ -34,11 +34,13 @@ public class FunctionScheduler implements Component
 
     private List<FunctionSchedulerStep> _steps;
 
+    @Override
     public void Awake()
     {
 
     }
     
+    @Override
     public void Init()
     {
         _isStarted = false;
@@ -50,11 +52,13 @@ public class FunctionScheduler implements Component
         _repeatCount = 0;
     }
 
+    @Override
     public void Disabled()
     {
         Stop();
     }
 
+    @Override
     public void DoComponent()
     {
         if(_isStarted && !_isPaused)
@@ -111,6 +115,12 @@ public class FunctionScheduler implements Component
                 break;
             }
         }
+    }
+
+    @Override
+    public void Print()
+    {
+        
     }
 
     public FunctionScheduler AddWait(double delay)

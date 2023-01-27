@@ -83,21 +83,25 @@ public class Arduino implements Component
 
     private String[] _currentParams;
 
+    @Override
     public void Awake()
     {
 
     }
 
+    @Override
     public void Init()
     {
         
     }
 
+    @Override
     public void Disabled()
     {
         Close();
     }
 
+    @Override
     public void DoComponent()
     {
         //Data available
@@ -132,6 +136,12 @@ public class Arduino implements Component
             }
             
         }
+    }
+
+    @Override
+    public void Print()
+    {
+        
     }
 
     /**

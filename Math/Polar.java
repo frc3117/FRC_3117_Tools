@@ -1,7 +1,5 @@
 package frc.robot.Library.FRC_3117_Tools.Math;
 
-import edu.wpi.first.wpilibj.drive.Vector2d;
-
 /**
  * The polar coordinate system
  */
@@ -26,7 +24,7 @@ public class Polar
         var vec1 = vector();
         var vec2 = pol.vector();
 
-        return Polar.fromVector(new Vector2d(vec1.x + vec2.x, vec1.y + vec2.y));
+        return Polar.fromVector(new Vector2d(vec1.X + vec2.X, vec1.Y + vec2.Y));
     }
     /**
      * Substract a polar to the current one
@@ -38,7 +36,7 @@ public class Polar
         var vec1 = vector();
         var vec2 = pol.vector();
 
-        return Polar.fromVector(new Vector2d(vec1.x - vec2.x, vec1.y - vec2.y));
+        return Polar.fromVector(new Vector2d(vec1.X - vec2.X, vec1.Y - vec2.Y));
     }
 
     /**
@@ -56,6 +54,6 @@ public class Polar
      */
     public static Polar fromVector(Vector2d vec)
     {
-        return new Polar(vec.magnitude(), Math.atan2(vec.x, vec.y));
+        return new Polar(vec.Magnitude(), Math.atan2(vec.X, vec.Y));
     }
 }

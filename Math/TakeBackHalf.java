@@ -56,7 +56,7 @@ public class TakeBackHalf implements BaseController
 
             _isDebug = false;
 
-            SmartDashboard.delete(_gainName);
+            SmartDashboard.getEntry(_gainName).close();
         }
     }
 

@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import edu.wpi.first.wpilibj.drive.Vector2d;
-
 /**
  * The linear interpolation curve class
  */
@@ -33,27 +31,27 @@ public class Curve
             return 0;
         }
 
-        if(x <= _points.get(0).x)
+        if(x <= _points.get(0).X)
         {
-            return _points.get(0).y;
+            return _points.get(0).Y;
         }
 
         for(int i = 0; i < _points.size() - 1; i++)
         {
-            if(_points.get(i).x >= x)
+            if(_points.get(i).X >= x)
             {
-                return Mathf.Lerp(_points.get(i), _points.get(i + 1), x).y;
+                return Mathf.Lerp(_points.get(i), _points.get(i + 1), x).Y;
             }
         }
 
-        return _points.get(_points.size() - 1).y;
+        return _points.get(_points.size() - 1).Y;
     }
 
     class Vector2dSort implements Comparator<Vector2d>
     {
         public int compare(Vector2d v1, Vector2d v2)
         {
-            return (int)Math.signum(v1.x - v2.x);
+            return (int)Math.signum(v1.X - v2.X);
         }
     }
 }

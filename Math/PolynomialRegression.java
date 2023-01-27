@@ -1,6 +1,5 @@
 package frc.robot.Library.FRC_3117_Tools.Math;
 
-import edu.wpi.first.wpilibj.drive.Vector2d;
 import frc.robot.Library.FRC_3117_Tools.Math.Jama.Matrix;
 import frc.robot.Library.FRC_3117_Tools.Math.Jama.QRDecomposition;
 
@@ -16,8 +15,8 @@ public class PolynomialRegression {
         double[] y = new double[points.length];
         for(int i = 0; i < points.length; ++i)
         {
-            x[i] = points[i].x;
-            y[i] = points[i].y;
+            x[i] = points[i].X;
+            y[i] = points[i].Y;
         }
         Solve(x, y, degree);
     }

@@ -88,12 +88,12 @@ public class AdvancedPID implements BasePID {
 
             _isDebug = false;
             
-            SmartDashboard.delete(_kpName);
-            SmartDashboard.delete(_kiName);
-            SmartDashboard.delete(_kdName);
+            SmartDashboard.getEntry(_kpName).close();
+            SmartDashboard.getEntry(_kiName).close();
+            SmartDashboard.getEntry(_kdName).close();
 
-            SmartDashboard.delete(_integralSaturationMinName);
-            SmartDashboard.delete(_integralSaturationMaxName);
+            SmartDashboard.getEntry(_integralSaturationMinName).close();
+            SmartDashboard.getEntry(_integralSaturationMaxName).close();
         }
     }
 
