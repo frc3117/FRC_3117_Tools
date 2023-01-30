@@ -2,7 +2,7 @@ package frc.robot.Library.FRC_3117_Tools.Math;
 
 import frc.robot.Library.FRC_3117_Tools.Physics.TranslationMatrix;
 
-public class Vector3d 
+public class Vector3d
 {
     public Vector3d()
     {
@@ -11,6 +11,12 @@ public class Vector3d
     public Vector3d(Vector2d vec)
     {
         this(vec.X, vec.Y);
+    }
+    public Vector3d(Spherical sph)
+    {
+        X = sph.Radius * Math.sin(sph.Polar) * Math.cos(sph.Azymuth);
+        Y = sph.Radius * Math.sin(sph.Polar) * Math.sin(sph.Azymuth);
+        Z = sph.Radius * Math.cos(sph.Polar);
     }
     public Vector3d(TranslationMatrix translation)
     {
@@ -107,6 +113,10 @@ public class Vector3d
     {
         return new Vector2d(this);
     }
+    public Spherical Spherical()
+    {
+        return new Spherical(this);
+    }
     public TranslationMatrix TranslationMatrix()
     {
         return new TranslationMatrix(this);
@@ -124,6 +134,15 @@ public class Vector3d
     public static Vector3d FromVector2d(Vector2d vec)
     {
         return new Vector3d(vec.X, vec.Y);
+    }
+
+    public static Spherical ToSpherical(Vector3d vec)
+    {
+        return new Spherical(vec);
+    }
+    public static Vector3d FromSpherical(Spherical sph)
+    {
+        return new Vector3d(sph);
     }
 
     public static TranslationMatrix ToTranslationMatrix(Vector3d vec)
