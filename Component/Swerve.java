@@ -424,7 +424,7 @@ public class Swerve implements Component, Sendable {
             translationPolar.azymuth -= _headingOffset + _headingOffsetManual;
 
             //Remove the angle of the gyroscope to the azymuth to make the driving relative to the world
-            translationPolar.azymuth -= _mode == DrivingMode.World ? ((_IMU.getAngle() - _headingOffsetManual) % 360) * 0.01745 + 3.1415: 0;
+            translationPolar.azymuth -= _mode == DrivingMode.World ? ((_IMU.getAngle() - _headingOffsetManual) % 360) * 0.01745: 0;
 
             var rotationAxis = _isRotationAxisOverriden ? _rotationAxisOverride * _roationSpeedRatio : _rotationRateLimiter.GetCurrent() * _roationSpeedRatio;
 
@@ -451,8 +451,6 @@ public class Swerve implements Component, Sendable {
                     _lastAngle[i] = Sum.azymuth;
                 }
 
-                _driveMotor[i].Set(Mathf.Clamp(Sum.radius, -1, 1) * _flipDriveMultiplicator[i]);
-
                 var deltaAngle = GetDeltaAngle(i, Sum.vector());
                 if(Math.abs(deltaAngle) <= UnitConverter.DegreesToRadian(0.5))
                 {         
@@ -462,6 +460,8 @@ public class Swerve implements Component, Sendable {
                 var directionCommand = Mathf.Clamp(_directionPID[i].Evaluate(deltaAngle, dt), -1, 1);
                 _directionMotor[i].Set(directionCommand);
                 _lastDirectionCommand[i] = directionCommand;
+
+                _driveMotor[i].Set(Mathf.Clamp(Sum.radius, -1, 1) * _flipDriveMultiplicator[i]);
             }
 
             f++;

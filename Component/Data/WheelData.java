@@ -30,8 +30,10 @@ public class WheelData
 
     public Vector2d GetWheelRotationVector()
     {
+        return new Vector2d(WheelPosition.X, WheelPosition.Y).Normalized();
+
         //Rotation vector is a normalized normal vector from the wheel position
-        var vec = new Vector2d(-WheelPosition.Y, WheelPosition.X);
-        return vec.Normalized();
+        /*var vec = new Vector2d(-WheelPosition.Y, WheelPosition.X);
+        return vec.Normalized();*/
     }
 }
