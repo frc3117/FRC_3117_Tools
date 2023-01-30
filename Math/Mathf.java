@@ -23,6 +23,8 @@ public class Mathf
      */
     public static final double kDEG2RAD = 0.0174;
 
+    public static final double TAU = 2 * Math.PI;
+
     /**
      * Round the current number to the closest base
      * @param value The number to round
@@ -120,6 +122,17 @@ public class Mathf
         return new Color(R, G, B, A);
     }
 
+    public static double OffsetAngle(double angle, double offset)
+    {
+        var offsetAngle = angle - offset;
+        if (offsetAngle >= TAU)
+            offsetAngle -= TAU;
+        else if (offsetAngle <= 0)
+            offsetAngle += TAU;
+
+        return offsetAngle * TAU;
+    }
+
     /**
      * Get the smalest delta angle between 2 angle
      * @param Source The first angle
@@ -128,7 +141,13 @@ public class Mathf
      */
     public static double DeltaAngle(double Source, double Target)
     {
-        return DeltaAngle(new Polar(1, Source).vector(), new Polar(1, Target).vector());
+        var a = (Source - Target) % TAU;
+        var b = (Target - Source) % TAU;
+
+        if (a < b)
+            return -a;
+        
+        return b;
     }
     /**
      * Get the smallest delta angle between 2 point

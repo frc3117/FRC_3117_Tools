@@ -63,6 +63,19 @@ public class Vector2d
         return copy;
     }
 
+    public void Scale(double scale)
+    {
+        X *= scale;
+        Y *= scale;
+    }
+    public Vector2d Scaled(double scale)
+    {
+        var copy = Copy();
+        copy.Scale(scale);
+
+        return copy;
+    }
+
     public double SqrMagnitude()
     {
         return Math.pow(X, 2) + Math.pow(Y, 2);
@@ -90,6 +103,22 @@ public class Vector2d
     public double Distance(Vector2d vec)
     {
         return Diff(vec).Magnitude();
+    }
+
+    public void Rotate(double angle)
+    {
+        var cs = Math.cos(angle);
+        var sn = Math.sin(angle);
+
+        X = X * cs - Y * sn;
+        Y = X * sn + Y * cs;
+    }
+    public Vector2d Rotated(double angle)
+    {
+        var copy = Copy();
+        copy.Rotate(angle);
+
+        return copy;
     }
 
     public Vector3d Vector3d()

@@ -3,6 +3,7 @@ package frc.robot.Library.FRC_3117_Tools.Component.Drivetrain.Swerve;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.InputManager;
 import frc.robot.Library.FRC_3117_Tools.Component.Drivetrain.Swerve.Data.SwerveDriveData;
 import frc.robot.Library.FRC_3117_Tools.Interface.Component;
+import frc.robot.Library.FRC_3117_Tools.Math.Mathf;
 import frc.robot.Library.FRC_3117_Tools.Math.Vector2d;
 
 public class SwerveDrive implements Component
@@ -40,7 +41,7 @@ public class SwerveDrive implements Component
 
         for (var module : Data.Modules)
         {
-            module.DoModule(translation, rotation);
+            module.DoModule(this, translation, rotation);
         }
     }
 
@@ -48,5 +49,14 @@ public class SwerveDrive implements Component
     public void Print() 
     {
 
+    }
+
+    public double GetHeadingRaw()
+    {
+        return Data.Gyro.getAngle() * Mathf.kDEG2RAD;
+    }
+    public double GetHeading()
+    {
+        return Mathf.OffsetAngle(GetHeadingRaw(), Data.GyroOffset);
     }
 }
