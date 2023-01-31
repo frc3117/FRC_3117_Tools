@@ -29,7 +29,7 @@ public class SwerveModule
     }
     public double GetDriveVelocity()
     {
-        return Data.DriveController.GetEncoderVelocity();
+        return Data.DriveController.GetEncoderVelocity() * (_isDriveInverted ? -1 : 1);
     }
 
     public Vector2d GetInstantVector()
@@ -42,6 +42,16 @@ public class SwerveModule
             vel * Math.sin(angle)
         );
     }
+    public Vector2d GetFlippedInstantVector()
+    {
+        var angle = GetSteerAngle();
+        var vel = GetDriveVelocity();
+
+        return new Vector2d(
+            -vel * Math.cos(angle),
+            -vel * Math.sin(angle)
+        );
+    }
 
     public void DoModule(SwerveDrive swerve, Vector2d translation, double rotation)
     {
@@ -50,19 +60,21 @@ public class SwerveModule
         targetWheelVector.Normalize();
 
         // Compute the error vector from the target vector and the current vector
-        var errorVector = targetWheelVector.Diff(GetInstantVector());
+        var currentErrorVector = targetWheelVector.Diff(GetInstantVector());
+        var flippedErrorVector = targetWheelVector.Diff(GetFlippedInstantVector());
 
-        // Extract each component from the vector
-        var velocityError = errorVector.Magnitude();
-        var angleError = Math.atan2(errorVector.Y, errorVector.X);
+        var currentAngleError = Math.atan2(currentErrorVector.Y, currentErrorVector.X);
+        var flippedAngleError = Math.atan2(flippedErrorVector.Y, flippedErrorVector.X);
 
-        if (_isDriveInverted)
-            angleError = Mathf.OffsetAngle(angleError, Math.PI);
-
-        if (Math.abs(angleError) >= 0.5 * Math.PI)
+        var velocityError = 0.;
+        var angleError = 0.;
+        if (currentAngleError > flippedAngleError)
         {
-            angleError = Mathf.OffsetAngle(angleError, Math.PI);
-            _isDriveInverted = !_isDriveInverted;
+            
+        }
+        else
+        {
+
         }
     }
 }
