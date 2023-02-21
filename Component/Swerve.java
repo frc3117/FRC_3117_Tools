@@ -43,7 +43,7 @@ public class Swerve implements Component, Sendable {
         _verticaRateLimiter = new RateLimiter(10000, 0);
         _rotationRateLimiter = new RateLimiter(10000, 0);
 
-        //Initializing all component of the swerve swerve system
+        //Initializing all component of the swerve system
         for(int i  = 0; i < _wheelCount; i++)
         {
             _driveMotor[i] = WheelsData[i].DriveController;
