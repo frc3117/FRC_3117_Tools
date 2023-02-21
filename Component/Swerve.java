@@ -19,7 +19,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Swerve implements Component, Sendable {
+public class Swerve implements Component, Sendable 
+{
     public Swerve(WheelData[] WheelsData, Gyro imu)
     {
         _wheelCount = WheelsData.length;
@@ -48,6 +49,10 @@ public class Swerve implements Component, Sendable {
         {
             _driveMotor[i] = WheelsData[i].DriveController;
             _directionMotor[i] = WheelsData[i].DirectionController;
+
+            _driveMotor[i].SetBrake(true);
+            _directionMotor[i].SetBrake(true);
+
             _directionEncoder[i] = new AnalogInput(WheelsData[i].DirectionEncoderChannel);
 
             _rotationVector[i] = WheelsData[i].GetWheelRotationVector();
