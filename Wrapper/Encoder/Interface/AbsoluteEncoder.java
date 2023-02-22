@@ -7,6 +7,9 @@ public interface AbsoluteEncoder
     public double GetOffset();
     public void SetOffset(double offset);
 
+    public boolean GetInverted();
+    public void SetInverted(boolean inverted);
+
     public double GetRawValue();
     public double GetValue();
 

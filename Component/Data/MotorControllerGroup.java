@@ -21,17 +21,19 @@ public class MotorControllerGroup
      * Add a motor controller to the negative side
      * @param controller The controller to add
      */
-    public void AddNegativeController(MotorController controller)
+    public MotorControllerGroup AddNegativeController(MotorController controller)
     {
         _negativeController.add(controller);
+        return this;
     }
     /**
      * Add a motor controller to the positive side
      * @param controller The controller to add
      */
-    public void AddPositiveController(MotorController controller)
+    public MotorControllerGroup AddPositiveController(MotorController controller)
     {
         _positiveController.add(controller);
+        return this;
     }
 
     /**

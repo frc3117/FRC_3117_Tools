@@ -5,6 +5,7 @@ import frc.robot.Library.FRC_3117_Tools.Wrapper.Encoder.Interface.AbsoluteEncode
 public abstract class AbsoluteEncoderBase implements AbsoluteEncoder
 {
     private double _offset;
+    private boolean _inverted;
 
     @Override
     public void Zero()
@@ -23,6 +24,17 @@ public abstract class AbsoluteEncoderBase implements AbsoluteEncoder
     }
 
     @Override
+    public boolean GetInverted()
+    {
+        return _inverted;
+    }
+    @Override
+    public void SetInverted(boolean inverted)
+    {
+        _inverted = inverted;
+    }
+
+    @Override
     public abstract double GetRawValue();
     @Override
     public double GetValue()
@@ -33,6 +45,9 @@ public abstract class AbsoluteEncoderBase implements AbsoluteEncoder
             value -= 1;
         else if (value < 0)
             value += 1;
+
+        if (_inverted)
+            value = 1 - value;
 
         return value;
     }

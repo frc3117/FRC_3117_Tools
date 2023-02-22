@@ -2,8 +2,12 @@ package frc.robot.Library.FRC_3117_Tools.Component;
 
 import frc.robot.Library.FRC_3117_Tools.Component.Data.Input;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.MotorController;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.Tupple.Pair;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.WheelData;
 import frc.robot.Library.FRC_3117_Tools.Interface.Component;
+import frc.robot.Library.FRC_3117_Tools.Interface.FromManifest;
+import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifestDevices;
+import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifestObject;
 import frc.robot.Library.FRC_3117_Tools.Math.AdvancedPID;
 import frc.robot.Library.FRC_3117_Tools.Math.Mathf;
 import frc.robot.Library.FRC_3117_Tools.Math.Polar;
@@ -19,19 +23,14 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+@FromManifest(EntryName = "swerveDrive")
 public class Swerve implements Component, Sendable 
 {
     public Swerve(WheelData[] WheelsData, Gyro imu)
     {
         _wheelCount = WheelsData.length;
 
-        _driveMotor = new MotorController[_wheelCount];
-        _directionMotor = new MotorController[_wheelCount];
-        _directionEncoder = new AnalogInput[_wheelCount];
-        _rotationVector = new Vector2d[_wheelCount];
-        _wheelPosition = new Vector2d[_wheelCount];
         _directionPID = new AdvancedPID[_wheelCount];
-        _angleOffset = new double[_wheelCount];
 
         _flipAngleOffset = new double[_wheelCount];
         _flipDriveMultiplicator = new double[_wheelCount];
@@ -44,21 +43,9 @@ public class Swerve implements Component, Sendable
         _verticaRateLimiter = new RateLimiter(10000, 0);
         _rotationRateLimiter = new RateLimiter(10000, 0);
 
-        //Initializing all component of the swerve swerve system
+        //Initializing all component of the swerve system
         for(int i  = 0; i < _wheelCount; i++)
         {
-            _driveMotor[i] = WheelsData[i].DriveController;
-            _directionMotor[i] = WheelsData[i].DirectionController;
-
-            _driveMotor[i].SetBrake(true);
-            _directionMotor[i].SetBrake(true);
-
-            _directionEncoder[i] = new AnalogInput(WheelsData[i].DirectionEncoderChannel);
-
-            _rotationVector[i] = WheelsData[i].GetWheelRotationVector();
-            _wheelPosition[i] = WheelsData[i].WheelPosition;
-            _angleOffset[i] = WheelsData[i].AngleOffset;
-
             _flipAngleOffset[i] = 0;
             _flipDriveMultiplicator[i] = 1;
 
@@ -67,9 +54,40 @@ public class Swerve implements Component, Sendable
             _lastDirectionCommand[i] = 0;
         }
 
-        _IMU = imu;
+        Modules = WheelsData;
+        IMU = imu;
 
         SmartDashboard.putData("SwerveDrive", this);
+    }
+
+    public static Pair<String, Component> CreateFromManifest(RobotManifestObject manifestObject) {
+        var imu = RobotManifestDevices.GetGyro(manifestObject.GetString("IMU"));
+
+        var modulesManifestObject = manifestObject.GetSubObjectArray("modules");
+        var modules = new WheelData[modulesManifestObject.length];
+        for (var i = 0; i < modules.length; i++)
+        {
+            var module = new WheelData();
+            var moduleManifestObject = modulesManifestObject[i];
+
+            var dirEncoderName = moduleManifestObject.GetString("headingEncoder");
+            module.DirectionEncoder = RobotManifestDevices.GetAbsoluteEncoder(dirEncoderName);
+
+            var dirMotorName = moduleManifestObject.GetString("headingMotor");
+            module.DirectionController = RobotManifestDevices.GetMotorController(dirMotorName);
+
+            var driveMotorName = moduleManifestObject.GetString("driveMotor");
+            module.DriveController = RobotManifestDevices.GetMotorController(driveMotorName);
+
+            module.WheelPosition = moduleManifestObject.GetVector2d("position");
+
+            modules[i] = module;
+        }
+
+        var swerve = new Swerve(modules, imu);
+        DrivingMode.valueOf(manifestObject.GetString("driveMode"));
+
+        return new Pair<>("SwerveDrive", swerve);
     }
 
     public enum DrivingMode
@@ -80,18 +98,10 @@ public class Swerve implements Component, Sendable
         Tank
     }
 
+    public WheelData[] Modules;
+    public Gyro IMU;
+
     private int _wheelCount;
-
-    private MotorController[] _driveMotor;
-    private MotorController[] _directionMotor;
-    private AnalogInput[] _directionEncoder;
-    private Vector2d[] _rotationVector;
-
-    private Vector2d[] _wheelPosition;
-
-    private Gyro _IMU;
-
-    private double[] _angleOffset;
 
     private double[] _flipAngleOffset;
     private double[] _flipDriveMultiplicator;
@@ -210,10 +220,10 @@ public class Swerve implements Component, Sendable
      */
     public void RecalibrateIMU()
     {
-        _IMU.reset();
-        _IMU.calibrate();
+        IMU.reset();
+        IMU.calibrate();
 
-        _headingOffset = _IMU.getAngle() * Mathf.kDEG2RAD + 3.1415;
+        _headingOffset = IMU.getAngle() * Mathf.kDEG2RAD + 3.1415;
     }
 
     /**
@@ -289,7 +299,7 @@ public class Swerve implements Component, Sendable
      */
     public double GetHeading()
     {
-        var heading = _IMU.getAngle() * Mathf.kDEG2RAD;
+        var heading = IMU.getAngle() * Mathf.kDEG2RAD;
         var totalOffset = _headingOffset + _headingOffsetManual;
 
         if (heading >= totalOffset)
@@ -339,7 +349,7 @@ public class Swerve implements Component, Sendable
             Angle += 2 * 3.1415;
         }
 
-        var vec = new Polar((_driveMotor[ID].GetEncoderVelocity() / 256.) * 3.1415 * 2, Angle).vector();
+        var vec = new Polar((Modules[ID].DriveController.GetEncoderVelocity() / 256.) * 3.1415 * 2, Angle).vector();
 
         return vec;
     }
@@ -354,17 +364,11 @@ public class Swerve implements Component, Sendable
 
     public double GetWheelAngleRaw(int ID)
     {
-        return _directionEncoder[ID].getVoltage() / RobotController.getVoltage5V();
+        return Modules[ID].DirectionEncoder.GetRawAngle();
     }
     public double GetWheelAngle(int ID)
     {
-        var angle = GetWheelAngleRaw(ID) - _angleOffset[ID];
-        if (angle >= 1)
-            angle -= 1;
-        else if (angle <= 0)
-            angle += 1;
-
-        return angle * 2 * Math.PI;
+        return Modules[ID].DirectionEncoder.GetAngle();
     }
 
     /**
@@ -429,14 +433,15 @@ public class Swerve implements Component, Sendable
             translationPolar.azymuth -= _headingOffset + _headingOffsetManual;
 
             //Remove the angle of the gyroscope to the azymuth to make the driving relative to the world
-            translationPolar.azymuth -= _mode == DrivingMode.World ? ((_IMU.getAngle() - _headingOffsetManual) % 360) * 0.01745: 0;
+            translationPolar.azymuth -= _mode == DrivingMode.World ? ((IMU.getAngle() - _headingOffsetManual) % 360) * 0.01745: 0;
 
             var rotationAxis = _isRotationAxisOverriden ? _rotationAxisOverride * _roationSpeedRatio : _rotationRateLimiter.GetCurrent() * _roationSpeedRatio;
 
             for(int i = 0; i < _wheelCount; i++)
             {
                 //Each wheel have a predetermined rotation vector based on wheel position
-                var scaledRotationVector = new Vector2d(_rotationVector[i].X * rotationAxis, _rotationVector[i].Y * rotationAxis);               
+                var rotationVector = Modules[i].RotationVector;
+                var scaledRotationVector = new Vector2d(rotationVector.X * rotationAxis, rotationVector.Y * rotationAxis);
 
                 var SumVec = Mathf.Vector2Sum(scaledRotationVector, translationPolar.vector());
                 var Sum = Polar.fromVector(SumVec);
@@ -463,10 +468,10 @@ public class Swerve implements Component, Sendable
                 }
 
                 var directionCommand = Mathf.Clamp(_directionPID[i].Evaluate(deltaAngle, dt), -1, 1);
-                _directionMotor[i].Set(directionCommand);
+                Modules[i].DirectionController.Set(directionCommand);
                 _lastDirectionCommand[i] = directionCommand;
 
-                _driveMotor[i].Set(Mathf.Clamp(Sum.radius, -1, 1) * _flipDriveMultiplicator[i]);
+                Modules[i].DriveController.Set(Mathf.Clamp(Sum.radius, -1, 1) * _flipDriveMultiplicator[i]);
             }
 
             f++;
@@ -480,7 +485,7 @@ public class Swerve implements Component, Sendable
             var average = 0;
             for(int i = 0; i < _wheelCount; i++)
             {
-                wheelPol[i] = Polar.fromVector(Mathf.Vector2Sub(point, _wheelPosition[i]));
+                wheelPol[i] = Polar.fromVector(Mathf.Vector2Sub(point, Modules[i].WheelPosition));
                 average += wheelPol[i].radius;
             }
             average /= (double)_wheelCount;
@@ -490,8 +495,8 @@ public class Swerve implements Component, Sendable
                 wheelPol[i].radius /= average;
                 wheelPol[i].radius *=  Input.GetAxis("Rotation");
 
-                _driveMotor[i].Set(Mathf.Clamp(wheelPol[i].radius, -1, 1) * _flipDriveMultiplicator[i]);
-                _directionMotor[i].Set(Mathf.Clamp(_directionPID[i].Evaluate(GetDeltaAngle(i, wheelPol[i].vector()), dt), -1, 1));
+                Modules[i].DriveController.Set(Mathf.Clamp(wheelPol[i].radius, -1, 1) * _flipDriveMultiplicator[i]);
+                Modules[i].DirectionController.Set(Mathf.Clamp(_directionPID[i].Evaluate(GetDeltaAngle(i, wheelPol[i].vector()), dt), -1, 1));
             }
             break;
 
@@ -499,7 +504,7 @@ public class Swerve implements Component, Sendable
             for(int i = 0; i < _wheelCount; i++)
             {
                 //Always Allign Wheel Forward
-                _directionMotor[i].Set(Mathf.Clamp(_directionPID[i].Evaluate(GetDeltaAngle(i, new Vector2d(0, 1)), dt), -1, 1));
+                Modules[i].DirectionController.Set(Mathf.Clamp(_directionPID[i].Evaluate(GetDeltaAngle(i, new Vector2d(0, 1)), dt), -1, 1));
 
                 if(i + 1 <= _wheelCount / 2)
                 {
@@ -517,7 +522,7 @@ public class Swerve implements Component, Sendable
         _instantVertical = _isVerticalAxisOverride ? _verticalAxisOverride : _verticaRateLimiter.GetCurrent();
         _instantRotation = _isRotationAxisOverriden ? _rotationAxisOverride : _rotationRateLimiter.GetCurrent();
 
-        //Reset the overriden state to false a the end of the "frame"
+        //Reset the override state to false at the end of the "frame"
         _isRotationAxisOverriden = false;
         _isVerticalAxisOverride = false;
         _isHorizontalAxisOverride = false;

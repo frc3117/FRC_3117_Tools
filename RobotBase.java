@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.InputManager;
 import frc.robot.Library.FRC_3117_Tools.Interface.Component;
 import frc.robot.Library.FRC_3117_Tools.Math.Timer;
+import frc.robot.Library.FRC_3117_Tools.Reflection.Reflection;
 
 public class RobotBase extends TimedRobot
 {
@@ -15,6 +16,14 @@ public class RobotBase extends TimedRobot
     @Override
     public void robotInit()
     {
+        /*Reflection.BakeAllPackage();
+
+        var fromManifest = Reflection.GetAllClassWithAnnotation(FromManifest.class);
+        for (var cls : fromManifest)
+        {
+
+        }*/
+
         _componentList = new LinkedHashMap<>();
         _hasBeenInit = false;
 
