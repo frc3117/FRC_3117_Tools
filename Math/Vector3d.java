@@ -127,6 +127,33 @@ public class Vector3d
         return new Vector3d(X, Y, Z);
     }
 
+    public static double Dot(Vector3d v1, Vector3d v2) {
+        return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
+    }
+    public static Vector3d Cross(Vector3d v1, Vector3d v2) {
+        return new Vector3d(
+                v1.Y * v2.Z - v1.Z * v2.Y,
+                v1.Z * v2.X - v1.X * v2.Z,
+                v1.X * v2.Y - v1.Y * v2.X
+        );
+    }
+
+    public static double Angle(Vector3d from, Vector3d to) {
+        var num = Math.sqrt(from.SqrMagnitude() * to.SqrMagnitude());
+        if (Mathf.EpsilonEqual(num, 0))
+            return 0;
+
+        var dot = Mathf.Clamp(Vector3d.Dot(from, to) / num, -1, 1);
+        return Math.acos(dot) * Mathf.kRAD2DEG;
+    }
+    public static double SignedAngle(Vector3d from, Vector3d to, Vector3d axis) {
+        var unsigned = Angle(from, to);
+        var cross = Vector3d.Cross(from, to);
+
+        var sign = Math.signum(Vector3d.Dot(axis, cross));
+        return unsigned * sign;
+    }
+
     public static Vector2d ToVector2d(Vector3d vec)
     {
         return new Vector2d(vec.X, vec.Y);
