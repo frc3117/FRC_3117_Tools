@@ -13,24 +13,20 @@ public class Reflection
 {
     private static HashMap<String, PackageInfo> BakedPackages = new HashMap<>();
 
-    public static PackageInfo GetPackagesInfo(String packageName) {
-       return GetPackageInfo(packageName, true);
+    public static PackageInfo GetPackageInfo(String packageName)  {
+        return BakedPackages.get(packageName);
     }
-    public static PackageInfo GetPackageInfo(String packageName, boolean useBakeIfExist) {
-        if (useBakeIfExist && BakedPackages.containsKey(packageName))
-            return BakedPackages.get(packageName);
 
-        var packagePath = packageName.replaceAll("\\.", File.separator);
+    public static void BakePackages(String... includePackages) {
         var classPathEntries = System.getProperty("java.class.path").split(
                 System.getProperty("path.separator")
         );
 
-        var packageInfo = new PackageInfo(packageName);
-        for (var classEntry : classPathEntries)
+        for (var classPathEntry : classPathEntries)
         {
-            if (classEntry.endsWith(".jar"))
+            if (classPathEntry.endsWith(".jar"))
             {
-                var jar = new File(classEntry);
+                var jar = new File(classPathEntry);
                 try
                 {
                     var stream = new JarInputStream(new FileInputStream(jar));
@@ -38,66 +34,68 @@ public class Reflection
 
                     while ((entry = stream.getNextJarEntry()) != null)
                     {
-                        var name = entry.getName();
-                        if (name.endsWith(".class") && name.contains(packagePath))
+                        var name = entry.getName().replaceAll("[\\|/]", ".");
+                        if (name.endsWith(".class"))
                         {
-                            var classPath = name.substring(0, name.length() - 6);
-                            classPath = classPath.replaceAll("[\\|/]", ".");
+                            var className = name.substring(0, name.lastIndexOf('.'));
+                            var packageName = className.substring(0, className.lastIndexOf('.'));
 
-                            packageInfo.Classes.add(new ClassInfo(classPath));
+                            if (ShouldInclude(packageName, includePackages))
+                            {
+                                if (!BakedPackages.containsKey(packageName))
+                                    BakedPackages.put(packageName, new PackageInfo(packageName));
+
+                                BakedPackages.get(packageName).Classes.add(new ClassInfo(className));
+                            }
                         }
                     }
                 } catch (Exception e) { }
             }
             else
             {
-                try
+                for (var p : includePackages)
                 {
-                    var base = new File(classEntry + File.separator + packagePath);
-                    for (var file : base.listFiles())
-                    {
-                        var name = file.getName();
-                        if (name.endsWith(".class"))
-                        {
-                            var classPath = name.substring(0, name.length() - 6);
-                            if (!packageName.isEmpty())
-                                classPath = packageName + "." + classPath;
+                    var path = classPathEntry + "/" + p.replaceAll("\\.", "/");
 
-                            packageInfo.Classes.add(new ClassInfo(classPath));
-                        }
-                    }
-                } catch (Exception e) { }
+                    LoadPackageRecursive(new File(path), p);
+                }
             }
         }
-
-        return packageInfo;
     }
-
-    public static void BakeAllPackage() {
-        for (var p : Package.getPackages())
-            BakePackage(p.getName());
-    }
-    public static void BakePackage(String packageName) {
-        BakedPackages.put(packageName, GetPackageInfo(packageName, false));
-    }
-    public static void BakePackageAndChild(String packageName) {
-        for (var p : Package.getPackages())
+    private static boolean ShouldInclude(String packageName, String... includeList) {
+        for (var s : includeList)
         {
-            if (p.getName().startsWith(packageName))
-                BakePackage(p.getName());
+            if (packageName.startsWith(s))
+                return true;
         }
+
+        return false;
     }
-    public static void RemoveBackedPackage(String packageName) {
-        BakedPackages.remove(packageName);
+    private static void LoadPackageRecursive(File file, String packageName) {
+        try
+        {
+            for (var child : file.listFiles())
+            {
+                var name = packageName + "." + child.getName();
+
+                if (child.isDirectory())
+                    LoadPackageRecursive(child, name);
+                else
+                {
+                    var className = name.substring(0, name.length() - 6);
+
+                    if (!BakedPackages.containsKey(packageName))
+                        BakedPackages.put(packageName, new PackageInfo(packageName));
+
+                    BakedPackages.get(packageName).Classes.add(new ClassInfo(className));
+                }
+            }
+        } catch (Exception e) { }
     }
 
     public static List<Class<?>> GetAllClassInPackage(String packageName) {
-        return GetAllClassInPackage(packageName, true);
+        return GetPackageInfo(packageName).GetClasses();
     }
-    public static List<Class<?>> GetAllClassInPackage(String packageName, boolean useBakeIfExist) {
-        return GetPackageInfo(packageName, useBakeIfExist).GetClasses();
-    }
-
     public static List<Class<?>> GetAllClass() {
         var classes = new ArrayList<Class<?>>();
 
@@ -108,7 +106,6 @@ public class Reflection
 
         return classes;
     }
-
     public static List<Class<?>> GetAllInheritedClass(Class<?> parentClass) {
         var inherited = new ArrayList<Class<?>>();
 

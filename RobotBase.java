@@ -2,9 +2,14 @@ package frc.robot.Library.FRC_3117_Tools;
 
 import java.util.LinkedHashMap;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.InputManager;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.Tupple.Pair;
 import frc.robot.Library.FRC_3117_Tools.Interface.Component;
+import frc.robot.Library.FRC_3117_Tools.Interface.FromManifest;
+import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifest;
+import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifestInputs;
 import frc.robot.Library.FRC_3117_Tools.Math.Timer;
 import frc.robot.Library.FRC_3117_Tools.Reflection.Reflection;
 
@@ -16,16 +21,40 @@ public class RobotBase extends TimedRobot
     @Override
     public void robotInit()
     {
-        /*Reflection.BakeAllPackage();
+        _componentList = new LinkedHashMap<>();
+        _hasBeenInit = false;
+
+        RobotManifest.LoadFromFile(Filesystem.getDeployDirectory() + "/RobotManifest.json");
+        Reflection.BakePackages(
+                "frc.robot",
+                "edu.wpi",
+                "com.revrobotics",
+                "com.ctre");
+
+        RobotManifestInputs.LoadInputs();
 
         var fromManifest = Reflection.GetAllClassWithAnnotation(FromManifest.class);
         for (var cls : fromManifest)
         {
+            var fromManifestAnnotation = cls.getAnnotation(FromManifest.class);
+            if (!RobotManifest.ManifestJson.HasEntry(fromManifestAnnotation.EntryName()))
+                continue;
 
-        }*/
+            if (Component.class.isAssignableFrom(cls))
+            {
+                try
+                {
+                    var createFromManifest = cls.getMethod("CreateFromManifest", String.class);
+                    var component = (Pair<String, Component>)createFromManifest
+                            .invoke(null, fromManifestAnnotation.EntryName());
 
-        _componentList = new LinkedHashMap<>();
-        _hasBeenInit = false;
+                    AddComponent(component.Item1, component.Item2);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         CreateComponentInstance();
         CreateInput();

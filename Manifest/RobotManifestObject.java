@@ -3,6 +3,8 @@ package frc.robot.Library.FRC_3117_Tools.Manifest;
 import com.google.gson.JsonObject;
 import frc.robot.Library.FRC_3117_Tools.Math.Vector2d;
 
+import java.util.HashMap;
+
 public class RobotManifestObject {
     public RobotManifestObject(JsonObject json) {
         Json = json;
@@ -10,8 +12,19 @@ public class RobotManifestObject {
 
     public JsonObject Json;
 
+    public boolean HasEntry(String name) {
+        return Json.has(name);
+    }
+
     public RobotManifestObject GetSubObject(String name) {
         return new RobotManifestObject(Json.getAsJsonObject(name));
+    }
+    public HashMap<String, RobotManifestObject> GetSubObjects() {
+        var subObjects = new HashMap<String, RobotManifestObject>();
+        for (var entry : Json.entrySet())
+            subObjects.put(entry.getKey(), new RobotManifestObject(entry.getValue().getAsJsonObject()));
+
+        return subObjects;
     }
     public RobotManifestObject[] GetSubObjectArray(String name) {
         var array = Json.getAsJsonArray(name);
@@ -84,8 +97,7 @@ public class RobotManifestObject {
         return booleanArray;
     }
 
-    public Vector2d GetVector2d(String name)
-    {
+    public Vector2d GetVector2d(String name) {
         var vecJson = Json.getAsJsonObject(name);
 
         return new Vector2d(
@@ -93,8 +105,7 @@ public class RobotManifestObject {
                 vecJson.get("y").getAsDouble()
         );
     }
-    public Vector2d[] GetVector2dArray(String name)
-    {
+    public Vector2d[] GetVector2dArray(String name) {
         var array = Json.getAsJsonArray(name);
         var vector2dArray = new Vector2d[array.size()];
 

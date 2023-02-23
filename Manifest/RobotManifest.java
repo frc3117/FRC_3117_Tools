@@ -1,13 +1,10 @@
 package frc.robot.Library.FRC_3117_Tools.Manifest;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.Reader;
 
 public class RobotManifest
 {
@@ -25,5 +22,6 @@ public class RobotManifest
         } catch (Exception e) {}
 
         RobotManifestDevices.Initialize();
+        RobotManifestInputs.Initialize();
     }
 }

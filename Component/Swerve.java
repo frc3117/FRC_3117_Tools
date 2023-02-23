@@ -1,13 +1,12 @@
 package frc.robot.Library.FRC_3117_Tools.Component;
 
 import frc.robot.Library.FRC_3117_Tools.Component.Data.Input;
-import frc.robot.Library.FRC_3117_Tools.Component.Data.MotorController;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.Tupple.Pair;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.WheelData;
 import frc.robot.Library.FRC_3117_Tools.Interface.Component;
 import frc.robot.Library.FRC_3117_Tools.Interface.FromManifest;
+import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifest;
 import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifestDevices;
-import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifestObject;
 import frc.robot.Library.FRC_3117_Tools.Math.AdvancedPID;
 import frc.robot.Library.FRC_3117_Tools.Math.Mathf;
 import frc.robot.Library.FRC_3117_Tools.Math.Polar;
@@ -18,8 +17,6 @@ import frc.robot.Library.FRC_3117_Tools.Math.Vector2d;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -60,8 +57,8 @@ public class Swerve implements Component, Sendable
         SmartDashboard.putData("SwerveDrive", this);
     }
 
-    public static Pair<String, Component> CreateFromManifest(RobotManifestObject manifestObject) {
-        var imu = RobotManifestDevices.GetGyro(manifestObject.GetString("IMU"));
+    public static Pair<String, Component> CreateFromManifest(String name) {
+        var manifestObject = RobotManifest.ManifestJson.GetSubObject(name);
 
         var modulesManifestObject = manifestObject.GetSubObjectArray("modules");
         var modules = new WheelData[modulesManifestObject.length];
@@ -83,6 +80,8 @@ public class Swerve implements Component, Sendable
 
             modules[i] = module;
         }
+
+        var imu = RobotManifestDevices.GetGyro(manifestObject.GetString("IMU"));
 
         var swerve = new Swerve(modules, imu);
         DrivingMode.valueOf(manifestObject.GetString("driveMode"));
