@@ -127,6 +127,19 @@ public class Vector3d
         return new Vector3d(X, Y, Z);
     }
 
+    public String toString()
+    {
+        var builder = new StringBuilder();
+        builder.append("X: ");
+        builder.append(X);
+        builder.append(" Y: ");
+        builder.append(Y);
+        builder.append(" Z: ");
+        builder.append(Z);
+
+        return builder.toString();
+    }
+
     public static double Dot(Vector3d v1, Vector3d v2) {
         return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
     }

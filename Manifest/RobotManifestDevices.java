@@ -76,6 +76,15 @@ public class RobotManifestDevices
 
         return controller;
     }
+    public static MotorController[] GetMotorControllerArray(String... names) {
+        var controllerArr = new MotorController[names.length];
+        for (var i = 0; i < names.length; i++)
+        {
+            controllerArr[i] = GetMotorController(names[i]);
+        }
+
+        return controllerArr;
+    }
 
     public static Gyro GetGyro(String name) {
         var gyroObject = Devices.GetSubObject(name);

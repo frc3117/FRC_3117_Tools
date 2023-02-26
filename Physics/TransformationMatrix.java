@@ -22,6 +22,10 @@ public class TransformationMatrix
     public TransformationMatrix(TranslationMatrix translationMatrix, RotationMatrix rotationMatrix)
     {
         _transformationMatrix = new SimpleMatrix(4, 4);
+
+        _transformationMatrix.insertIntoThis(0, 0, rotationMatrix.GetMatrix());
+        _transformationMatrix.insertIntoThis(0, 3, translationMatrix.GetMatrix());
+        _transformationMatrix.setRow(3, 0, 0, 0, 0, 1);
     }  
     public TransformationMatrix(SimpleMatrix matrix)
     {

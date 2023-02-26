@@ -77,6 +77,7 @@ public class Swerve implements Component, Sendable
             module.DriveController = RobotManifestDevices.GetMotorController(driveMotorName);
 
             module.WheelPosition = moduleManifestObject.GetVector2d("position");
+            module.RotationVector = module.GetWheelRotationVector();
 
             modules[i] = module;
         }
