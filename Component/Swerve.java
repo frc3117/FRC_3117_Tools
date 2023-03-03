@@ -85,7 +85,7 @@ public class Swerve implements Component, Sendable
         var imu = RobotManifestDevices.GetGyro(manifestObject.GetString("IMU"));
 
         var swerve = new Swerve(modules, imu);
-        DrivingMode.valueOf(manifestObject.GetString("driveMode"));
+        swerve.SetCurrentMode(DrivingMode.valueOf(manifestObject.GetString("driveMode")));
 
         return new Pair<>("SwerveDrive", swerve);
     }
@@ -156,7 +156,6 @@ public class Swerve implements Component, Sendable
     {
         
     }
-
 
     /**
      * Set the current drive mode of the swerve drive

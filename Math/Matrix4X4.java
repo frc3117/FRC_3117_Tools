@@ -56,6 +56,10 @@ public class Matrix4X4
         return new Matrix4X4(_matrix.mult(other._matrix));
     }
 
+    public SimpleMatrix GetMatrix() {
+        return _matrix;
+    }
+
     public String toString() {
         return _matrix.toString();
     }
