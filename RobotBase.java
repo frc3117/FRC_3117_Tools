@@ -9,6 +9,7 @@ import frc.robot.Library.FRC_3117_Tools.Component.Data.Tupple.Pair;
 import frc.robot.Library.FRC_3117_Tools.Interface.Component;
 import frc.robot.Library.FRC_3117_Tools.Interface.FromManifest;
 import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifest;
+import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifestControllers;
 import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifestInputs;
 import frc.robot.Library.FRC_3117_Tools.Math.Timer;
 import frc.robot.Library.FRC_3117_Tools.Reflection.Reflection;
@@ -32,6 +33,7 @@ public class RobotBase extends TimedRobot
                 "com.ctre");
 
         RobotManifestInputs.LoadInputs();
+        RobotManifestControllers.LoadControllers();
 
         var fromManifest = Reflection.GetAllClassWithAnnotation(FromManifest.class);
         for (var cls : fromManifest)

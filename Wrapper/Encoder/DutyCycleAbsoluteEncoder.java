@@ -17,6 +17,11 @@ public class DutyCycleAbsoluteEncoder extends AbsoluteEncoderBase
     private DutyCycleEncoder _encoder;
 
     @Override
+    public boolean IsConnected() {
+        return _encoder.isConnected();
+    }
+
+    @Override
     public double GetRawValue() 
     {
         return _encoder.getAbsolutePosition();

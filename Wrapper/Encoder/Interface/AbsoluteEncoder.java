@@ -2,6 +2,8 @@ package frc.robot.Library.FRC_3117_Tools.Wrapper.Encoder.Interface;
 
 public interface AbsoluteEncoder 
 {
+    public boolean IsConnected();
+
     public void Zero();
 
     public double GetOffset();

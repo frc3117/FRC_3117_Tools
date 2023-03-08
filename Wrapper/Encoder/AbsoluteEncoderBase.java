@@ -8,6 +8,9 @@ public abstract class AbsoluteEncoderBase implements AbsoluteEncoder
     private boolean _inverted;
 
     @Override
+    public abstract boolean IsConnected();
+
+    @Override
     public void Zero()
     {
         _offset = GetRawValue();

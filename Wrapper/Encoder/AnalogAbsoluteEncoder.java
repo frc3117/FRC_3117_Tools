@@ -13,6 +13,11 @@ public class AnalogAbsoluteEncoder extends AbsoluteEncoderBase
     private AnalogInput _encoder;
 
     @Override
+    public boolean IsConnected() {
+        return true;
+    }
+
+    @Override
     public double GetRawValue() 
     {
         return _encoder.getVoltage() / RobotController.getVoltage5V();

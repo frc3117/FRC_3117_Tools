@@ -4,8 +4,13 @@ public class DigitalInputCAN
 {
     public DigitalInputCAN(MultiDigitalInputCAN digitalInputs, int Id) 
     {
+        this(digitalInputs, Id, false);
+    }
+    public DigitalInputCAN(MultiDigitalInputCAN digitalInputs, int Id, boolean reversed)
+    {
         _digitalInputs = digitalInputs;
         _id = Id;
+        _reversed = reversed;
     }
 
     private MultiDigitalInputCAN _digitalInputs;

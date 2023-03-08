@@ -16,9 +16,13 @@ public class MultiDigitalInputCAN extends CANDevice
 
     public DigitalInputCAN GetDigitalInput(int digitalInputID)
     {
-        return new DigitalInputCAN(this, digitalInputID);
+        return GetDigitalInput(digitalInputID, false);
     }
-    
+    public DigitalInputCAN GetDigitalInput(int digitalInputID, boolean reversed)
+    {
+        return new DigitalInputCAN(this, digitalInputID, reversed);
+    }
+
     public boolean GetValue(int digitalInputID)
     {
         return (GetValues() << (63 - digitalInputID)) < 0;
