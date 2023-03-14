@@ -40,26 +40,18 @@ public class RotationMatrix
     }
     public Vector3d GetEuler()
     {
-        var c00 = _rotationMatrix.get(0, 0);
-        var c10 = _rotationMatrix.get(1, 0);
+        var r21 = _rotationMatrix.get(2, 1);
+        var r22 = _rotationMatrix.get(2, 2);
 
-        var sy = Math.sqrt(c00 * c00 + c10 + c10);
+        var r20 = _rotationMatrix.get(2, 0);
 
-        double x, y, z;
-        if (sy < 1e-6)
-        {
-            x = Math.atan2(_rotationMatrix.get(2, 1), _rotationMatrix.get(2, 2));
-            y = Math.atan2(-_rotationMatrix.get(2, 0), sy);
-            z = Math.atan2(_rotationMatrix.get(1, 0), _rotationMatrix.get(0, 0));
-        }
-        else
-        {
-            x = Math.atan2(-_rotationMatrix.get(1, 2), _rotationMatrix.get(1, 1));
-            y = Math.atan2(-_rotationMatrix.get(2, 0), sy);
-            z = 0;
-        }
+        var r10 = _rotationMatrix.get(1, 0);
+        var r00 = _rotationMatrix.get(0, 0);
 
-        return new Vector3d(x, y, z);
+        return new Vector3d(
+                Math.atan2(r21, r22),
+                Math.atan2(-r20, Math.sqrt(r21*r21 + r22*r22)),
+                Math.atan2(r10, r00));
     }
     
     public double GetQuaternionX()
@@ -97,18 +89,18 @@ public class RotationMatrix
     }
     public void SetEuler(Vector3d vec)
     {
-        var cosX = Math.cos(vec.X);
-        var sinX = Math.sin(vec.X);
+        var cosZ = Math.cos(vec.Z);
+        var sinZ = Math.sin(vec.Z);
 
         var cosY = Math.cos(vec.Y);
         var sinY = Math.sin(vec.Y);
 
-        var cosZ = Math.cos(vec.Z);
-        var sinZ = Math.sin(vec.Z);
+        var cosX = Math.cos(vec.X);
+        var sinX = Math.sin(vec.X);
 
-        var xRot = new double[][] {
-            new double[] { cosX, -sinX, 0 },
-            new double[] { sinX, cosX, 0},
+        var zRot = new double[][] {
+            new double[] { cosZ, -sinZ, 0 },
+            new double[] { sinZ, cosZ, 0},
             new double[] { 0, 0, 1}
         };
         var yRot = new double[][] {
@@ -116,17 +108,22 @@ public class RotationMatrix
             new double[] { 0, 1, 0 },
             new double[] { -sinY, 0, cosY}
         };
-        var zRot = new double[][] {
+        var xRot = new double[][] {
             new double[] { 1, 0, 0 },
-            new double[] { 0, cosZ, -sinZ },
-            new double[] { 0, sinZ, cosZ }
+            new double[] { 0, cosX, -sinX },
+            new double[] { 0, sinX, cosX }
         };
 
-        var xRotMatrix = new SimpleMatrix(xRot);
-        var yRotMatrix = new SimpleMatrix(yRot);
         var zRotMatrix = new SimpleMatrix(zRot);
+        var yRotMatrix = new SimpleMatrix(yRot);
+        var xRotMatrix = new SimpleMatrix(xRot);
 
-        _rotationMatrix = zRotMatrix.mult(yRotMatrix).mult(xRotMatrix);
+        var mat = SimpleMatrix.identity(3);
+        mat = mat.mult(zRotMatrix);
+        mat = mat.mult(yRotMatrix);
+        mat = mat.mult(xRotMatrix);
+
+        _rotationMatrix = mat;
     }
 
     public void SetQuaternionX(double x)
@@ -163,6 +160,13 @@ public class RotationMatrix
     public SimpleMatrix GetMatrix()
     {
         return _rotationMatrix;
+    }
+
+    public TranslationMatrix Rotate(TranslationMatrix translation) {
+        return new TranslationMatrix(GetMatrix().mult(translation.GetMatrix()));
+    }
+    public Vector3d Rotate(Vector3d vec) {
+        return Vector3d.FromTranslationMatrix(Rotate(vec.TranslationMatrix()));
     }
 
     public RotationMatrix Copy()

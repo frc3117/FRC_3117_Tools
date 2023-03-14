@@ -1,9 +1,9 @@
-package frc.robot.Library.FRC_3117_Tools.Physics.Controll;
+package frc.robot.Library.FRC_3117_Tools.Physics.Control;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifestObject;
-import frc.robot.Library.FRC_3117_Tools.Physics.Controll.Interface.ControllerBase;
+import frc.robot.Library.FRC_3117_Tools.Physics.Control.Interface.ControllerBase;
 
 public class PID extends ControllerBase
 {

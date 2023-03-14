@@ -157,7 +157,7 @@ public class Vector3d
             return 0;
 
         var dot = Mathf.Clamp(Vector3d.Dot(from, to) / num, -1, 1);
-        return Math.acos(dot) * Mathf.kRAD2DEG;
+        return Math.acos(dot);
     }
     public static double SignedAngle(Vector3d from, Vector3d to, Vector3d axis) {
         var unsigned = Angle(from, to);
@@ -189,7 +189,7 @@ public class Vector3d
     {
         return new TranslationMatrix(vec);
     }
-    public static Vector3d FromTranslationMatri(TranslationMatrix translation)
+    public static Vector3d FromTranslationMatrix(TranslationMatrix translation)
     {
         return new Vector3d(translation);
     }

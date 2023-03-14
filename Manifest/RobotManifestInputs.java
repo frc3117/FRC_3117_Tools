@@ -1,19 +1,19 @@
 package frc.robot.Library.FRC_3117_Tools.Manifest;
 
 import frc.robot.Library.FRC_3117_Tools.Component.Data.Input;
+import frc.robot.Library.FRC_3117_Tools.Interface.FromManifest;
 import frc.robot.Library.FRC_3117_Tools.Interface.JoystickInput;
 import frc.robot.Library.FRC_3117_Tools.Reflection.Reflection;
 
+@FromManifest(EntryName = "inputs", EarlyOnLoadMethod = "LoadInputs")
 public class RobotManifestInputs
 {
-    private static RobotManifestObject Inputs;
+    public static void LoadInputs(String entryName) {
+        if (!RobotManifest.ManifestJson.HasEntry(entryName))
+            return;
 
-    public static void Initialize() {
-        Inputs = RobotManifest.ManifestJson.GetSubObject("inputs");
-    }
-
-    public static void LoadInputs() {
-        for (var input : Inputs.GetSubObjects().entrySet())
+        var inputs = RobotManifest.ManifestJson.GetSubObject(entryName);
+        for (var input : inputs.GetSubObjects().entrySet())
         {
             var inputName = input.getKey();
             var manifestObject = input.getValue();

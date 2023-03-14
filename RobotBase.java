@@ -16,47 +16,26 @@ import frc.robot.Library.FRC_3117_Tools.Reflection.Reflection;
 
 public class RobotBase extends TimedRobot
 {
+    public static RobotBase Instance;
+
     private LinkedHashMap<String, Component> _componentList;
     private boolean _hasBeenInit;
 
     @Override
     public void robotInit()
     {
+        Instance = this;
+
         _componentList = new LinkedHashMap<>();
         _hasBeenInit = false;
 
-        RobotManifest.LoadFromFile(Filesystem.getDeployDirectory() + "/RobotManifest.json");
         Reflection.BakePackages(
                 "frc.robot",
                 "edu.wpi",
                 "com.revrobotics",
                 "com.ctre");
 
-        RobotManifestInputs.LoadInputs();
-        RobotManifestControllers.LoadControllers();
-
-        var fromManifest = Reflection.GetAllClassWithAnnotation(FromManifest.class);
-        for (var cls : fromManifest)
-        {
-            var fromManifestAnnotation = cls.getAnnotation(FromManifest.class);
-            if (!RobotManifest.ManifestJson.HasEntry(fromManifestAnnotation.EntryName()))
-                continue;
-
-            if (Component.class.isAssignableFrom(cls))
-            {
-                try
-                {
-                    var createFromManifest = cls.getMethod("CreateFromManifest", String.class);
-                    var component = (Pair<String, Component>)createFromManifest
-                            .invoke(null, fromManifestAnnotation.EntryName());
-
-                    AddComponent(component.Item1, component.Item2);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        RobotManifest.LoadFromFile(Filesystem.getDeployDirectory() + "/RobotManifest.json");
 
         CreateComponentInstance();
         CreateInput();

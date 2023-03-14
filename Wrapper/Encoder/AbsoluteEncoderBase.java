@@ -65,4 +65,21 @@ public abstract class AbsoluteEncoderBase implements AbsoluteEncoder
     {
         return GetValue() * 2 * Math.PI;
     }
+
+    @Override
+    public abstract double GetRawTotalValue();
+    public double GetTotalValue() {
+        var value = GetRawTotalValue() - _offset;
+        if (_inverted)
+            value *= -1;
+
+        return value;
+    }
+
+    public double GetRawTotalAngle() {
+        return GetRawValue() * 2 * Math.PI;
+    }
+    public double GetTotalAngle() {
+        return GetTotalValue() * 2 * Math.PI;
+    }
 }

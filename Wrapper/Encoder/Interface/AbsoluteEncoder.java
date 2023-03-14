@@ -17,4 +17,10 @@ public interface AbsoluteEncoder
 
     public double GetRawAngle();
     public double GetAngle();
+
+    public double GetRawTotalValue();
+    public double GetTotalValue();
+
+    public double GetRawTotalAngle();
+    public double GetTotalAngle();
 }

@@ -36,7 +36,7 @@ public class TransformationMatrix
 
     public TranslationMatrix GetTranslationMatrix()
     {
-        return new TranslationMatrix(_transformationMatrix.extractMatrix(0, 4, 3, 4));
+        return new TranslationMatrix(_transformationMatrix.extractMatrix(0, 3, 3, 4));
     }
     public RotationMatrix GetRotationMatrix()
     {

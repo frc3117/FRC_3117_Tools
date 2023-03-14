@@ -3,13 +3,16 @@ package frc.robot.Library.FRC_3117_Tools.Component.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Library.FRC_3117_Tools.Interface.JoystickInput;
 
 /**
  * The input manager
  */
-public class Input 
+public class Input implements Sendable
 {
     public enum XboxButton implements JoystickInput
     {
@@ -61,18 +64,22 @@ public class Input
             _joysticks.put(ID, new Joystick(ID));
         }
 
+        _inputName = inputName;
         _joystickID = ID;
         _input = input;
         _isInputNegativeInverted = invert;
 
         _deadzone.put(inputName, 0.);
         _inputs.put(inputName, this);
+
+        SmartDashboard.putData("Inputs/" + inputName, this);
     }
 
     private static HashMap<String, Input> _inputs = new HashMap<String, Input>();
     private static HashMap<String, Double> _deadzone = new HashMap<String, Double>();
     private static HashMap<Integer, Joystick> _joysticks = new HashMap<Integer, Joystick>();
 
+    private String _inputName;
     private int _joystickID;
     private int _joystickIDNegative = 9999;
     private int _input; // The ID of the input
@@ -167,7 +174,11 @@ public class Input
      * @return The current value of the axis
      */
     public static double GetAxis(String Name) {
-        var current = _inputs.get("Axis/" + Name);
+        var fullName = "Axis/" + Name;
+        if (!_inputs.containsKey(fullName))
+            return 0;
+
+        var current = _inputs.get(fullName);
         var negative = 0.;
 
         if(current._joystickIDNegative != 9999)
@@ -177,7 +188,7 @@ public class Input
 
         var val = (_joysticks.get(current._joystickID).getRawAxis(current._input) * (current._isInputInverted ? -1 : 1)) - negative;
 
-        if(Math.abs(val) <= _deadzone.get("Axis/" + Name))
+        if(Math.abs(val) <= _deadzone.get(fullName))
         {
             return 0;
         }
@@ -191,8 +202,11 @@ public class Input
      * @return The current state of the button
      */
     public static boolean GetButton(String Name) {
-        var current = _inputs.get("Button/" + Name);
+        var fullName = "Button/" + Name;
+        if (!_inputs.containsKey(fullName))
+            return false;
 
+        var current = _inputs.get(fullName);
         return _joysticks.get(current._joystickID).getRawButton(current._input);
     }
 
@@ -240,5 +254,25 @@ public class Input
     public String[] GetAllInput()
     {
         return _inputs.keySet().toArray(new String[_inputs.size()]);
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        var split = _inputName.split("/", 2);
+
+        var name = split[1];
+        var isAxis = split[0].equals("Axis");
+        if (isAxis)
+        {
+            builder.addStringProperty("Type", () -> "Axis", null);
+            builder.addDoubleProperty("Value", () -> GetAxis(name), null);
+            builder.addDoubleProperty("Deadzone", () -> _deadzone.get(_inputName), (val) -> _deadzone.put(_inputName, val));
+            builder.addBooleanProperty("Inverted", () -> _isInputInverted, (val) -> _isInputInverted = val);
+        }
+        else
+        {
+            builder.addStringProperty("Type", () -> "Button", null);
+            builder.addBooleanProperty("Value", () -> GetButton(name), null);
+        }
     }
 }

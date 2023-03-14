@@ -27,7 +27,7 @@ public class Matrix4X4
     public Matrix4X4(TransformationMatrix transformationMatrix) {
         _matrix = transformationMatrix.GetMatrix().copy();
     }
-    private Matrix4X4(SimpleMatrix matrix) {
+    public Matrix4X4(SimpleMatrix matrix) {
         _matrix = matrix;
     }
 
@@ -48,8 +48,8 @@ public class Matrix4X4
     public Matrix4X4 mult(TransformationMatrix other) {
         return new Matrix4X4(_matrix.mult(other.GetMatrix()));
     }
-    public Matrix4X4 rmult(TransformationMatrix other) {
-        return new Matrix4X4(other.GetMatrix().mult(_matrix));
+    public TransformationMatrix rmult(TransformationMatrix other) {
+        return new TransformationMatrix(other.GetMatrix().mult(_matrix));
     }
 
     public Matrix4X4 mult(Matrix4X4 other) {
@@ -62,5 +62,9 @@ public class Matrix4X4
 
     public String toString() {
         return _matrix.toString();
+    }
+
+    public TransformationMatrix ToTransformationMatrix() {
+        return new TransformationMatrix(_matrix);
     }
 }

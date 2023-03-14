@@ -48,11 +48,11 @@ public class TranslationMatrix
     }
     public double GetY()
     {
-        return _translationMatrix.get(0, 1);
+        return _translationMatrix.get(1, 0);
     }
     public double GetZ()
     {
-        return _translationMatrix.get(0, 2);
+        return _translationMatrix.get(2, 0);
     }
 
     public void SetX(double x)
@@ -61,11 +61,11 @@ public class TranslationMatrix
     }
     public void SetY(double y)
     {
-        _translationMatrix.set(0, 1, y);
+        _translationMatrix.set(1, 0, y);
     }
     public void SetZ(double z)
     {
-        _translationMatrix.set(0, 2, z);
+        _translationMatrix.set(2, 0, z);
     }
 
     public SimpleMatrix GetMatrix()

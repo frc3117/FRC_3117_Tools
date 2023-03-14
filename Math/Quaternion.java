@@ -18,10 +18,31 @@ public class Quaternion
 
     private static final Quaternion IDENTITY = new Quaternion(0, 0, 0, 1);
 
-    public double W;
     public double X;
     public double Y;
     public double Z;
+    public double W;
+
+    public Vector3d Rotate(Vector3d vec) {
+        var x = X * 2;
+        var y = Y * 2;
+        var z = Z * 2;
+        var xx = X * x;
+        var yy = Y * y;
+        var zz = Z * z;
+        var xy = X * y;
+        var xz = X * z;
+        var yz = Y * z;
+        var wx = W * x;
+        var wy = W * y;
+        var wz = W * z;
+
+        return new Vector3d(
+                (1f - (yy + zz)) * vec.X + (xy - wz) * vec.Y + (xz + wy) * vec.Z,
+                (xy + wz) * vec.X + (1f - (xx + zz)) * vec.Y + (yz - wx) * vec.Z,
+                (xz - wy) * vec.X + (yz + wx) * vec.Y + (1f - (xx + yy)) * vec.Z
+        );
+    }
 
     public Vector3d Euler()
     {
@@ -35,6 +56,31 @@ public class Quaternion
     public Quaternion Copy()
     {
         return new Quaternion(X, Y, Z, W);
+    }
+
+    public String toString() {
+        var builder = new StringBuilder();
+        builder.append("X: ");
+        builder.append(X);
+        builder.append(" Y: ");
+        builder.append(Y);
+        builder.append(" Z: ");
+        builder.append(Z);
+        builder.append(" W: ");
+        builder.append(W);
+
+        return builder.toString();
+    }
+
+    public static Quaternion AngleAxis(double angle, Vector3d axis) {
+        var s = Math.sin(angle / 2);
+
+        return new Quaternion(
+                axis.X * s,
+                axis.Y * s,
+                axis.Z * s,
+                Math.cos(angle / 2)
+        );
     }
 
     public static Vector3d ToEuler(Quaternion quaternion)

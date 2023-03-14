@@ -19,8 +19,9 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
 
-@FromManifest(EntryName = "swerveDrive")
+@FromManifest(EntryName = "swerveDrive", OnLoadMethod = "CreateFromManifest")
 public class Swerve implements Component, Sendable 
 {
     public Swerve(WheelData[] WheelsData, Gyro imu)
@@ -57,7 +58,10 @@ public class Swerve implements Component, Sendable
         SmartDashboard.putData("SwerveDrive", this);
     }
 
-    public static Pair<String, Component> CreateFromManifest(String name) {
+    public static void CreateFromManifest(String name) {
+        if (!RobotManifest.ManifestJson.HasEntry(name))
+            return;
+
         var manifestObject = RobotManifest.ManifestJson.GetSubObject(name);
 
         var modulesManifestObject = manifestObject.GetSubObjectArray("modules");
@@ -87,7 +91,7 @@ public class Swerve implements Component, Sendable
         var swerve = new Swerve(modules, imu);
         swerve.SetCurrentMode(DrivingMode.valueOf(manifestObject.GetString("driveMode")));
 
-        return new Pair<>("SwerveDrive", swerve);
+        Robot.Instance.AddComponent("SwerveDrive", swerve);
     }
 
     public enum DrivingMode

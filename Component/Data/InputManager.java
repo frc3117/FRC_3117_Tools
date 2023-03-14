@@ -203,6 +203,9 @@ public class InputManager
      */
     public static boolean GetButton(String ButtonName)
     {
+        if (!_currentState.containsKey(ButtonName))
+            return false;
+
         return _currentState.get(ButtonName);
     }
     /**
@@ -212,6 +215,9 @@ public class InputManager
      */
     public static boolean GetButtonDown(String ButtonName)
     {
+        if (!_currentState.containsKey(ButtonName))
+            return false;
+
         return !_lastState.get(ButtonName) && _currentState.get(ButtonName);
     }
     /**
@@ -221,6 +227,9 @@ public class InputManager
      */
     public static boolean GetButtonUp(String ButtonName)
     {
+        if (!_currentState.containsKey(ButtonName))
+            return false;
+
         return _lastState.get(ButtonName) && !_currentState.get(ButtonName);
     }
 
@@ -231,6 +240,9 @@ public class InputManager
      */
     public static Double GetAxis(String AxisName)
     {
+        if (!_currentAxisValue.containsKey(AxisName))
+            return 0.;
+
         return _currentAxisValue.get(AxisName);
     }
 

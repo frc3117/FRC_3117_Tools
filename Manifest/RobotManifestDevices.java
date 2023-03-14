@@ -2,17 +2,20 @@ package frc.robot.Library.FRC_3117_Tools.Manifest;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.MotorController;
+import frc.robot.Library.FRC_3117_Tools.Interface.FromManifest;
 import frc.robot.Library.FRC_3117_Tools.Wrapper.ADIS16448_IMU_Gyro;
 import frc.robot.Library.FRC_3117_Tools.Wrapper.Encoder.AnalogAbsoluteEncoder;
 import frc.robot.Library.FRC_3117_Tools.Wrapper.Encoder.DutyCycleAbsoluteEncoder;
 import frc.robot.Library.FRC_3117_Tools.Wrapper.Encoder.Interface.AbsoluteEncoder;
 
+@FromManifest(EntryName = "devices", EarlyOnLoadMethod = "Initialize")
 public class RobotManifestDevices
 {
     private static RobotManifestObject Devices;
 
-    public static void Initialize() {
-        Devices = RobotManifest.ManifestJson.GetSubObject("devices");
+    public static void Initialize(String entryName) {
+        if (RobotManifest.ManifestJson.HasEntry(entryName))
+            Devices  = RobotManifest.ManifestJson.GetSubObject("devices");
     }
 
     public static AbsoluteEncoder GetAbsoluteEncoder(String name) {
@@ -61,6 +64,10 @@ public class RobotManifestDevices
 
             case "CANSparkMaxBrushed":
                 controller = new MotorController(MotorController.MotorControllerType.SparkMax, id, false);
+                break;
+
+            case "TalonSRX":
+                controller = new MotorController(MotorController.MotorControllerType.TalonSRX, id, false);
                 break;
 
             case "TalonFX":

@@ -7,4 +7,6 @@ import java.lang.annotation.RetentionPolicy;
 public @interface FromManifest
 {
     String EntryName();
+    String EarlyOnLoadMethod() default "";
+    String OnLoadMethod() default "";
 }
