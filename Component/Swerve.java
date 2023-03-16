@@ -153,6 +153,14 @@ public class Swerve implements Component, Sendable
     public void Init()
     {
         InitIMU();
+
+        _rotationRateLimiter.Reset();
+        _verticaRateLimiter.Reset();
+        _horizontalRateLimiter.Reset();
+
+        _isRotationAxisOverriden = false;
+        _isVerticalAxisOverride = false;
+        _isHorizontalAxisOverride = false;
     }
 
     @Override

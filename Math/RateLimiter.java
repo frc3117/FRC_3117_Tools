@@ -11,8 +11,8 @@ public class RateLimiter
         _current = InitValue;
     }
 
-    private double _velocity;
-    private double _current;
+    private double _velocity = 0;
+    private double _current = 0;
 
     /**
      * Set the new velocity of the rate limiter
@@ -76,5 +76,6 @@ public class RateLimiter
     public void Reset()
     {
         _current = 0;
+        _velocity = 0;
     }
 }

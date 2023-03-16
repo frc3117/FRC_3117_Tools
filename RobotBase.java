@@ -2,8 +2,10 @@ package frc.robot.Library.FRC_3117_Tools;
 
 import java.util.LinkedHashMap;
 
+import com.ctre.phoenix.motorcontrol.WPI_MotorSafetyImplem;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Watchdog;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.InputManager;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.Tupple.Pair;
 import frc.robot.Library.FRC_3117_Tools.Interface.Component;
@@ -47,7 +49,7 @@ public class RobotBase extends TimedRobot
     @Override
     public void robotPeriodic() 
     {
-  
+        WPI_MotorSafetyImplem.checkMotors();
     }
 
     @Override

@@ -1,8 +1,11 @@
 package frc.robot.Library.FRC_3117_Tools.Component.Data;
 
+import com.ctre.phoenix.motorcontrol.MotorCommutation;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.WPI_MotorSafetyImplem;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -28,9 +31,11 @@ public class MotorController
 
             case TalonSRX:
             _talonSRX = new WPI_TalonSRX(Channel);
+            _talonSRX.setSafetyEnabled(true);
             break;
 
             case TalonFX:
+
             _talonFX = new TalonFX(Channel);
             _encoderResolution = 2048;
             break;
