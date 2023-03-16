@@ -37,9 +37,9 @@ public class Swerve implements Component, Sendable
         _lastDirectionCommand = new double[_wheelCount];
 
         //Set default value of the rate limiter to "Infinity" (value that will make the rate limiter go instantly to the target)
-        _horizontalRateLimiter = new RateLimiter(10000, 0);
-        _verticaRateLimiter = new RateLimiter(10000, 0);
-        _rotationRateLimiter = new RateLimiter(10000, 0);
+        _horizontalRateLimiter = new RateLimiter(4, 0);
+        _verticaRateLimiter = new RateLimiter(4, 0);
+        _rotationRateLimiter = new RateLimiter(4, 0);
 
         //Initializing all component of the swerve system
         for(int i  = 0; i < _wheelCount; i++)

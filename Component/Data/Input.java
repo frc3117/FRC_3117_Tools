@@ -14,6 +14,33 @@ import frc.robot.Library.FRC_3117_Tools.Interface.JoystickInput;
  */
 public class Input implements Sendable
 {
+    public enum GenericInput implements JoystickInput {
+        INPUT_0(0),
+        INPUT_1(1),
+        INPUT_2(2),
+        INPUT_3(3),
+        INPUT_4(4),
+        INPUT_5(5),
+        INPUT_6(6),
+        INPUT_7(7),
+        INPUT_8(8),
+        INPUT_9(9),
+        INPUT_10(10),
+        INPUT_11(11),
+        INPUT_12(12),
+        INPUT_13(13);
+
+        private final int _value;
+        private GenericInput(int value) {
+            _value = value;
+        }
+
+        @Override
+        public int GetValue() {
+            return _value;
+        }
+    }
+
     public enum XboxButton implements JoystickInput
     {
         A(1),
@@ -55,6 +82,20 @@ public class Input implements Sendable
 
         public int GetValue()
         {
+            return _value;
+        }
+    }
+
+    public enum JoystickButton implements JoystickInput {
+        ;
+
+        private final int _value;
+        private JoystickButton(int value) {
+            _value = value;
+        }
+
+        @Override
+        public int GetValue() {
             return _value;
         }
     }

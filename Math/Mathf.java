@@ -130,7 +130,7 @@ public class Mathf
         else if (offsetAngle <= 0)
             offsetAngle += TAU;
 
-        return offsetAngle * TAU;
+        return offsetAngle;
     }
 
     /**

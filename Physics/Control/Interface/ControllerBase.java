@@ -13,7 +13,6 @@ public abstract class ControllerBase implements Sendable
 
     public static HashMap<String, ControllerBase> Controllers = new HashMap<>();
 
-
     public final String Name;
     public double Setpoint;
 
@@ -21,4 +20,6 @@ public abstract class ControllerBase implements Sendable
         return Evaluate(currentValue, Timer.GetDeltaTime());
     }
     public abstract double Evaluate(double currentValue, double deltaTime);
+
+    public abstract void Reset();
 }

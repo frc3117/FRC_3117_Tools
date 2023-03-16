@@ -39,17 +39,21 @@ public class PID extends ControllerBase
     private double _previousProportional;
 
     @Override
-    public double Evaluate(double currentValue, double deltaTime)
-    {
+    public double Evaluate(double currentValue, double deltaTime) {
         _proportional = Setpoint - currentValue;
         _derivative = (_previousProportional - _proportional) / deltaTime;
-        _integral = _proportional * deltaTime;
+        _integral += _proportional * deltaTime;
 
         _previousProportional = _proportional;
 
         return Kp * _proportional +
                Ki * _integral +
                Kd * _derivative;
+    }
+
+    @Override
+    public void Reset() {
+        _integral = 0;
     }
 
     @Override
