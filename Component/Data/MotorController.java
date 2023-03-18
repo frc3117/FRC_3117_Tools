@@ -31,7 +31,7 @@ public class MotorController
 
             case TalonSRX:
             _talonSRX = new WPI_TalonSRX(Channel);
-            _talonSRX.setSafetyEnabled(true);
+            //_talonSRX.setSafetyEnabled(true);
             break;
 
             case TalonFX:

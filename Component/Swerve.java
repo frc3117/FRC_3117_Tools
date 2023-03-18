@@ -7,13 +7,7 @@ import frc.robot.Library.FRC_3117_Tools.Interface.Component;
 import frc.robot.Library.FRC_3117_Tools.Interface.FromManifest;
 import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifest;
 import frc.robot.Library.FRC_3117_Tools.Manifest.RobotManifestDevices;
-import frc.robot.Library.FRC_3117_Tools.Math.AdvancedPID;
-import frc.robot.Library.FRC_3117_Tools.Math.Mathf;
-import frc.robot.Library.FRC_3117_Tools.Math.Polar;
-import frc.robot.Library.FRC_3117_Tools.Math.RateLimiter;
-import frc.robot.Library.FRC_3117_Tools.Math.Timer;
-import frc.robot.Library.FRC_3117_Tools.Math.UnitConverter;
-import frc.robot.Library.FRC_3117_Tools.Math.Vector2d;
+import frc.robot.Library.FRC_3117_Tools.Math.*;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -313,13 +307,9 @@ public class Swerve implements Component, Sendable
         var heading = IMU.getAngle() * Mathf.kDEG2RAD;
         var totalOffset = _headingOffset + _headingOffsetManual;
 
-        if (heading >= totalOffset)
-            heading -= totalOffset;
-        else
-            heading += totalOffset;
-
-        return heading;
+        return Mathf.OffsetAngle(heading, totalOffset);
     }
+
     /**
      * Get the current estimated position of the swerve drive
      */
@@ -331,6 +321,12 @@ public class Swerve implements Component, Sendable
     public void SetHeadingOffset(double offset)
     {
         _headingOffsetManual = offset;
+    }
+    public void SetHeadingAsCurrent(double currentHeading) {
+        _headingOffsetManual -= Mathf.DeltaAngle(GetHeading(), currentHeading);
+    }
+    public void AddHeadingOffset(double val) {
+        _headingOffsetManual += val;
     }
 
     /**
@@ -424,30 +420,21 @@ public class Swerve implements Component, Sendable
             var vertical = Input.GetAxis("Vertical");
             var rotation = Input.GetAxis("Rotation");
 
-            var x = _horizontalRateLimiter.Evaluate(horizontal);
-            var y = _verticaRateLimiter.Evaluate(vertical);
-            var z = _rotationRateLimiter.Evaluate(rotation);
+            var inputVec = new Vector3d(
+                    _horizontalRateLimiter.Evaluate(horizontal),
+                    _verticaRateLimiter.Evaluate(vertical),
+                    _rotationRateLimiter.Evaluate(rotation)
+            );
 
-            var mag = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
-
-            if(mag > 1)
-            {
-                horizontal = _horizontalRateLimiter.GetCurrent() / mag;
-                vertical = _verticaRateLimiter.GetCurrent() / mag;
-                rotation =  _rotationRateLimiter.GetCurrent() / mag;
-            }
+            var mag = inputVec.Magnitude();
 
             //Translation vector is equal to the translation joystick axis
             var translation = new Vector2d(_isHorizontalAxisOverride ? _horizontalAxisOverride : _horizontalRateLimiter.GetCurrent() * _speedRatio * -1, (_isVerticalAxisOverride ? _verticalAxisOverride : _verticaRateLimiter.GetCurrent()) * _speedRatio);
+
             var translationPolar = Polar.fromVector(translation);
-
-            translationPolar.azymuth -= _headingOffset + _headingOffsetManual;
-
-            //Remove the angle of the gyroscope to the azymuth to make the driving relative to the world
-            translationPolar.azymuth -= _mode == DrivingMode.World ? ((IMU.getAngle() - _headingOffsetManual) % 360) * 0.01745: 0;
+            translationPolar.azymuth -= GetHeading();
 
             var rotationAxis = _isRotationAxisOverriden ? _rotationAxisOverride * _roationSpeedRatio : _rotationRateLimiter.GetCurrent() * _roationSpeedRatio;
-
             for(int i = 0; i < _wheelCount; i++)
             {
                 //Each wheel have a predetermined rotation vector based on wheel position

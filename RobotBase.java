@@ -49,7 +49,7 @@ public class RobotBase extends TimedRobot
     @Override
     public void robotPeriodic() 
     {
-        WPI_MotorSafetyImplem.checkMotors();
+        //WPI_MotorSafetyImplem.checkMotors();
     }
 
     @Override

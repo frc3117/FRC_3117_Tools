@@ -76,6 +76,5 @@ public class RateLimiter
     public void Reset()
     {
         _current = 0;
-        _velocity = 0;
     }
 }
