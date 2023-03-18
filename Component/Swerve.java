@@ -416,9 +416,9 @@ public class Swerve implements Component, Sendable
             case World:
 
             //Adding a rate limiter to the translation joystick to make the driving smoother
-            var horizontal = Input.GetAxis("Horizontal");
-            var vertical = Input.GetAxis("Vertical");
-            var rotation = Input.GetAxis("Rotation");
+            var horizontal = Input.GetButton("ReverseControls") ? -Input.GetAxis("Horizontal") : Input.GetAxis("Horizontal");
+            var vertical = Input.GetButton("ReverseControls") ? -Input.GetAxis("Vertical") : Input.GetAxis("Vertical");
+            var rotation = Input.GetButton("ReverseControls") ? -Input.GetAxis("Rotation") : Input.GetAxis("Rotation");
 
             var inputVec = new Vector3d(
                     _horizontalRateLimiter.Evaluate(horizontal),
