@@ -1,6 +1,7 @@
 package frc.robot.Library.FRC_3117_Tools.Component;
 
 import frc.robot.Library.FRC_3117_Tools.Component.Data.Input;
+import frc.robot.Library.FRC_3117_Tools.Component.Data.InputManager;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.Tupple.Pair;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.WheelData;
 import frc.robot.Library.FRC_3117_Tools.Interface.Component;
@@ -130,6 +131,8 @@ public class Swerve implements Component, Sendable
 
     private double _verticalAxisOverride = 0;
     private boolean _isVerticalAxisOverride = false;
+
+    private  boolean _controlReversed = false;
 
     private double _instantHorizontal = 0;
     private double _instantVertical = 0;
@@ -298,6 +301,10 @@ public class Swerve implements Component, Sendable
         _isVerticalAxisOverride = true;
     }
 
+    public void ReverseControll() {
+        _controlReversed = !_controlReversed;
+    }
+
     /**
      * Get the current heading of the swerve drive
      * @return
@@ -409,16 +416,20 @@ public class Swerve implements Component, Sendable
     public void DoComponent()
     {
         double dt = Timer.GetDeltaTime();
- 
+
+        if (InputManager.GetButtonDown("ReverseControls")) {
+            ReverseControll();
+        }
+
         switch(_mode)
         {
             case Local:
             case World:
 
             //Adding a rate limiter to the translation joystick to make the driving smoother
-            var horizontal = Input.GetButton("ReverseControls") ? -Input.GetAxis("Horizontal") : Input.GetAxis("Horizontal");
-            var vertical = Input.GetButton("ReverseControls") ? -Input.GetAxis("Vertical") : Input.GetAxis("Vertical");
-            var rotation = Input.GetButton("ReverseControls") ? -Input.GetAxis("Rotation") : Input.GetAxis("Rotation");
+            var horizontal = Input.GetAxis("Horizontal");
+            var vertical = Input.GetAxis("Vertical");
+            var rotation = Input.GetAxis("Rotation");
 
             var inputVec = new Vector3d(
                     _horizontalRateLimiter.Evaluate(horizontal),
@@ -430,11 +441,14 @@ public class Swerve implements Component, Sendable
 
             //Translation vector is equal to the translation joystick axis
             var translation = new Vector2d(_isHorizontalAxisOverride ? _horizontalAxisOverride : _horizontalRateLimiter.GetCurrent() * _speedRatio * -1, (_isVerticalAxisOverride ? _verticalAxisOverride : _verticaRateLimiter.GetCurrent()) * _speedRatio);
+            translation.X *= (_controlReversed ? -1 : 1);
+            translation.Y *= (_controlReversed ? -1 : 1);
 
             var translationPolar = Polar.fromVector(translation);
             translationPolar.azymuth -= GetHeading();
 
             var rotationAxis = _isRotationAxisOverriden ? _rotationAxisOverride * _roationSpeedRatio : _rotationRateLimiter.GetCurrent() * _roationSpeedRatio;
+            rotationAxis *= (_controlReversed ? -1 : 1);
             for(int i = 0; i < _wheelCount; i++)
             {
                 //Each wheel have a predetermined rotation vector based on wheel position
