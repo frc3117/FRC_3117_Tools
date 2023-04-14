@@ -7,7 +7,9 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Library.FRC_3117_Tools.Interface.AxisTransform;
 import frc.robot.Library.FRC_3117_Tools.Interface.JoystickInput;
+import frc.robot.Library.FRC_3117_Tools.Math.Mathf;
 
 /**
  * The input manager
@@ -109,6 +111,7 @@ public class Input implements Sendable
         _joystickID = ID;
         _input = input;
         _isInputNegativeInverted = invert;
+        _axisTransform = Input::DeadzoneTransform;
 
         _deadzone.put(inputName, 0.);
         _inputs.put(inputName, this);
@@ -127,6 +130,7 @@ public class Input implements Sendable
     private boolean _isInputInverted;
     private int _inputNegative = 9999;
     private boolean _isInputNegativeInverted;
+    private AxisTransform _axisTransform;
 
     /**
      * Register an axis
@@ -201,6 +205,10 @@ public class Input implements Sendable
         _deadzone.put("Axis/" + Name, Deadzone);
     }
 
+    public static void SetAxisTransform(String Name, AxisTransform axisTransform) {
+        _inputs.get("Axis/" + Name)._axisTransform = axisTransform;
+    }
+
     /**
      * Unregister all the axis and buttons
      */
@@ -219,22 +227,15 @@ public class Input implements Sendable
         if (!_inputs.containsKey(fullName))
             return 0;
 
-        var current = _inputs.get(fullName);
-        var negative = 0.;
+        var input = _inputs.get(fullName);
 
-        if(current._joystickIDNegative != 9999)
-        {
-            negative = _joysticks.get(current._joystickIDNegative).getRawAxis(current._inputNegative) * (current._isInputNegativeInverted ? -1 : 1);
-        }
+        var positive = input._joystickID == 9999 ? 0 : _joysticks.get(input._joystickID).getRawAxis(input._input);
+        positive *= input._isInputInverted ? -1 : 1;
 
-        var val = (_joysticks.get(current._joystickID).getRawAxis(current._input) * (current._isInputInverted ? -1 : 1)) - negative;
+        var negative = input._joystickIDNegative == 9999 ? 0 : _joysticks.get(input._joystickIDNegative).getRawAxis(input._inputNegative);
+        positive *= input._isInputNegativeInverted ? -1 : 1;
 
-        if(Math.abs(val) <= _deadzone.get(fullName))
-        {
-            return 0;
-        }
-
-        return val;
+        return input._axisTransform.Invoke(positive - negative, _deadzone.get(fullName));
     }
 
     /**
@@ -295,6 +296,23 @@ public class Input implements Sendable
     public String[] GetAllInput()
     {
         return _inputs.keySet().toArray(new String[_inputs.size()]);
+    }
+
+    public static double DeadzoneTransform(double axis, double deadzone) {
+        if (Math.abs(axis) <= deadzone)
+            return 0;
+
+        return axis;
+    }
+    public static double LinearTransform(double axis, double deadzone) {
+        return Mathf.Clamp((Math.abs(axis) - deadzone) / (1 - deadzone), 0, 1) * Math.signum(axis);
+    }
+    public static double PowTransform(double axis, double deadzone, double pow) {
+        return Math.pow(Math.abs(LinearTransform(axis, deadzone)), pow) * Math.signum(axis);
+    }
+    public static double NormalizedSignmoid(double axis, double deadzone, double curvature) {
+        var l = 2.*Math.abs(LinearTransform(axis, deadzone)) - 1.;
+        return (( (l - curvature*l) / (curvature - (2*curvature * Math.abs(l)) + 1) + 1) * Math.signum(axis)) / 2.;
     }
 
     @Override

@@ -54,8 +54,9 @@ public class AntiWindupPID extends ControllerBase {
     private Range _integralRange;
 
     @Override
-    public double Evaluate(double currentValue, double deltaTime) {
-        _proportional = Setpoint - currentValue;
+    public double EvaluateError(double error, double deltaTime) {
+        _proportional = error;
+
         if (!Mathf.EpsilonEqual(Math.signum(_proportional), Math.signum(_previousProportional)))
             Reset();
 

@@ -17,9 +17,16 @@ public abstract class ControllerBase implements Sendable
     public double Setpoint;
 
     public double Evaluate(double currentValue) {
-        return Evaluate(currentValue, Timer.GetDeltaTime());
+        return EvaluateError(Setpoint - currentValue, Timer.GetDeltaTime());
     }
-    public abstract double Evaluate(double currentValue, double deltaTime);
+    public double Evaluate(double currentValue, double deltaTime) {
+        return EvaluateError(Setpoint - currentValue, deltaTime);
+    }
+
+    public double EvaluateError(double error) {
+        return EvaluateError(error, Timer.GetDeltaTime());
+    }
+    public abstract double EvaluateError(double error, double deltaTime);
 
     public abstract void Reset();
 }

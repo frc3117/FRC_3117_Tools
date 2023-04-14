@@ -2,7 +2,6 @@ package frc.robot.Library.FRC_3117_Tools.Component;
 
 import frc.robot.Library.FRC_3117_Tools.Component.Data.Input;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.InputManager;
-import frc.robot.Library.FRC_3117_Tools.Component.Data.Tupple.Pair;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.WheelData;
 import frc.robot.Library.FRC_3117_Tools.Interface.Component;
 import frc.robot.Library.FRC_3117_Tools.Interface.FromManifest;
@@ -12,14 +11,14 @@ import frc.robot.Library.FRC_3117_Tools.Math.*;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Library.FRC_3117_Tools.Wrapper.IMU.Interface.IMU;
 import frc.robot.Robot;
 
 @FromManifest(EntryName = "swerveDrive", OnLoadMethod = "CreateFromManifest")
 public class Swerve implements Component, Sendable 
 {
-    public Swerve(WheelData[] WheelsData, Gyro imu)
+    public Swerve(WheelData[] WheelsData, IMU imu)
     {
         _wheelCount = WheelsData.length;
 
@@ -32,9 +31,9 @@ public class Swerve implements Component, Sendable
         _lastDirectionCommand = new double[_wheelCount];
 
         //Set default value of the rate limiter to "Infinity" (value that will make the rate limiter go instantly to the target)
-        _horizontalRateLimiter = new RateLimiter(4, 0);
-        _verticaRateLimiter = new RateLimiter(4, 0);
-        _rotationRateLimiter = new RateLimiter(4, 0);
+        _horizontalRateLimiter = new RateLimiter(2.5, 0);
+        _verticaRateLimiter = new RateLimiter(2.5, 0);
+        _rotationRateLimiter = new RateLimiter(3, 0);
 
         //Initializing all component of the swerve system
         for(int i  = 0; i < _wheelCount; i++)
@@ -48,7 +47,7 @@ public class Swerve implements Component, Sendable
         }
 
         Modules = WheelsData;
-        IMU = imu;
+        IMUSensor = imu;
 
         SmartDashboard.putData("SwerveDrive", this);
     }
@@ -81,7 +80,7 @@ public class Swerve implements Component, Sendable
             modules[i] = module;
         }
 
-        var imu = RobotManifestDevices.GetGyro(manifestObject.GetString("IMU"));
+        var imu = RobotManifestDevices.GetIMU(manifestObject.GetString("IMU"));
 
         var swerve = new Swerve(modules, imu);
         swerve.SetCurrentMode(DrivingMode.valueOf(manifestObject.GetString("driveMode")));
@@ -98,7 +97,7 @@ public class Swerve implements Component, Sendable
     }
 
     public WheelData[] Modules;
-    public Gyro IMU;
+    public IMU IMUSensor;
 
     private int _wheelCount;
 
@@ -228,10 +227,16 @@ public class Swerve implements Component, Sendable
      */
     public void RecalibrateIMU()
     {
-        IMU.reset();
-        IMU.calibrate();
+        IMUSensor.calibrate();
+        ZeroIMU(0);
+    }
 
-        _headingOffset = IMU.getAngle() * Mathf.kDEG2RAD + 3.1415;
+    public void ZeroIMU() {
+        ZeroIMU(0);
+    }
+    public void ZeroIMU(double offset) {
+        IMUSensor.reset();
+        _headingOffset = IMUSensor.getAngle() * Mathf.kDEG2RAD + Math.PI - offset;
     }
 
     /**
@@ -242,6 +247,10 @@ public class Swerve implements Component, Sendable
     {
         _speedRatio = Speed;
     }
+    public void SetRotationSpeed(double Speed) {
+        _roationSpeedRatio = Speed;
+    }
+
     /**
      * Set the PID gain of the wheel direction motor
      * @param ID The id of the wheel
@@ -311,7 +320,7 @@ public class Swerve implements Component, Sendable
      */
     public double GetHeading()
     {
-        var heading = IMU.getAngle() * Mathf.kDEG2RAD;
+        var heading = IMUSensor.getAngle() * Mathf.kDEG2RAD;
         var totalOffset = _headingOffset + _headingOffsetManual;
 
         return Mathf.OffsetAngle(heading, totalOffset);
@@ -448,7 +457,7 @@ public class Swerve implements Component, Sendable
             translationPolar.azymuth -= GetHeading();
 
             var rotationAxis = _isRotationAxisOverriden ? _rotationAxisOverride * _roationSpeedRatio : _rotationRateLimiter.GetCurrent() * _roationSpeedRatio;
-            rotationAxis *= (_controlReversed ? -1 : 1);
+            //rotationAxis *= (_controlReversed ? -1 : 1);
             for(int i = 0; i < _wheelCount; i++)
             {
                 //Each wheel have a predetermined rotation vector based on wheel position
@@ -590,5 +599,8 @@ public class Swerve implements Component, Sendable
             builder.addDoubleProperty("SteerTargetAngle_" + i, () -> _lastAngle[currentId], null);
             builder.addDoubleProperty("SteerCommand_" + i, () -> _lastDirectionCommand[currentId], null);
         }
+
+        builder.addDoubleProperty("X_Tilt", () -> IMUSensor.GetTiltX(), null);
+        builder.addDoubleProperty("Y_Tilt", () -> IMUSensor.GetTiltY(), null);
     }
 }

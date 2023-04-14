@@ -3,10 +3,11 @@ package frc.robot.Library.FRC_3117_Tools.Manifest;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.Library.FRC_3117_Tools.Component.Data.MotorController;
 import frc.robot.Library.FRC_3117_Tools.Interface.FromManifest;
-import frc.robot.Library.FRC_3117_Tools.Wrapper.ADIS16448_IMU_Gyro;
+import frc.robot.Library.FRC_3117_Tools.Wrapper.IMU.ADIS16448_IMU;
 import frc.robot.Library.FRC_3117_Tools.Wrapper.Encoder.AnalogAbsoluteEncoder;
 import frc.robot.Library.FRC_3117_Tools.Wrapper.Encoder.DutyCycleAbsoluteEncoder;
 import frc.robot.Library.FRC_3117_Tools.Wrapper.Encoder.Interface.AbsoluteEncoder;
+import frc.robot.Library.FRC_3117_Tools.Wrapper.IMU.Interface.IMU;
 
 @FromManifest(EntryName = "devices", EarlyOnLoadMethod = "Initialize")
 public class RobotManifestDevices
@@ -103,7 +104,7 @@ public class RobotManifestDevices
         switch (type)
         {
             case "ADIS16448":
-                gyro = new ADIS16448_IMU_Gyro();
+                gyro = new ADIS16448_IMU();
                 break;
 
             case "NavX":
@@ -117,5 +118,27 @@ public class RobotManifestDevices
         //gyro.SetOffset(offset);
 
         return gyro;
+    }
+
+    public static IMU GetIMU(String name) {
+        var imuObject = Devices.GetSubObject(name);
+
+        var type = imuObject.GetString("type");
+        var offset = imuObject.GetDouble("offset");
+
+        IMU imu;
+        switch (type) {
+            case "ADIS16448":
+                imu = new ADIS16448_IMU();
+                break;
+
+            case "NavX":
+                return null;
+
+            default:
+                return null;
+        }
+
+        return imu;
     }
 }
